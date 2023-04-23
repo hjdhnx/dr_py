@@ -5,7 +5,7 @@
 	"showAll": false,
 	"search": true,
 	"headers": {
-		"Authorization":"xxcxcxcxc"
+		"Authorization":""
 	},
 	"params": {
 		"/abc": {
