@@ -3,10 +3,10 @@
 <h4>🚀第二派-dr模板的python实现🚀</h4>
   <a href="https://alist.nn.ci"><img height="100px" alt="logo" src="https://ghproxy.com/https://raw.githubusercontent.com/hjdhnx/dr_py/main/static/img/icon.png"/></a>
   <p><em>🗂️A webServer convert web and x5 movie sites to cms api data</em></p>
-  <a href="https://code.gitlink.org.cn/api/v1/repos/hjdhnx/dr_py/releases">
+  <a href="https://github.com/hjdhnx/dr_py/releases">
     <img src="https://img.shields.io/badge/version-3.9.34-blue" alt="latest version" />
   </a>
-  <a href="https://code.gitlink.org.cn/api/v1/repos/hjdhnx/dr_py/issues">
+  <a href="https://github.com/hjdhnx/dr_py/issues">
     <img src="https://img.shields.io/badge/issues-3-orange" alt="discussions" />
   </a>
 
@@ -20,7 +20,7 @@
     <img src="https://img.shields.io/badge/docker镜像主页-drpy-blue" alt="Downloads" />
   </a>
 
-  <a href="https://code.gitlink.org.cn/api/v1/repos/hjdhnx/dr_py/blob/master/LICENSE">
+  <a href="https://github.com/hjdhnx/dr_py/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-AGPL3.0-orange" alt="License" />
   </a>
 
