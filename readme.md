@@ -10,8 +10,8 @@
     <img src="https://img.shields.io/badge/issues-3-orange" alt="discussions" />
   </a>
 
-<a href="https://wwi.lanzoup.com/iUGPG0tso2qf">
-    <img src="https://img.shields.io/badge/蓝奏云下载-3.9.41-blue" alt="Downloads" />
+<a href="https://wwi.lanzoup.com/ikzBx0tsvepi">
+    <img src="https://img.shields.io/badge/蓝奏云下载-3.9.41b10-blue" alt="Downloads" />
   </a>
 
 
