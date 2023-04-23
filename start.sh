@@ -2,9 +2,11 @@
 # 建立文件夹
 mkdir -p /home/pywork/dr_py && cd /home/pywork/dr_py
 # 下载仓库包
-wget https://code.gitlink.org.cn/api/v1/repos/hjdhnx/dr_py/archive/master.zip
+wget https://ghproxy.com/https://github.com/hjdhnx/dr_py/archive/refs/heads/main.zip -O dr_py.zip
 # 解压
-unzip master.zip
+unzip dr_py.zip
+# 移动文件到当前目录
+mv dr*/* ./
 # 清理临时文件
 rm *.zip
 # 启动容器
