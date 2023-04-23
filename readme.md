@@ -55,7 +55,7 @@
 #### 项目修复
 进入容器drpy项目根目录执行以下代码
 ```shell
-cd utils && rm update.py && wget https://code.gitlink.org.cn/api/v1/repos/hjdhnx/dr_py/raw/master/utils/update.py
+cd utils && rm update.py && wget https://ghproxy.com/https://raw.githubusercontent.com/hjdhnx/dr_py/main/utils/update.py
 ```
 执行后重启9001或者docker即可正常检测升级
 

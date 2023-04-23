@@ -74,7 +74,8 @@ def getOnlineVer():
     msg = ''
     try:
         # r = requests.get('https://gitcode.net/qq_32394351/dr_py/-/raw/master/js/version.txt',timeout=(2,2))
-        r = requests.get('https://code.gitlink.org.cn/api/v1/repos/hjdhnx/dr_py/raw/master/js/version.txt',timeout=(2,2))
+        # r = requests.get('https://code.gitlink.org.cn/api/v1/repos/hjdhnx/dr_py/raw/master/js/version.txt',timeout=(2,2))
+        r = requests.get('https://ghproxy.com/https://raw.githubusercontent.com/hjdhnx/dr_py/main/js/version.txt',timeout=(2,2))
         ver = r.text
     except Exception as e:
         # print(f'{e}')
@@ -146,7 +147,7 @@ def force_copy_files(from_path, to_path, exclude_files=None):
 def copy_to_update():
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
     tmp_path = os.path.join(base_path, f'tmp')
-    dr_path = os.path.join(tmp_path, f'dr_py')
+    dr_path = os.path.join(tmp_path, f'dr_py-main')
     if not os.path.exists(dr_path):
         # print(f'升级失败,找不到目录{dr_path}')
         logger.info(f'升级失败,找不到目录{dr_path}')
@@ -169,7 +170,8 @@ def download_new_version():
     tmp_path = os.path.join(base_path, f'tmp')
     os.makedirs(tmp_path,exist_ok=True)
     # url = 'https://gitcode.net/qq_32394351/dr_py/-/archive/master/dr_py-master.zip'
-    url = 'https://code.gitlink.org.cn/api/v1/repos/hjdhnx/dr_py/archive/master.zip'
+    # url = 'https://code.gitlink.org.cn/api/v1/repos/hjdhnx/dr_py/archive/master.zip'
+    url = 'https://ghproxy.com/https://github.com/hjdhnx/dr_py/archive/refs/heads/main.zip'
     # tmp_files = os.listdir(tmp_path)
     # for tp in tmp_files:
     #     print(f'清除缓存文件:{tp}')
