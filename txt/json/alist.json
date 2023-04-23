@@ -4,6 +4,9 @@
 	"startPage": "/",
 	"showAll": false,
 	"search": true,
+	"headers": {
+		"Authorization":"xxcxcxcxc"
+	},
 	"params": {
 		"/abc": {
 			"password": "123"

@@ -89,8 +89,12 @@ const http = function (url, options = {}) {
 	if(!keys.includes('user-agent')){
 		options.headers['User-Agent'] = UA;
 	}
+	console.log(JSON.stringify(options.headers));
 	try {
 		const res = req(url, options);
+		// if(options.headers['Authorization']){
+		// 	console.log(res.content);
+		// }
 		res.json = () => res&&res.content ? JSON.parse(res.content) : null;
 		res.text = () => res&&res.content ? res.content:'';
 		return res
@@ -124,10 +128,10 @@ function get_drives_path(tid) {
 }
 
 function get_drives(name) {
-	const { settings, api, server } = __drives[name];
+	const { settings, api, server,headers } = __drives[name];
 	if (settings.v3 == null) { //获取 设置
 		settings.v3 = false;
-		const data = http.get(server + '/api/public/settings').json().data;
+		const data = http.get(server + '/api/public/settings',{headers:headers}).json().data;
 		if (Array.isArray(data)) {
 			settings.title = data.find(x => x.key === 'title')?.value;
 			settings.v3 = false;
@@ -208,13 +212,21 @@ function init(ext) {
 			_path_param: _path_param,
 			settings: {},
 			api: {},
+			headers:item.headers||{},
 			getParams(path) {
 				const key = this._path_param.find(x => path.startsWith(x));
 				return Object.assign({}, this.params[key], { path });
 			},
 			getPath(path) {
-				const res = http.post(this.server + this.api.path, { data: this.getParams(path) }).json();
-				return this.settings.v3 ? res.data.content : res.data.files
+				const res = http.post(this.server + this.api.path, { data: this.getParams(path),headers:this.headers }).json();
+				// console.log(res);
+				try {
+					return this.settings.v3 ? res.data.content : res.data.files
+				}catch (e) {
+					console.log(`getPath发生错误:${e.message}`);
+					console.log(JSON.stringify(res));
+					return [{name:'error',value:JSON.stringify(res)}]
+				}
 			},
 			getFile(path) {
 				let raw_url = this.server+'/d'+path;
@@ -222,7 +234,7 @@ function init(ext) {
 				let data = {raw_url:raw_url,raw_url1:raw_url};
 				if(playRaw===1){
 					try {
-						const res = http.post(this.server + this.api.file, { data: this.getParams(path) }).json();
+						const res = http.post(this.server + this.api.file, { data: this.getParams(path),headers:this.headers }).json();
 						data = this.settings.v3 ? res.data : res.data.files[0];
 						if (!this.settings.v3) {
 							data.raw_url = data.url; //v2 的url和v3不一样
@@ -337,33 +349,44 @@ function category(tid, pg, filter, extend) {
 		showMode = fl.show;
 	}
 	list.forEach(item => {
-		if (drives.is_subt(item)) {
-			subList.push(item.name);
+		if(item.name!=='error') {
+			if (drives.is_subt(item)) {
+				subList.push(item.name);
+			}
+			if (!drives.showAll && !drives.isFolder(item) && !drives.isVideo(item)) {
+				return //只显示视频文件和文件夹
+			}
+			let vod_time = drives.getTime(item);
+			let vod_size = get_size(item.size);
+			let remark = vod_time.split(' ')[0].substr(3) + '\t' + vod_size;
+			let vod_id = id + item.name + (drives.isFolder(item) ? '/' : '');
+			if (showMode === 'all') {
+				vod_id += '#all#';
+			}
+			print(vod_id);
+			const vod = {
+				'vod_id': vod_id,
+				'vod_name': item.name.replaceAll("$", "").replaceAll("#", ""),
+				'vod_pic': drives.getPic(item),
+				'vod_time': vod_time,
+				'vod_size': item.size,
+				'vod_tag': drives.isFolder(item) ? 'folder' : 'file',
+				'vod_remarks': drives.isFolder(item) ? remark + ' 文件夹' : remark
+			};
+			if (drives.isVideo(item)) {
+				vodFiles.push(vod);
+			}
+			allList.push(vod);
+		}else{
+			console.log(item);
+			const vod = {
+				vod_name: item.value,
+				vod_id: 'no_data',
+				vod_remarks: '不要点,会崩的',
+				vod_pic: 'https://ghproxy.com/https://raw.githubusercontent.com/hjdhnx/dr_py/main/404.jpg'
+			}
+			allList.push(vod);
 		}
-		if (!drives.showAll && !drives.isFolder(item) && !drives.isVideo(item)) {
-			return //只显示视频文件和文件夹
-		}
-		let vod_time = drives.getTime(item);
-		let vod_size = get_size(item.size);
-		let remark = vod_time.split(' ')[0].substr(3)+'\t'+vod_size;
-		let vod_id = id + item.name + (drives.isFolder(item) ? '/' : '');
-		if(showMode==='all'){
-			vod_id+='#all#';
-		}
-		print(vod_id);
-		const vod = {
-			'vod_id': vod_id,
-			'vod_name': item.name.replaceAll("$", "").replaceAll("#", ""),
-			'vod_pic': drives.getPic(item),
-			'vod_time':vod_time ,
-			'vod_size':item.size ,
-			'vod_tag': drives.isFolder(item) ? 'folder' : 'file',
-			'vod_remarks': drives.isFolder(item) ? remark + ' 文件夹' : remark
-		};
-		if (drives.isVideo(item)) {
-			vodFiles.push(vod);
-		}
-		allList.push(vod);
 	});
 
 	if (vodFiles.length === 1 && subList.length > 0) { //只有一个视频 一个或者多个字幕 取相似度最高的
