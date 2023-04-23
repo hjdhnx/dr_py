@@ -1,0 +1,25 @@
+. ./app.sh
+source ./app.sh
+. <(cat app.sh)
+# supervisord -c manager.conf
+flask db init
+flask db migrate
+flask db upgrade
+
+pip install -i https://mirrors.cloud.tencent.com/pypi/simple --upgrade pip
+pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple
+
+可能会用到:
+ddddocr==1.1.0 ; sys_platform == 'win32'
+ddddocr==1.0.8 ; sys_platform != 'win32'
+
+废弃操作仅限 flask-migrate==2.7.0:
+# # 导入数据迁移核心类
+# from flask_migrate import Migrate
+# from flask_script import Manager
+# manager = Manager(app)
+# 初始化数据迁移
+# migrate = Migrate(app, db)
+# manager.add_command('sql', MigrateCommand)
+# python app.py sql migrate -m “init”
+# python app.py sql upgrade

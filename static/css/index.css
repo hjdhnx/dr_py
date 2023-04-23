@@ -1,0 +1,24 @@
+    .btn{
+        margin-bottom: 1rem;
+        border: 1px solid #615e5e;
+        width: 240px;
+        height: 30px;
+        text-align: center;
+        background-color: #1379cb;
+        color: #ffffff;
+        border-radius: 20px;
+        line-height: 30px;
+          }
+
+    .btn a{
+        color: #ffffff;
+    }
+
+a {
+    text-decoration: none;
+    text-align: center;
+    line-height: 30px;
+}
+.jyw{
+    margin-bottom: 5rem;
+}

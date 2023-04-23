@@ -1,0 +1,8 @@
+quickjs是优秀的js解释器,秒杀execjs,但是呢在于python的交互上远远不如js2py
+
+1.js注入python函数必须用add_callable,无法set
+2.js注入变量基础类型必须用set
+3.不支持注入python非基础类型，包括字典,对象，模块包
+4.不能注入的类型可以传参调用js
+5.类型转换麻烦,不过发现js的 obj(dict) 和 list 可以通过ctx.get完了 json()方法转为python字符串,python字符串再json.loads转为py类型
+6.由于第5点,想要复杂类型交互是没办法的了。(不过合理注入python基础类型变量以及方法的话实现海阔视界那些东西还是够了)

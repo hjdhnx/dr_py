@@ -1,0 +1,24 @@
+let jxUrl = 'https://api.10static.com/?from=duoduozy&url=';
+fetch_params.headers.Referer = 'https://www.1010dy3.com';
+fetch_params.headers['User-Agent'] = PC_UA;
+try {
+    let html = request(jxUrl+vipUrl);
+    // log(html);
+    let url = html.match(/var urls = "(.*?)"/)[1];
+    let key = 'Of84ff0clf252cba';
+    let iv = 'c487ebl2e38aOfaO';
+    try {
+        eval(getCryptoJS());
+        var getVideoInfo = function (text,key,iv) {
+            return CryptoJS.AES.decrypt(text, key, {iv: iv, padding: CryptoJS.pad.Pkcs7}).toString(CryptoJS.enc.Utf8);
+        };
+        realUrl = getVideoInfo(url,key,iv);
+    }catch (e) {
+        log('发生了错误:'+e.message);
+        realUrl = vipUrl;
+    }
+    log('解析到真实播放地址:'+realUrl);
+}catch (e) {
+    log('解析发生错误:'+e.message);
+    realUrl = vipUrl;
+}

@@ -1,0 +1,122 @@
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>管理员登录</title>
+  <meta name="description" content="particles.js is a lightweight JavaScript library for creating particles.">
+  <meta name="author" content="道长">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" media="screen" href="/static/css/login.css">
+  <!-- 引入layui css -->
+  <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui-v2.5.6/css/layui.css" />
+  <!-- 引入layui js -->
+  <script src="https://www.layuicdn.com/layui-v2.5.6/layui.js"></script>
+
+  <link rel="icon" href="/static/img/logo.png" type="image/x-icon">
+</head>
+
+<body style>
+  <!-- particles.js container -->
+  <div id="particles-js" style="display: flex;align-items: center;justify-content: center">
+
+    <canvas class="particles-js-canvas-el" width="1920" height="2792" style="width: 100%; height: 100%;"></canvas>
+  </div>
+  <div class="login-page">
+    <div class="login-content">
+      <img src="https://s1.ax1x.com/2023/03/08/ppmmiNj.jpg" alt="DRPY">
+      <div class="login-tit"><span>DRPY</span>用户登录</div>
+      <div class="login-input">
+        <div class="layui-form-item">
+          <label class="layui-icon layui-icon-username"></label>
+          <input type="text" id="username" placeholder="账号">
+        </div>
+          <div class="layui-form-item1">
+          <label class="layui-icon layui-icon-password"></label>
+          <input type="password" id="password" placeholder="密码">
+        </div>
+      </div>
+        <div class="login-btn">
+          <div class="login-btn-left" onclick="login()">
+            <span>登录</span>
+          </div>
+
+          <div class="login-btn-right" onclick="changeImg('autologin')">
+            <input type="checkbox" name="zd" id="picture_autologin">7天内自动登录
+          </div>
+          <div class="login-btn-right" onclick="changeImg('remember')">
+            <input type="checkbox" name="mm" id="picture_remember">记住密码
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- scripts -->
+    <script src="/static/js/particles.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/grey.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/sweetalert/sweetalert.css">
+    <script type="text/javascript" src="/static/sweetalert/sweetalert-dev.js"></script>
+
+    <script>
+      $('#picture_autologin').attr('src', "/static/img/checked.png");
+      function changeImg(id) {
+        let pic = $('#picture_' + id);
+        if (pic.attr('src') === "/static/img/check.png") {
+          pic.attr('src', "/static/img/checked.png")
+        } else {
+          pic.attr('src', "/static/img/check.png")
+        }
+      }
+
+      function login() {
+        var username = $('#username').val();
+        var password = $('#password').val();
+        var autologin = "no";
+        let pic = $('#picture_autologin');
+        if (pic.attr("src") === "/static/img/checked.png") {
+          autologin = "yes";
+        }
+        console.log(username + "--" + password + '--' + autologin);
+        if (username !== "" && password !== "") {
+          var json = { "username": username, "password": password, "autologin": autologin, "login": "1" };
+          // ajax_post("login.php",json,backmsg);
+          console.log(json);
+          $.post("/admin/login", json, function (result) {
+            console.log(result);
+            if (result.code === 200) {
+              console.log('登录成功');
+              swal({
+                title: "登录提示",
+                text: "登录成功！\n是否重载页面?",
+                type: "success",
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: '确定',
+                cancelButtonText: "取消",
+                closeOnConfirm: false
+              },
+                function (isConfirm) {
+                  if (isConfirm) {
+                    location.reload();
+                  }
+                }
+              );
+              // swal("登录提示","登录成功！\n正在进入个人中心","success");
+              // location.href = '/admin'
+            } else {
+              swal("登录失败！\n用户名或密码错误，请重试！", "", "error");
+            }
+          });
+        } else {
+          alert('用户密码必填!');
+        }
+      }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+body {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.title {
+    background-image: linear-gradient(to right, rgb(0, 153, 255), #ff02cc);
+    -webkit-background-clip: text;
+    color: transparent;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    line-height: height;
+}
+
+.ver_title {
+    font-size: 15px;
+    padding-left: 5px
+}
+.image{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    /*position: fixed;*/
+    text-align: center;
+    /*fixed center;*/
+}
+.tips{
+    color: #9b5df1;
+}
+
+.image::after{
+    content: "";
+    /*background:url('https://tuapi.eees.cc/api.php?category=dongman&type=302&px=m');*/
+    background:url('https://tuapi.eees.cc/api.php?category=dongman&type=302');
+    background-repeat: no-repeat;
+    opacity: 0.4;
+    /*position: fixed;*/
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+.btn {
+    margin-bottom: 1rem;
+    border: 1px solid #5fdefe;
+    width: 240px;
+    height: 30px;
+    text-align: center;
+    background-color: #1379cb;
+    color: #ffffff;
+    border-radius: 50px;
+    line-height: 30px;
+}
+
+.btn1 {
+    margin-bottom: 1rem;
+    border: 1px solid #5c6cf6;
+    width: 240px;
+    height: 30px;
+    text-align: center;
+    border-radius: 50px;
+    line-height: 30px;
+}
+.btn1  a {
+    color: #000000;
+    font-size: 13px;
+}
+
+.btn  a {
+    color: #ffffff;
+}
+
+a {
+    text-decoration: none;
+    text-align: center;
+    line-height: 30px;
+}
+
+.jyw {
+    margin-bottom: 5rem;
+}

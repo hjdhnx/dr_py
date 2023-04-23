@@ -1,0 +1,73 @@
+.btn_option {
+    border-radius: 25px;
+    color: #3f1ef9;
+    text-align: center;
+    padding: 3px 6px 3px 6px;
+    border: 1px solid  #3f1ef9;
+    background-color: #ffffff;
+}
+
+.title {
+    background-image: linear-gradient(to right, rgb(0, 153, 255), #ff02cc);
+    -webkit-background-clip: text;
+    color: transparent;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    line-height: height;
+}
+
+input.conf {
+    margin-bottom: 10px;
+    width: 120px;
+    border-radius: 25px;
+    height: 20px;
+    border: 1px solid #60afca;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 10px;
+  
+}
+.edit_conf{
+    border: 1px solid #000000;
+    color: #000000;
+}
+.label3 {
+
+    color: #5c6cf6;
+    font-weight: bold;
+
+
+}
+
+.label4 {
+    letter-spacing: 0.5em;
+    margin-right: -1em;
+    color: #5c6cf6;
+    font-weight: bold;
+
+
+}
+
+.label5 {
+    letter-spacing: 0.36em;
+    margin-right: -0.6em;
+    color: #5c6cf6;
+    font-weight: bold;
+
+}
+
+.label6 {
+    color: #5c6cf6;
+    font-weight: bold;
+
+}
+
+
+.w{
+    text-align: right;
+    width: 323px;
+    margin-right: 20px;
+}

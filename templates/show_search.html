@@ -1,0 +1,89 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <meta http-equiv="Cache-Control" content="no-siteapp;no-transform">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>drpy搜索统计</title>
+    <script src="/static/js/jquery.min.js"></script>
+    <link rel="stylesheet" media="screen" href="/static/css/home.css">
+    <script src="/static/js/grey.js"></script>
+    <link href="/static/css/jquery-confirm.min.css" rel="stylesheet">
+    <script src="/static/js/jquery-confirm.min.js"></script>
+
+</head>
+
+<body>
+<div class="image">
+
+<script>
+    $(document).ready(function () {
+        $("#nosearch_sites").click(function () {
+            let a = "{{val.nosearch_sites|safe}}";
+            // console.log(a);
+            let nosearch_sites = eval(a);
+            console.log(nosearch_sites);
+            let ss_sites = nosearch_sites.join(',');
+            // console.log(ss_sites);
+            // $.alert(ss_sites);
+            $.alert({title:'不可搜索统计：'+nosearch_sites.length,content:ss_sites,buttons: {
+                        ok: {
+                            text: '确认',
+                            btnClass: 'btn-primary',
+                            action: function() {
+                            }
+                        }
+                    }});
+        });
+
+        $("#search_sites").click(function () {
+            let a = "{{val.search_sites|safe}}";
+            // console.log(a);
+            let search_sites = eval(a);
+            console.log(search_sites);
+            let ss_sites = search_sites.join(',');
+            // console.log(ss_sites);
+            // $.alert(ss_sites);
+            $.alert({title:'可搜索统计：'+search_sites.length,content:ss_sites,buttons: {
+                        ok: {
+                            text: '确认',
+                            btnClass: 'btn-primary',
+                            action: function() {
+                            }
+                        }
+                    }});
+        });
+    });
+</script>
+<div class="title">欢迎使用drpy搜索统计界面<div class="kf">
+    <span class="ver_title">框架开发：道长</span><span class="ver_title">框架美化：蓝莓</span></div>
+</div>
+<p class="tips">统计内置源参与搜索相关数据</p>
+<center>
+    <div class="zt">
+        <div class="btn">
+            <a href="javascript:;">聚搜超时: {{val.timeout}} 秒</a>
+        </div>
+        <div class="btn">
+            <a href="javascript:;">搜索限制源数量: {{val.search_limit}} </a>
+        </div>
+
+        <div class="btn">
+            <a href="javascript:;">总可搜索源: {{val.total_search|length}}</a>
+        </div>
+
+        <div class="btn">
+            <a href="javascript:;" id="nosearch_sites">不可搜索源: {{val.nosearch_sites|length}}</a>
+        </div>
+
+        <div class="btn">
+            <a href="javascript:;" id="search_sites">当前搜索源: {{val.search_sites|length}}</a>
+        </div>
+    </div>
+</center>
+</div>
+</body>
+</html>

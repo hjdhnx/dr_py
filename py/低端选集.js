@@ -1,0 +1,58 @@
+js:
+log(TABS);
+let d=[];
+pdfh = jsp.pdfh;
+pdfa = jsp.pdfa;
+if(typeof(play_url)==='undefined'){
+var play_url = '';
+}
+// play_url = play_url.replace('&play_url=','&type=json&play_url=');
+function getLists(html){
+    let src=pdfh(html,'.wp-playlist-script&&Html');
+    src=JSON.parse(src).tracks;
+    let list1=[];
+    let list2=[];
+    src.forEach(function(it){
+        let src0=it.src0;
+        let src1=it.src1;
+        let src2=it.src2;
+        let title=it.caption;
+        let url1 = "https://ddys.tv/getvddr/video?id=" + src1+"&dim=1080P+&type=mix";
+        let url2="https://w.ddys.tv" + src0 + "?ddrkey=" + src2;
+        let zm = "https://ddys.tv/subddr/" + it.subsrc;
+        list1.push({
+            title:title,
+            url:url1,
+            desc:zm,
+        });
+        list2.push({
+            title:title,
+            url:url2,
+            desc:zm,
+        });
+    });
+    return {
+        list1:list1,
+        list2:list2
+    }
+}
+var data=getLists(html);
+var list1=data.list1;
+var list2=data.list2;
+let nums=pdfa(html,'body&&.post-page-numbers');
+nums.forEach(function(it){
+    let num=pdfh(it,'body&&Text');
+    log(num);
+    let nurl=input+num+'/';
+    if(num==1){
+        return
+    }
+    log(nurl);
+    let html=request(nurl);
+    let data=getLists(html);
+    list1=list1.concat(data.list1);
+    list2=list2.concat(data.list2);
+});
+list1 = list1.map(function (item){return item.title+'$'+play_url+urlencode(item.url+'|'+input+'|'+item.desc)});
+list2 = list2.map(function (item){return item.title+'$'+play_url+urlencode(item.url+'|'+input+'|'+item.desc)});
+LISTS=[list1, list2]

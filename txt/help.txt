@@ -1,0 +1,9 @@
+service supervisord start #启动,默认配置文件
+service supervisord stop #停止
+service supervisord status #状态
+supervisorctl shutdown #关闭所有任务
+supervisorctl stop|start program_name #启动或停止服务
+supervisorctl status #查看所有任务状态
+kill -9 $(cat supervisord.pid) # 杀掉进程
+supervisord -c manager.conf # 启动服务
+echo_supervisord_conf > ./cmd.conf #输出配置

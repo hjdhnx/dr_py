@@ -1,0 +1,2 @@
+[chatgpt申请](http://mp.weixin.qq.com/s?__biz=MjM5MDI1ODUyMA==&mid=2672969192&idx=1&sn=04efcb04d4a5a8f493ef83fb9fa6bd1d&chksm=bce161df8b96e8c95e5ea89893b2d212c411a763d0644e5617a746e4fc829a4d154d5feba192&mpshare=1&scene=24&srcid=02050Gzonfq7o1MfMDZ5r3Az&sharer_sharetime=1675559603236&sharer_shareid=e78e6999b00e23bdc812d4fb7b55e462#rd)  
+[钉钉对接chatgpt机器人](https://blog.csdn.net/zls365365/article/details/128567593)

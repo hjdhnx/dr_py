@@ -1,0 +1,13 @@
+let url_tmp = vipUrl.split('@');
+let url = url_tmp[0];
+let headers = {};
+url_tmp.slice(1).forEach(function (it){
+  headers[it.split('=')[0]] = it.split('=')[1];
+});
+let html = request(vipUrl,{headers:headers});
+print(html.length);
+try {
+  realUrl = image(html);
+}catch (e) {
+  print('发生了错误:'+e);
+}

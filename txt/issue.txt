@@ -1,0 +1,39 @@
+错误:Could not link required node_modules
+解决:在Python包安装路径下的js2py/node_import.py的17行有以下代码
+assert subprocess.call(
+        'cd %s;npm install babel-core babel-cli babel-preset-es2015 babel-polyfill babelify browserify browserify-shim'
+        % repr(DIRNAME),
+        shell=True,
+        cwd=DIRNAME) == 0, 'Could not link required node_modules'
+
+修改为
+
+assert subprocess.call(
+        'npm install babel-core babel-cli babel-preset-es2015 babel-polyfill babelify browserify browserify-shim',
+        shell=True,
+        cwd=DIRNAME) == 0, 'Could not link required node_modules'
+
+
+from asgiref.wsgi import WsgiToAsgi
+import uvicorn
+asgi_app = WsgiToAsgi(app)
+uvicorn.run('app:asgi_app', host=http_host, port=http_host, debug=False, workers=1)
+
+另外一个很强的css解析库,性能待验证parsel
+https://cuiqingcai.com/202232.html
+
+远程直播地址:
+"lives":[{"group":"redirect","channels":[{"name":"直播","urls":["proxy://do=live&type=txt&ext=aHR0cHM6Ly9hZ2l0LmFpL2xjeC8xMS9yYXcvYnJhbmNoL21hc3Rlci9saXZl"]}]}],
+下面格式原版tv_box才能用?
+"live","urls":["proxy://do=live&type=txt&ext=aHR0cHM6Ly9naXRjb2RlLm5ldC9xcV8yNjg5ODIzMS9UVkJveC8tL3Jhdy9tYWluL2xpdmUvMDgzMHpiLnR4dA=="]}]}],
+"lives":[{"group":"redirect","channels":[{"name":"直播","urls":["proxy://do=live&type=txt&ext={{ base64Encode(host+'/lives') }}"]}]}],
+"lives":[{"group":"redirect","channels":[{"name":"直播","urls":["proxy://do=live&type=txt&ext={% if config.LIVE_MODE==0 %}{{base64Encode(host+'/lives')}}{% else %}{{ base64Encode('https://gitcode.net/qq_26898231/TVBox/-/raw/main/live/0830zb.txt')}}{% endif %}"]}]}],
+
+
+"homepage":"https://gitcode.net/qq_32394351/dr_py",
+"imgo",
+
+config文件 type类型
+0 资源网
+1 app(xiaogui)
+4 app(xiaogui) 播放的时候自动带上play 和 flag(线路名)

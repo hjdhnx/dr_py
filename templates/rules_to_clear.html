@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp;no-transform">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>删除已缓存规则列表-{{rules.count}}</title>
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/grey.js"></script>
+</head>
+<style>
+    .red {
+        color:red;
+        font-weight: bold
+    }
+    .yellow {
+        color:yellow;
+        font-weight: bold
+    }
+    .yellow a{
+        width: 100px;
+        color: #ea7d7d;
+    }
+    .refresh{
+
+    }
+</style>
+<body>
+<script>
+    $(document).ready(function(){
+        $(".refresh").click(function(){
+            // location.reload();
+            let rule = this.innerText.trim();
+            let code = $.ajax({url:"/clear?rule="+rule,async:false}).responseText;
+            code = typeof(code) === "object"?code:JSON.parse(code);
+            if(code.code === 200){
+                alert(code.msg);
+                location.reload()
+            }
+
+        });
+
+        $(".cls").click(function(){
+            let cls = this.innerText.trim();
+            if(confirm('确认清除规则'+cls+'缓存的分类?')){
+                let code = $.ajax({url:"/cls/clear/"+cls,async:false}).responseText;
+            code = typeof(code) === "object"?code:JSON.parse(code);
+                if(code.code === 200){
+                    alert('操作成功!\n'+code.msg);
+                    location.reload()
+                }else{
+                    alert('操作失败!\n'+code.msg);
+                }
+            }
+        });
+});
+
+</script>
+<h1>缓存规则列表-{{rules.count}}</h1>
+{% if rules.count < 1 %}
+<h3>暂无已缓存的规则</h3>
+{% endif %}
+
+{% for rule in rules.list %}
+
+    	{% if rule|length > 2 %}
+        <!-- | 为过滤条件 -->
+        	<li class="red">
+<!--                <a class="refresh" href="/clear?rule={{rule}}" target="_blank">{{ rule }}</a>-->
+                <a class="refresh" href="javascript:void(0);">{{ rule.name }}</a>
+            </li>
+
+        {% else %}
+         <!-- 如果是if条件，最后必须要有else，否则就会报错 -->
+            <li class="yellow">
+                <a class="refresh" href="javascript:void(0);" target="_blank">{{ rule.name }}</a>
+            </li>
+
+        {% endif %}
+      	<!-- if条件必须有endif，否则会报错 -->
+
+ {% endfor %}
+
+<h1>缓存分类列表-{{classes|length}}</h1>
+{% if classes|length < 1 %}
+<h3>暂无已缓存的分类</h3>
+{% endif %}
+{% for cls in classes %}
+    {% if cls|length > 2 %}
+        <li class="red">
+            <a class="cls" href="javascript:void(0);">{{ cls }}</a>
+        </li>
+
+    {% else %}
+        <li class="yellow">
+            <a class="cls" href="javascript:void(0);">{{ cls }}</a>
+        </li>
+
+    {% endif %}
+ {% endfor %}
+</body>
+
+</html>

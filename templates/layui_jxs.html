@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>解析管理</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="/static/plugin/layui/css/layui.css">
+  <link rel="stylesheet" href="/static/plugin/layui/ext/soulTable/soulTable.css" media="all"/>
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/grey.js"></script>
+</head>
+<body>
+<table id="myTable" lay-filter="myTable"></table>
+<script type="text/html" id="toolbar">
+  <div class="layui-btn-container">
+<!--    <button class="layui-btn layui-btn-sm" lay-event="clearFilter">清除所有筛选条件</button>-->
+<!--    <button class="layui-btn layui-btn-sm" lay-event="getData">获取当前页数据</button>-->
+    <button class="layui-btn layui-btn-sm" lay-event="saveData">保存拖拽排序结果</button>
+    <button class="layui-btn layui-btn-sm" lay-event="setTestVideo">设置解析测试视频</button>
+  </div>
+</script>
+<script type="text/html" id="bar">
+  <a class="layui-btn layui-btn-xs" lay-event="set_top">顶</a>
+  <a class="layui-btn layui-btn-xs" lay-event="set_bottom">底</a>
+<!--  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删</a>-->
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="test">测</a>
+</script>
+<script src="/static/plugin/layui/layui.js"></script>
+<script>
+  // 自定义模块
+  layui.config({
+    base: '/static/plugin/layui/ext/',   // 模块目录
+    version: 'v1.6.4'
+  }).extend({
+    soulTable: 'soulTable/soulTable',
+    tableChild: 'soulTable/tableChild',
+    tableMerge: 'soulTable/tableMerge',
+    tableFilter: 'soulTable/tableFilter',
+    excel: 'soulTable/excel',
+  });
+
+  layui.use(['form', 'table','soulTable'], function () {
+    var table = layui.table, soulTable = layui.soulTable;
+    var $ = layui.$;
+    soulTable.config({
+          rowDrag: true
+    });
+    // 后台分页
+    table.render({
+      elem: '#myTable'
+      ,id: 'myTable'
+      ,url: '/layui/api/jx_list'
+      ,height: 1000
+      ,toolbar: '#toolbar'
+      ,page: true
+      ,limit:100
+    ,limits:[20,40,60,80,100,150,200,300,500]
+      ,cols: [[
+        {type: 'checkbox', fixed: 'left'},
+        {field: 'id', title: '编号', width: 80, sort: true},
+        {field: 'name', title: '名称', width: 200, sort: true, filter: true},
+        {field: 'state', title: '状态', width: 60},
+        {field: 'order', title: '顺序', width: 80,sort: true},
+        {field: 'url', title: '接口', minWidth: 200, sort: true},
+        {field: 'type', title: '类型', width: 80 , filter: true},
+        // {field: 'header', title: '请求头', width: 112,  filter: {split:','}, sort:true},
+        {field: 'header', title: '请求头', width: 200, sort:true},
+        {field: 'ext', title: '扩展信息', minWidth: 200, sort:true},
+        {title: '操作', width: 156, fixed: 'right', templet: '#bar'}
+      ]]
+      ,done: function () {
+        soulTable.render(this)
+      }
+    });
+
+
+    function saveData(data){
+      if(!Array.isArray(data) || data.length < 1){
+      return layer.msg('待保存的数据有误');
+      }
+      let params = {"data":JSON.stringify(data)};
+      // console.log(params);
+      $.post("/admin/parse/save_data",params,function(res,status){
+           console.log(res);
+           if(res.code === 200){
+             table.reload('myTable', {
+                // page: {
+                //     curr: 3 //重新从第 1 页开始
+                // }
+            });
+           }else{
+               console.log('修改失败了...');
+               return false
+           }
+       });
+    }
+
+    // 工具栏事件
+    table.on('toolbar(myTable)', function(obj){
+      var id = obj.config.id;
+      // console.log(id);
+      if (obj.event === 'clearFilter') {
+        // 清除所有筛选条件并重载表格
+        // 参数: tableId
+        soulTable.clearFilter('myTable')
+      }else if(obj.event === 'getData'){
+        var getData = table.getData(id);
+        // console.log(getData);
+        layer.alert(layui.util.escape(JSON.stringify(getData)));
+      }else if(obj.event === 'saveData'){
+        layer.confirm('确定保存当前的排序结果?保存后将刷新数据库和当前页面', function(index){
+          var getData = table.getData(id);
+          // console.log(getData);
+          saveData(getData);
+          layer.close(index);
+        });
+      }else if(obj.event === 'setTestVideo'){
+        let test_video = localStorage.test_video||'https://v.qq.com/x/cover/m441e3rjq9kwpsc/d00448tl6se.html';
+        layer.prompt({
+          formType: 2,
+          value: test_video,
+          title: '请输入待测试的视频地址',
+          area: ['360px', '120px'] //自定义文本域宽高
+	}, function(value, index, elem){
+	      console.log(value); //得到value
+          localStorage.test_video = value;
+          layer.close(index);
+      });
+      }
+    });
+
+    //触发单元格工具事件
+    table.on('tool(myTable)', function(obj) { // 双击 toolDouble
+      console.log(obj);
+      if(obj.event === 'del'){
+        layer.msg('未开发功能:删除...',{time:1000})
+      }else if(obj.event === 'test'){
+        let test_video = localStorage.test_video||'https://v.qq.com/x/cover/m441e3rjq9kwpsc/d00448tl6se.html';
+        let url = obj.data.url+test_video;
+        layer.msg('开始测试:'+url,{time:1000});
+        window.open(url);
+      }else if(obj.event === 'set_top'){
+        layer.msg('未开发功能:置顶...',{time:1000})
+      }else if(obj.event === 'set_bottom'){
+        layer.msg('未开发功能:置底...',{time:1000})
+      }
+    });
+  // }, null, 'define');
+  });
+
+
+</script>
+</body>
+</html>

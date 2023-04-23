@@ -1,0 +1,94 @@
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <meta http-equiv="Cache-Control" content="no-siteapp;no-transform">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>dr_py首页</title>
+    <script src="/static/js/jquery.min.js"></script>
+    <link rel="stylesheet" media="screen" href="/static/css/home.css">
+    <script src="/static/js/grey.js"></script>
+<!--    <link rel="stylesheet" media="screen" href="/static/css/grey.css">-->
+
+</head>
+
+<!--<body style="opacity: 0.5;background: #FFFFFF url(https://tuapi.eees.cc/api.php?category=dongman&type=302&px=m) no-repeat fixed center;">-->
+<body>
+<div class="image">
+
+<script>
+    $(document).ready(function () {
+        $("#gen_config").click(function () {
+            // let rule = this.innerText.trim();
+            let code = $.ajax({ url: "/configs", async: false }).responseText;
+            code = typeof (code) === "object" ? code : JSON.parse(code);
+            alert(code.msg);
+        });
+    });
+</script>
+<div class="title">欢迎使用DR-PY首页界面<div class="kf"><span class="ver_title">当前版本: {{ ver }}</span>
+    <span class="ver_title">框架开发：道长</span><span class="ver_title">框架美化：蓝莓</span></div>
+</div>
+<p class="tips">可以简单的自定义爬虫实现cms数据接口</p>
+<center>
+    <div class="zt">
+        <div class="btn" style="display: none">
+            <a href="/clear?rule=">缓存清理接口</a>
+        </div>
+        <div class="btn" style="display: none">
+            <a href="/vod?rule=">猫CMS接口</a>
+        </div>
+        <div class="btn">
+            <a href="/admin">CMS后台管理</a>
+        </div>
+        <div class="btn">
+            <a href="/rules/view">缓存文件列表-查看</a>
+        </div>
+        <div class="btn">
+            <a href="/rules/clear">缓存文件列表-清除</a>
+        </div>
+        <div class="btn">
+            <a href="{{ getHost(0) }}/config/0?ver=0">本地配置地址</a>
+        </div>
+        {% if is_linux %}
+        <div class="btn">
+            <a href="{{ manager0 }}" target="_blank">本地在线进程管理[linux]</a>
+        </div>
+        {% endif %}
+        <div class="btn1">
+            <a class="jyw" href="https://picsum.photos/1280/720/?blur=10">局域网:{{ getHost(1) }}</a>
+        </div>
+        {% if '192.168' in getHost(1) %}
+        <div class="btn">
+            <a href="{{ getHost(1) }}/config/1?ver=0">局域网配置地址</a>
+        </div>
+        {% if is_linux %}
+        <div class="btn">
+            <a href="{{ manager1 }}" target="_blank">局域网在线进程管理[linux]</a>
+        </div>
+        {% endif %}
+        <div class="btn">
+            <a href="{{ getHost(1) }}/pics" target="_blank">局域网随机图片</a>
+        </div>
+        {% endif %}
+        <div class="btn">
+            <a href="{{ getHost(2) }}/config/2?ver=0">远程配置地址</a>
+        </div>
+        {% if is_linux %}
+        <div class="btn">
+            <a href="{{ manager2 }}" target="_blank">远程在线进程管理[linux]</a>
+        </div>
+        {% endif %}
+
+        <div class="btn">
+            <a href="javascript:void(0);" id="gen_config">生成配置文件</a>
+        </div>
+        <div class="btn">
+            <a href="/txt/pycms2.json" target="_blank">静态配置文件</a>
+        </div>
+    </div>
+</center>
+</div>
+</body>
+</html>

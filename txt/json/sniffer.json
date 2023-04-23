@@ -1,0 +1,16 @@
+[{
+  "host": "https://www.ikandy.fun",
+  "manual": "1",
+  "format": ".mp4#.m3u8#.flv",
+  "filters": ".html#=http"
+},{
+  "host": "https://czspp.com",
+  "manual": "1",
+  "format": ".mp4#.m3u8#.flv",
+  "filters": ".html#=http"
+},{
+  "host": "yanetflix.com",
+  "manual": "1",
+  "format": ".mp4#.m3u8#.flv",
+  "filters": ".html#=http"
+}]

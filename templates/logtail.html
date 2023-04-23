@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <meta http-equiv="Cache-Control" content="no-siteapp;no-transform">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>tvbox实时日志</title>
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/grey.js"></script>
+    <link href="/static/css/jquery-confirm.min.css" rel="stylesheet">
+    <script src="/static/js/jquery-confirm.min.js"></script>
+<!--    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>-->
+<!--    <link href="https://cdn.bootcdn.net/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css" rel="stylesheet">-->
+<!--    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>-->
+    <style>
+        .support{
+            background: #5dc2f1;
+            color: #FFFFFF;
+            text-align: center;
+        }
+        #title{
+            background: #000000;
+            color: #5dc2f1;
+            padding:3px 1px 3px 1px;
+        }
+        #height{
+            margin-left: 10px;
+        }
+        #msg{
+            /*white-space: pre;*/
+            text-align: left;
+            /*word-wrap: break-word;*/
+            /*word-break: normal;*/
+        }
+        #log-container{
+            overflow-y: scroll;
+            background: #333;
+            color: #aaa;
+            /*上右下左*/
+            padding:1px 2px 10px 2px;
+        }
+        .btn{
+            background: #f06e57;
+            color: #FFFFFF;
+            margin: 0 5px 0 0;
+            border: 2px solid #aaaaaa;
+            border-radius: 2px;
+        }
+        .input{
+            width: 70%;
+            height: 20px;
+        }
+
+        #inputMsg{
+            background: #333;
+            padding:5px 1px 5px 1px;
+        }
+        #inputMsg span{
+            color:#5dc2f1 ;
+        }
+    </style>
+</head>
+<body>
+    <div class="support"></div>
+    <div id="title">
+        <strong>tvbox实时日志 by道长</strong>
+        <span id="height"></span>
+        <button id="clearLog" class="btn">清空日志</button>
+        <button id="showInput" class="btn">显示输入框</button>
+        <button id="clearInput" class="btn">清空输入框</button>
+        <button id="autoClearInput" class="btn">自动清空</button>
+    </div>
+    <div id="inputMsg">
+        <span>输入</span>
+        <input type="text" class="input">
+        <button id="sendMsg" class="btn">发送</button>
+    </div>
+    <div id="log-container">
+		<div id="msg">
+		</div>
+	</div>
+    <div class="support"></div>
+
+    <script>
+        Date.prototype.Format = function (fmt) { // author: meizz
+            var o = {
+                "M+": this.getMonth() + 1, // 月份
+                "d+": this.getDate(), // 日
+                "h+": this.getHours(), // 小时
+                "m+": this.getMinutes(), // 分
+                "s+": this.getSeconds(), // 秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
+                "S": this.getMilliseconds() // 毫秒
+            };
+            if (/(y+)/.test(fmt))
+                fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                    return fmt;
+        }
+        function getWsUrl() {
+            let host = location.host;
+            let hostname = location.hostname;
+            let protocol = 'ws:';
+            let port = location.port;
+            let pathname = '/ws';
+            let ws_port = parseInt(port)+1;
+            return protocol+'//'+host+pathname;
+            // return protocol+'//'+hostname+':'+ws_port+pathname;
+        }
+        // const websocketUrl = 'ws://localhost:8080/log';
+        const websocketUrl = getWsUrl();
+        const test_msg = true;
+        const test_count = 10;
+        const reconnect_time = 5000;
+        var lockReconnect = false;//避免重复连接
+        var ws = null; //WebSocket的引用
+        var showInput;
+        var autoClearInput;
+        showInput = !!(localStorage.showInput && localStorage.showInput === '1');
+        autoClearInput = !!(localStorage.autoClearInput && localStorage.autoClearInput === '1');
+        var btn_showInput = $('#showInput');
+        var btn_autoClearInput = $('#autoClearInput');
+        if(!showInput){
+            $('#inputMsg').hide();
+            $('#clearInput').hide();
+            $('#autoClearInput').hide();
+            btn_showInput.text('显示输入框');
+            btn_showInput[0].style.borderStyle = 'outset';
+        }else{
+            $('#inputMsg').show();
+            $('#clearInput').show();
+            $('#autoClearInput').show();
+            btn_showInput.text('隐藏输入框');
+            btn_showInput[0].style.borderStyle = 'inset';
+        }
+        if(autoClearInput){
+            btn_autoClearInput.text('自动清空');
+            btn_autoClearInput[0].style.borderStyle = 'inset';
+        }else{
+            btn_autoClearInput.text('手动清空');
+            btn_autoClearInput[0].style.borderStyle = 'outset';
+        }
+        function initHeight(){//动态刷新日志框高度自适应设备
+            var div_height = window.screen.availHeight;
+	        var height = Math.ceil(div_height*0.75);
+	        if(showInput){
+	            height-=35;
+            }
+	        $('#height').text('日志窗口高度:'+height);
+	        $("#log-container").height(height);
+        }
+        initHeight();
+        window.onresize = () =>{
+　　      //只要窗口高度发生变化，就会进入这里面，在这里就可以写，回到聊天最底部的逻辑
+            initHeight();
+        }
+        function checkLoading(){// loading用,无实际意义
+            $.confirm({
+                closeIcon: true,
+                title: '请稍等',
+                content: '正在检查websocket连接...',
+                autoClose: 'ok|2000',
+                buttons: {
+                    ok: {
+                        text: '确定',
+                        action: function () {
+                            console.log('检查完毕,一切正常');
+                        }
+                    },
+                    cancel: {
+                        text: '取消',
+                        action(){
+                            // $.alert('已取消');
+                        }
+                    }
+                }
+            });
+        }
+        function checkSupport() {//检查浏览器是否支持websocket
+            var sp = $(".support");
+             if (window.WebSocket) {
+             sp.html('您的浏览器支持多个websocket通信的实例');
+             return true;
+             }
+             else {
+             sp.html('您的浏览器不支持多个websocket通信的实例,建议使用火狐浏览器或者谷歌浏览器');
+             return false;
+             }
+        }
+
+        function createWebSocket(){//创建ws连接并监听ws事件
+		    let can_ws = checkSupport();
+            // console.log('can_ws:',can_ws);
+            if(can_ws){
+                // 指定websocket路径
+                try {
+                    console.log('开始连接:'+websocketUrl);
+                    ws = new WebSocket(websocketUrl);
+                    initEventHandle();
+                }catch (e) {
+                    ws = null;
+                    reconnect();
+                }
+            }
+	    }
+
+        /**
+         * 自动重连
+         */
+        function reconnect() {
+        if(!lockReconnect){
+            lockReconnect = true;
+            //没连接上会一直重连，设置延迟避免请求过多
+            setTimeout(function () {
+                createWebSocket(websocketUrl);
+                addMsg("正在重连，当前时间"+new Date().Format("yyyy-MM-dd hh:mm:ss"));
+                lockReconnect = false;
+            }, reconnect_time); //这里设置重连间隔(ms)
+        }
+        }
+        function initEventHandle(){
+            ws.onopen = function(event) {
+                addMsg("websocket连接成功，当前时间"+new Date().Format("yyyy-MM-dd hh:mm:ss"));
+            }
+            ws.onmessage = function(event) {
+                // 接收服务端的实时日志并添加到HTML页面中
+                let msg = event.data;
+                addMsg(msg);
+            };
+            ws.onclose = function(event) {
+                addMsg('websocket连接关闭');
+                ws = null;
+                reconnect();
+            };
+            ws.onerror = function(event){
+            //如果出现连接、处理、接收、发送数据失败的时候触发onerror事件
+            //     let msg = "websocket发生错误:"+event.data;
+                let msg = "websocket发生错误,连接状态码:"+ws.readyState;
+                // console.log(event);
+                console.log(msg);
+                addMsg(msg);
+                ws = null;
+                reconnect();
+            }
+        }
+        createWebSocket();
+        function addMsg(msg){
+            // 将Msg添加到日志框里
+            if(msg&&msg.trim()&&!msg.endsWith('\n')){
+                msg+='\n';
+            }
+            msg = msg.replaceAll('\n','</br>');
+            $("#log-container div").append(msg);
+            // 滚动条滚动到最低部
+            $("#log-container").scrollTop($("#log-container div").height() - $("#log-container").height());
+        }
+        $(document).ready(function() {
+            checkLoading();
+            addMsg('websocket初始化中,当前ws服务地址=>  '+websocketUrl);
+            if(test_msg){
+            for(let i=0;i<test_count;i++){
+                addMsg('2022-11-15 10:12:50 - E:\\python\\mypython\\dr_py\\lib\\site-packages\\gevent\\pywsgi.py[line:1226]:INFO:dr.log -- 127.0.0.1 - - [2022-11-15 10:12:50] "GET /static/img/favicon.svg HTTP/1.1" 200 155239 0.001139\n');
+            }
+            }
+
+            $('#clearLog').click(function () {
+                $.confirm({
+                    title: '确认',
+                    content: '确认清空日志?',
+                    type: 'green',
+                    icon: 'glyphicon glyphicon-question-sign',
+                    buttons: {
+                        ok: {
+                            text: '确认',
+                            btnClass: 'btn-primary',
+                            action: function() {
+                                $("#log-container div").text('');
+                            }
+                        },
+                        cancel: {
+                            text: '取消',
+                            btnClass: 'btn-primary'
+                        }
+                    }
+                });
+            });
+
+            $('#clearInput').click(function (){
+                $('.input').val('');
+            });
+
+            $('#showInput').click(function (){
+                // console.log(localStorage.showInput);
+               if(!showInput){
+                    showInput = true;
+                    localStorage.showInput = '1';
+                    $('#inputMsg').show();
+                    $('#clearInput').show();
+                    $('#autoClearInput').show();
+                    btn_showInput.text('隐藏输入框');
+                    btn_showInput[0].style.borderStyle = 'inset';
+                }else{
+                   showInput = false;
+                   localStorage.showInput = '0';
+                    $('#inputMsg').hide();
+                    $('#clearInput').hide();
+                    $('#autoClearInput').hide();
+                    btn_showInput.text('显示输入框');
+                    btn_showInput[0].style.borderStyle = 'outset';
+                }
+               initHeight();
+            });
+
+            $('#autoClearInput').click(function (){
+                if(!autoClearInput){
+                    autoClearInput = true;
+                    localStorage.autoClearInput = '1';
+                    btn_autoClearInput.text('自动清空');
+                    btn_autoClearInput[0].style.borderStyle = 'inset';
+                }else{
+                   autoClearInput = false;
+                   localStorage.autoClearInput = '0';
+                    btn_autoClearInput.text('手动清空');
+                    btn_autoClearInput[0].style.borderStyle = 'outset';
+                }
+            });
+
+            $('#sendMsg').click(function (){
+                let text_input = $('.input');
+               let msg = text_input.val();
+               if(msg){
+                   if(ws){
+                       addMsg('主动发送文本消息:'+msg);
+                       ws.send(msg);
+                       if(autoClearInput){
+                            text_input.val('');
+                        }
+                   }else{
+                       addMsg('ws未正常连接,待发送消息无效:'+msg);
+                   }
+               }
+            });
+        });
+</script>
+</body>
+</html>

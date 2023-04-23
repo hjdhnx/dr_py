@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+<!--  <title>layui规则管理</title>-->
+  <title>规则管控</title>
+  <meta name="description" content="不会写前端只好用layui">
+  <meta name="author" content="道长"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="icon" href="/static/img/logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="/static/plugin/layui/css/layui.css">
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/grey.js"></script>
+  <script src="/static/plugin/layui/layui.js"></script>
+</head>
+<body>
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script type="text/html" id="toolbarDemo">
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm layui-bg-blue" id="moreTest">
+      多选操作
+      <i class="layui-icon layui-icon-down layui-font-12"></i>
+    </button>
+    <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+    <button class="layui-btn layui-btn-sm" lay-event="getData">获取当前页数据</button>
+    <button class="layui-btn layui-btn-sm" lay-event="isAll">是否全选</button>
+    <button class="layui-btn layui-btn-sm" id="reloadTest">
+      重载测试
+      <i class="layui-icon layui-icon-down layui-font-12"></i>
+    </button>
+    <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="multi-row">
+      多行
+    </button>
+    <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="default-row">
+      单行
+    </button>
+    <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="jxs">
+      解析管理
+    </button>
+
+  </div>
+</script>
+
+<script type="text/html" id="cityTpl">
+  <select id="demoCity1" class="layui-border" lay-ignore>
+    <option value="浙江杭州">浙江杭州</option>
+    <option value="江西南昌">江西南昌</option>
+    <option value="湖北武汉">湖北武汉</option>
+  </select>
+</script>
+
+<script type="text/html" id="barDemo">
+<!--  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
+  <a class="layui-btn layui-btn-xs" lay-event="set_top">顶</a>
+  <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="set_bottom">底</a>
+  <a class="layui-btn layui-btn-xs layui-btn-info" lay-event="set_order">输</a>
+
+<!--  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">隐藏</a>-->
+</script>
+
+
+
+
+<script>
+layui.use(['table', 'dropdown'], function(){
+  var table = layui.table;
+  var dropdown = layui.dropdown;
+  var $ = layui.$;
+  var form = layui.form;
+  layer.msg('本页面展示数据为未来功能，<br>可能并没有实际作用,等道长弃坑后续有缘人补上。', {
+    closeBtn: 1,
+    icon: 6,
+    time: 21*1000,
+    offset: '21px'
+  });
+
+  function setState(data,to_set_state){
+    if(data.length < 1){
+      return layer.msg('请至少选择一行');
+    }
+    to_set_state = to_set_state||0;
+    console.log(data);
+    let site_names = data.map(it=>it.site_name);
+    let site_names_str = site_names.join(',');
+    console.log('准备将'+site_names_str+'的显示状态设置为:'+to_set_state);
+    let params = {"names":site_names_str};
+    console.log(params);
+    $.post("/admin/rule_state/"+to_set_state,params,function(data,status){
+               console.log(data);
+               if(data.code === 200){
+                   // alert(data.msg);
+                  // location.reload();
+                 table.reload('test', {
+                    // page: {
+                    //     curr: 3 //重新从第 1 页开始
+                    // }
+                });
+               }else{
+                   console.log('修改失败了...');
+                   return false
+               }
+       });
+  }
+
+  function setOrder(data,to_set_order){
+    if(data.length < 1){
+      return layer.msg('请至少选择一行');
+    }
+    to_set_order = to_set_order||0;
+    console.log(data);
+    let site_names = data.map(it=>it.site_name);
+    let site_names_str = site_names.join(',');
+    console.log('准备将'+site_names_str+'的显示状态设置为:'+to_set_order);
+    let params = {"names":site_names_str};
+    console.log(params);
+    $.post("/admin/rule_order/"+to_set_order,params,function(data,status){
+               console.log(data);
+               if(data.code === 200){
+                   // alert(data.msg);
+                  // location.reload();
+                 table.reload('test', {
+                    // page: {
+                    //     curr: 3 //重新从第 1 页开始
+                    // }
+                });
+                 layer.msg('已设置顺序为'+to_set_order,{time:1000});
+               }else{
+                   console.log('修改失败了...');
+                   return false
+               }
+       });
+  }
+
+  // 创建渲染实例
+  table.render({
+    elem: '#test'
+    ,url: '/layui/api/list' // 此处为静态模拟数据，实际使用时需换成真实接口
+    ,toolbar: '#toolbarDemo'
+    ,defaultToolbar: ['filter', 'exports', 'print', {
+      title: '帮助'
+      ,layEvent: 'LAYTABLE_TIPS'
+      ,icon: 'layui-icon-tips'
+    }]
+    // ,height: 'full-200' // 最大高度减去其他容器已占有的高度差
+    // ,cellMinWidth: 80
+    // ,totalRow: true // 开启合计行
+    ,page: true
+    ,limit:12
+    ,limits:[10,12,15,20,40,60,80,100,150,200,300,500]
+    ,cols: [[
+      {type: 'checkbox', fixed: 'left'}
+      // ,{field: 'id', fixed: 'left',title: 'ID', width: 20, sort: true,totalRowText: '合计：'}
+      ,{field: 'id',title: 'ID', width: 60, sort: true}
+      ,{field: 'site_name', title: '存储名称', width: 120}
+      , {
+      field: 'state', title: '显示状态', minWidth: 100, templet: function (res) {
+        let menuId = res.site_name;
+        if (res.state === 1) {
+          return "   <input type='checkbox'  menuId = '" + menuId + "' lay-filter='state' lay-skin='switch' lay-text='显示|已隐藏' checked>"
+        } else if (res.state === 0) {
+          return "   <input type='checkbox'  menuId = '" + menuId + "'  lay-filter='state' lay-skin='switch' lay-text='显示|已隐藏'>"
+        }
+      }
+    }
+      ,{field: 'order', title: '顺序', width: 80}
+      ,{field: 'name', title: '显示名称', width: 120}
+      ,{field: 'key', title: '唯一标识', width: 120}
+      ,{field: 'type', title: '<i class="layui-icon layui-icon-email">类型</i>', minWidth: 80}
+      ,{field: 'searchable', title: '可搜索', minWidth: 80}
+      ,{field: 'quickSearch', title: '可快搜', minWidth: 80}
+      ,{field: 'filterable', title: '可筛选', minWidth: 80}
+
+      // ,{field:'city', width:115, title: '城市', minWidth:115, templet: '#cityTpl', exportTemplet: function(d, obj){
+      //   //console.log(obj)
+      //   // 处理该字段的导出数据
+      //   var td = obj.td(this.field); //获取当前 td
+      //   return td.find('select').val();
+      // }}
+      ,{fixed: 'right', title:'操作', width: 135, minWidth: 135, toolbar: '#barDemo'}
+    ]]
+    ,done: function(){
+      var id = this.id;
+
+      // 重载测试
+      dropdown.render({
+        elem: '#reloadTest' //可绑定在任意元素中，此处以上述按钮为例
+        ,data: [{
+          id: 'reload',
+          title: '重载'
+        },{
+          id: 'reload-deep',
+          title: '重载 - 参数叠加'
+        },{
+          id: 'reloadData',
+          title: '仅重载数据'
+        },{
+          id: 'reloadData-deep',
+          title: '仅重载数据 - 参数叠加'
+        }]
+        // 菜单被点击的事件
+        ,click: function(obj){
+          switch(obj.id){
+            case 'reload':
+              // 重载 - 默认（参数重置）
+              table.reload('test', {
+                where: {
+                  abc: '123456'
+                  //,test: '新的 test2'
+                  //,token: '新的 token2'
+                }
+              });
+            break;
+            case 'reload-deep':
+              // 重载 - 深度（参数叠加）
+              table.reload('test', {
+                where: {
+                  abc: 123
+                  ,test: '新的 test1'
+                }
+                //,defaultToolbar: ['print'] // 重载头部工具栏右侧图标
+                //,cols: ins1.config.cols
+              }, true);
+            break;
+            case 'reloadData':
+              // 数据重载 - 参数重置
+              table.reloadData('test', {
+                where: {
+                  abc: '123456'
+                  //,test: '新的 test2'
+                  //,token: '新的 token2'
+                }
+                ,scrollPos: 'fixed'  // 保持滚动条位置不变 - v2.7.3 新增
+                ,height: 2000 // 测试无效参数（即与数据无关的参数设置无效，此处以 height 设置无效为例）
+                //,url: '404'
+                //,page: {curr: 1, limit: 30} // 重新指向分页
+              });
+            break;
+            case 'reloadData-deep':
+              // 数据重载 - 参数叠加
+              table.reloadData('test', {
+                where: {
+                  abc: 123
+                  ,test: '新的 test1'
+                }
+              }, true);
+            break;
+          }
+          layer.msg('可观察 Network 请求参数的变化');
+        }
+      });
+
+      // 更多测试
+      dropdown.render({
+        elem: '#moreTest' //可绑定在任意元素中，此处以上述按钮为例
+        ,data: [{
+          id: 'show',
+          title: '🟢显示'
+        },{
+          id: 'hide',
+          title: '🔴隐藏'
+        },
+          {
+            id:'set_top',
+            title: '⬆️置顶',
+          },
+          {
+            id:'set_order_number',
+            title: '↕️指定序号',
+          },
+          {
+            id:'set_bottom',
+            title: '⬇️置底',
+          },
+        //   {
+        //   id: 'add',
+        //   title: '添加'
+        // },{
+        //   id: 'update',
+        //   title: '编辑'
+        // },{
+        //   id: 'delete',
+        //   title: '删除'
+        // }
+        ]
+        //菜单被点击的事件
+        ,click: function(obj){
+          var checkStatus = table.checkStatus(id)
+          var data = checkStatus.data; // 获取选中的数据
+          switch(obj.id){
+            case 'show':
+              // console.log(obj);
+              setState(data,1)
+              break;
+            case 'hide':
+              // console.log(obj);
+              setState(data,0);
+              break;
+            case 'set_top':
+              // console.log(obj);
+              setOrder(data,0);
+              break;
+            case 'set_order_number':
+              layer.prompt({
+                  formType: 0,
+                  value: '',
+                  title: '请输入指定的排序序号,数字越小排名越靠前',
+                  btn: ['确定','取消'], //按钮，
+                  btnAlign: 'c'
+              }, function(value,index){
+                  console.log('value:'+value);
+                  var reg = /^[\d]+$/;
+                  if(!reg.test(value)){
+                    layer.msg('请输入有效数字!',{time:500});
+                  }else{
+                    setOrder(data,Number(value));
+                    layer.close(index);
+                  }
+              });
+              // setOrder(data,0);
+              break;
+            case 'set_bottom':
+              // console.log(obj);
+              setOrder(data,9999)
+              break;
+            case 'add':
+              layer.open({
+                title: '添加',
+                type: 1,
+                area: ['80%','80%'],
+                content: '<div style="padding: 16px;">自定义表单元素</div>'
+              });
+            break;
+            case 'update':
+              if(data.length !== 1) return layer.msg('请选择一行');
+              layer.open({
+                title: '编辑',
+                type: 1,
+                area: ['80%','80%'],
+                content: '<div style="padding: 16px;">自定义表单元素</div>'
+              });
+            break;
+            case 'delete':
+              if(data.length === 0){
+                return layer.msg('请选择一行');
+              }
+              layer.msg('delete event');
+            break;
+          }
+        }
+      });
+    }
+    ,error: function(res, msg){
+      console.log(res, msg)
+    }
+  });
+
+  // 工具栏事件
+  table.on('toolbar(test)', function(obj){
+    var id = obj.config.id;
+    var checkStatus = table.checkStatus(id);
+    var othis = lay(this);
+    switch(obj.event){
+      case 'getCheckData':
+        var data = checkStatus.data;
+        layer.alert(layui.util.escape(JSON.stringify(data)));
+      break;
+      case 'getData':
+        var getData = table.getData(id);
+        console.log(getData);
+        layer.alert(layui.util.escape(JSON.stringify(getData)));
+      break;
+      case 'isAll':
+        layer.msg(checkStatus.isAll ? '全选': '未全选')
+      break;
+      case 'multi-row':
+        table.reload('test', {
+          // 设置行样式，此处以设置多行高度为例。若为单行，则没必要设置改参数 - 注：v2.7.0 新增
+          lineStyle: 'height: 95px;'
+        });
+        layer.msg('即通过设置 lineStyle 参数可开启多行');
+      break;
+      case 'default-row':
+        table.reload('test', {
+          lineStyle: null // 恢复单行
+        });
+        layer.msg('已设为单行');
+      break;
+      case 'jxs':
+        location.href = 'jxs';
+        break;
+      case 'LAYTABLE_TIPS':
+        layer.alert('Table for layui-v'+ layui.v);
+      break;
+    };
+  });
+
+  //触发单元格工具事件
+  table.on('tool(test)', function(obj){ // 双击 toolDouble
+    var data = obj.data;
+    //console.log(obj)
+    function setPos(od,msg){
+      let obj_name;
+      try{
+        obj_name = obj.data.api.match(/rule=(.*)/)[1].split('&')[0];
+      }catch (e){
+        obj_name = obj.data.key;
+      }
+      console.log(obj);
+      let params = {"names":[obj_name].join(',')};
+      console.log(params);
+      $.post("/admin/rule_order/"+od,params,function(res,status){
+           console.log(res);
+           if(res.code === 200){
+             data.order = od;
+             // console.log(obj);
+             obj.update({
+                  order: data.order
+              });
+             layer.msg('已'+msg);
+           }else{
+               console.log('修改失败了...');
+               layer.msg(msg+'失败,具体错误看日志');
+               return false
+           }
+     });
+    }
+    if(obj.event === 'del'){
+      let obj_name;
+      try{
+        obj_name = obj.data.api.match(/rule=(.*)/)[1].split('&')[0];
+      }catch (e){
+        obj_name = obj.data.key;
+      }
+      layer.confirm('真的要隐藏规则'+obj_name+'么', function(index){
+        console.log(obj);
+        let params = {"names":[obj_name].join(',')};
+        console.log(params);
+        $.post("/admin/rule_state/0",params,function(res,status){
+                   console.log(res);
+                   if(res.code === 200){
+                     data.state = 0;
+                     obj.update({
+                          // 这里的字段必须要在 table.render.cols.filed 有定义，否则无法触发表格渲染
+                          // key 决定是否重新渲染某一列，value 由 templet 里的语句进行逻辑处理
+                          state: data.state
+                      });
+                     // $('input[menuid="'+obj_name+'"]').removeAttr('checked');
+                     // table.render();
+                       // alert(data.msg);
+                      // location.reload();
+                   }else{
+                       // alert(data.msg);
+                       console.log('修改失败了...');
+                       return false
+                   }
+           });
+
+        // obj.del(); //这是删除,隐藏规则是不需要删除规则的,最多也就刷新一下
+        layer.close(index);
+      });
+    } else if(obj.event === 'edit'){
+      layer.open({
+        title: '编辑',
+        type: 1,
+        area: ['80%','80%'],
+        content: '<div style="padding: 16px;">自定义表单元素</div>'
+      });
+    }else if(obj.event === 'set_top'){
+      setPos(0,'置顶');
+    }else if(obj.event === 'set_bottom'){
+      setPos(9999,'置底');
+    }else if(obj.event === 'set_order'){
+      layer.prompt({
+                  formType: 0,
+                  value: '',
+                  title: '请输入指定的排序序号,数字越小排名越靠前',
+                  btn: ['确定','取消'], //按钮，
+                  btnAlign: 'c'
+              }, function(value,index){
+                  console.log('value:'+value);
+                  var reg = /^[\d]+$/;
+                  if(!reg.test(value)){
+                    layer.msg('请输入有效数字!',{time:500});
+                  }else{
+                    setPos(Number(value),'指定顺序');
+                    layer.close(index);
+                  }
+              });
+    }
+  });
+
+  //触发表格复选框选择
+  table.on('checkbox(test)', function(obj){
+    console.log(obj)
+  });
+
+  //触发表格单选框选择
+  table.on('radio(test)', function(obj){
+    console.log(obj)
+  });
+
+  // 行单击事件
+  table.on('row(test)', function(obj){
+    //console.log(obj);
+    //layer.closeAll('tips');
+  });
+  // 行双击事件
+  table.on('rowDouble(test)', function(obj){
+    console.log(obj);
+  });
+
+  // 单元格编辑事件
+  table.on('edit(test)', function(obj){
+    var field = obj.field //得到字段
+    ,value = obj.value //得到修改后的值
+    ,data = obj.data; //得到所在行所有键值
+
+    var update = {};
+    update[field] = value;
+    obj.update(update);
+  });
+
+  form.on('switch(state)', function (data) {
+        let site_name = data.elem.attributes['menuId'].nodeValue;
+        let to_set_state = data.elem.checked?1:0;
+        console.log('准备将'+site_name+'的显示状态设置为:'+to_set_state);
+        let params = {"names":[site_name].join(',')};
+        console.log(params);
+        $.post("/admin/rule_state/"+to_set_state,params,function(data,status){
+                   console.log(data);
+                   if(data.code === 200){
+                       // alert(data.msg);
+                      // location.reload();
+                   }else{
+                       // alert(data.msg);
+                       console.log('修改失败了...');
+                       data.elem.checked = !to_set_state;
+                       return false
+                   }
+           });
+        // console.log(data.value);          // 开关value值，也可以通过data.elem.value得到
+
+                    // let menuId = data.elem.attributes['menuId'].nodeValue;
+                    //console.log(data.elem);         // 得到checkbox原始DOM对象
+                    // console.log(data.othis);        // 得到美化后的DOM对象
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+2022-09-07 01:42:15 - E:/pythonwork/tv_box/dr_py/app.py[line:29]:INFO:dr.log -- ['360影视', '555影视', 'cokemv', 'LIBVIO', 'vip影院', '万能影视', '养端', '剧白白', '喵喵', '在线之家', '夜空', '干饭影视', '库马伊', '影视工厂', '玩偶姐姐', '瓜皮TV', '看视界', '莫扎兔', '蓝光影院', '蓝莓影视', '鸭奈飞']
+2022-09-07 01:42:15 - E:/pythonwork/tv_box/dr_py/app.py[line:30]:INFO:dr.log -- 局域网: http://192.168.3.224:5705/index
+本地: http://localhost:5705/index
+wlan_info:[('vEthernet (Default Switch)', '172.30.96.1'), ('vEthernet (WSL)', '172.29.224.1'), ('本地连接* 1', '169.254.201.117'), ('本地连接* 5', '169.254.188.158'), ('WLAN', '192.168.3.224'), ('Loopback Pseudo-Interface 1', '127.0.0.1')]

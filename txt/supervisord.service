@@ -1,0 +1,14 @@
+[Unit]
+Description=Supervisor daemon
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/supervisord -c /root/sd/pywork/dr_py/manager.conf # 启动命令
+ExecStop=/usr/bin/supervisorctl shutdown    # 停止程序的命令
+ExecReload=/usr/bin/supervisorctl reload     # 重启进程的命令
+KillMode=process   
+Restart=on-failure
+RestartSec=42s
+
+[Install]
+WantedBy=multi-user.target

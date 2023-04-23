@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+  <title>管理员操作中心-配置修改</title>
+  <meta name="description" content="particles.js is a lightweight JavaScript library for creating particles.">
+  <meta name="author" content="道长"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" media="screen" href="/static/css/admin.css">
+    <link rel="stylesheet" media="screen" href="/static/css/settings.css">
+  <link rel="icon" href="/static/img/logo.png" type="image/x-icon">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/grey.js"></script>
+  <link rel="stylesheet" href="/static/plugin/layui/css/layui.css">
+  <script src="/static/plugin/layui/layui.js"></script>
+</head>
+<body style="margin:0 auto">
+  <center>
+<script>
+  function saveConf(key,value){
+    // let thisObj=$(obj);//js对象转jquery对象
+    // let key = thisObj.attr("value");
+    // let value = $('.conf[name="'+key+'"]').val();
+    console.log('key:'+key+',value:'+value);
+    if(!key||typeof(value)==='undefined'){
+      layer.msg('saveConf传参异常',{time:1000});
+      return
+    }
+    let params = {
+      key:key,
+      value:value
+    };
+    $.post("/admin/save_conf",params,function(data,status){
+                   // console.log(data);
+                   if(data.code === 200){
+                       // alert(data.msg);
+                       layer.msg(data.msg,{time:1000});
+                       console.log('保存'+key+'成功了...');
+                       $(`input.conf[name="${key}"]`).val(value);
+                       if(/UNAME|PWD/.test(params.key)){
+                         location.reload();
+                         }
+                   }else{
+                      if(/登录/.test(data.msg)){
+                        location.href = '/admin'
+                      }else{
+                        // alert(data.msg);
+                        layer.msg(data.msg,{time:1000});
+                       console.log('保存'+key+'失败了...');
+                       return false
+                      }
+                   }
+    });
+  }
+
+  function checkValue(key,value){
+    if(key==='ENV'){
+      try {
+        JSON.parse(value);
+      }catch (e) {
+        layer.msg(`保存失败,变量 ${key}必须为json格式!`);
+        return false;
+      }
+    }
+    return true;
+  }
+    $(document).ready(function() {
+      $(".save_conf").click(function () {
+        let key = $(this).attr('value');
+        let value = $(`input.conf[name="${key}"]`).val();
+        if(checkValue(key,value)){
+            saveConf(key,value);
+        }
+      });
+      $('.edit_conf').click(function (){
+        let key = $(this).attr('value');
+        let value = $(`input.conf[name="${key}"]`).val();
+        layer.prompt({
+          formType: 2,
+          value: value,
+          title: '请输入 '+key,
+          area: ['320px', '100px'] //自定义文本域宽高
+	    }, function(value, index, elem){
+	      console.log(value); //得到value
+          if(checkValue(key,value)){
+            saveConf(key,value);
+          }
+          layer.close(index);
+        });
+      });
+      $('#update_db').click(function (){
+        if(confirm('确定要升级数据库?升级过程可能较长,需要耐心等待提示完成。判断标准为是否正常打开缓存文件列表-查看界面,如果正常就不需要进行此操作。升级数据库后将正常使用未来功能多选操作,可对规则进行多选显示或者隐藏')){
+          $.get("/admin/update_db",function(data,status){
+                   console.log(data);
+                   if(data.code === 200){
+                       alert(data.msg);
+                      // location.reload();
+                   }else{
+                       alert(data.msg);
+                       console.log('升级失败了...');
+                       return false
+                   }
+           });
+        }
+      });
+    });
+</script>
+<div class="title">欢迎使用DR-PY配置界面<div><span class="ver_title">当前版本: {{ ver }}</span><span
+                class="ver_title">框架开发：道长</span><span class="ver_title">框架美化：蓝莓</span></div></div>
+  <div class="nav">
+    <!-- 列表 -->
+    <ul>
+        <!-- 一级菜单 -->
+        <li class="nav-litem">
+           <a href="/admin">返回前页</a>
+        </li>
+
+        <li class="nav-litem">
+          <a href="javascript:void(0);" class="funcbtn" id="update_db">升级数据库</a>
+        </li>
+
+        <li class="nav-litem">
+          <a href="javascript:copy('cp ./tmp/dr_py/app.py ./app.py');" class="funcbtn" id="update_by_self">升级指令</a>
+        </li>
+
+        <li class="nav-litem">
+          <a href="javascript:copy('cp ./tmp/dr_py/base/custom.conf base');" class="funcbtn" id="user_custom">用户配置</a>
+        </li>
+
+       
+    </ul>
+</div>
+
+<div class="w">
+<form action="#" class="m">
+{% for conf in conf_lists %}
+
+  <span class="label{{conf.name|length}}">
+    {{ conf.name }}:
+  </span>
+  <input class="conf" type="text" name="{{ conf.key }}"  placeholder="请输入{{ conf.key }}..." value="{{ conf.value }}"/>
+  <a class="edit_conf btn_option" href="javascript:void(0);" value="{{ conf.key }}">编辑</a>
+  <a class="save_conf btn_option" href="javascript:void(0);" value="{{ conf.key }}">保存</a>
+{% if loop.last==False %}</br>{% endif %}{% endfor %}
+</form>
+</div>
+</center>
+</body>
+</html>

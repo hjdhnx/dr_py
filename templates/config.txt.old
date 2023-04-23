@@ -1,0 +1,258 @@
+{
+{% if config.WALL_PAPER_ENABLE %}"wallpaper":"{{ host }}/pics",{% endif %}
+"dr_count": {{rules.list|length}},
+"mode": {{ mode }},
+"spider": "{{ host }}/liveslib",
+{% if alists|length > 0 %}"drives": {{alists_str}},{% endif %}
+"homepage":"https://gitcode.net/qq_32394351/dr_py",
+"sites": [{% for rule in rules.list %}{% if js_mode != 1 %}
+{
+    "key":"dr_{{ rule.name }}",
+    "name":"{{ rule.name }}(道长)",
+    "type":1,
+    "api":"{{ host }}/vod?rule={{ rule.name }}",
+    "searchable": {{ rule.searchable }},
+    "quickSearch": {{ rule.quickSearch }},
+    "filterable": {{ rule.filterable }}
+}{% else %}
+{
+    "key":"dr_{{ rule.name }}",
+    "name":"{{ rule.name }}(drpy)",
+    "type":3,
+    "api":{% if ISTVB %}"{{ host }}/libs/drpy.ym.js"{% else %}"{{ host }}/libs/drpy.min.js"{% endif %},
+    #"api":"{{ host }}/libs/drpy.js",
+    "searchable": {{ rule.searchable }},
+    "quickSearch": {{ rule.quickSearch }},
+    "filterable": {{ rule.filterable }},
+    "ext":"{{ host }}/admin/view/{{ rule.name }}.js"
+}{% endif %}{% if loop.last==False %},{% endif %}{% endfor %}
+{% if js_mode == 1 %},{
+    "key":"js_drpy",
+    "name":"drpy(道长)",
+    "type":1,
+    "api":"{{ host }}/vod?rule=drpy",
+    "searchable": 1,
+    "quickSearch": 1,
+    "filterable": 1
+}{% endif %}
+{% if pys %}
+,{% for py in pys %}{
+    "key":"{{ py.name }}",
+    "name":"{{ py.name }}(Pyramid)",
+    "type": 3,
+    "api":"{{ py.name }}",
+    "searchable": {{ py.searchable }},
+    "quickSearch": {{ py.quickSearch }},
+    "filterable": {{ py.filterable }},
+    "ext": "{{ host }}/txt/py/{{ py.name }}.py"
+}{% if loop.last==False %},{% endif %}{% endfor %}
+{% endif %}
+],
+	"parses": [{
+		"name": "🌐Ⓤ",
+		"type": 0,
+		"url": "",
+		"header": {
+            "User-Agent": "Mozilla/5.0"
+        }
+	},{
+		"name": "🌀Ⓙ",
+		"type": 1,
+		"url": "",
+		"header": {
+            "User-Agent": "Mozilla/5.0"
+        }
+	},
+	{
+		"name": "轮询",
+		"type": 2,
+		"url": "Sequence",
+		"header": {
+            "User-Agent": "Mozilla/5.0"
+        }
+	},
+	{
+		"name": "并发",
+		"type": 2,
+		"url": "Parallel",
+		"header": {
+            "User-Agent": "Mozilla/5.0"
+        }
+	},
+	 {% for jx in jxs %}
+{
+    "name": "{{ jx.name }}",
+    "url": "{{ jx.url }}",
+    "type": {{ jx.type }},
+    "ext": {
+    "flag": ["qiyi","imgo","爱奇艺", "奇艺", "qq", "腾讯", "youku", "优酷", "pptv", "PPTV", "letv", "乐视","leshi", "bilibili", "哔哩哔哩", "哔哩", "mgtv", "芒果","sohu", "xigua","fun","风行"],
+    "header": {
+        "User-Agent": "{{ jx.ua }}"
+    }
+    }
+}{% if loop.last==False %},{% endif %}{% endfor %}
+	 ],
+"flags": ["imgo","youku", "qq", "iqiyi", "qiyi","fun", "letv","leshi","sohu", "tudou","xigua","cntv","1905", "pptv", "mgtv", "wasu", "bilibili", "renrenmi"],
+"hotSearch": [{
+    "name": "mobilesearch",
+    "request": {
+      "method": "GET",
+      "header": [
+        {
+          "key": "Referer",
+          "value": "{{ host }}"
+        }
+      ],
+      "url": {
+        "raw": "{{ host }}/hotsugg?t={time}"
+      }
+    },
+    "response": {
+        "result": "$.data",
+        "data": [
+          {
+            "key": "keyword",
+            "value": "title"
+          }
+        ]
+    }
+}],
+"lives":[{"group":"redirect","channels":[{"name":"直播","urls":["proxy://do=live&type=txt&ext={{live_url}}"]}]}],
+"sniffer": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.27",
+    "isVideoFormat": "http((?!http).){26,}\\.(m3u8|mp4|flv|avi|mkv|wmv|mpg|mpeg|mov|ts|3gp|rm|rmvb|asf|m4a|mp3|wma)",
+    "custom": [
+        {"url":"/Cloud/Down/AliCloud/", "mimeType":"text/html", "encoding":"utf-8", "header":{"Referer": "https://zxzj.vip/"}}
+    ]
+},
+"recommend": [{"name": "豆瓣推荐","request": {"method": "GET","header": [{"key": "Referer","value": "https://movie.douban.com/"}],"url": {"raw": "https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=&playable=1&start=0&year_range=2022,2022"}},"response": {"result": "$.data","data": [{"key": "name","value": "title"},{"key": "note","value": "rate"},{"key": "pic","value": "cover"}]},"expires" : "86400"}],
+"rating": [{"name": "rating","request": {"method": "GET","url": {"raw": "https://api.wmdb.tv/api/v1/movie/search?q={name}&limit=1"}},"response": {"result": "this","data": [{"key": "rating","value": "doubanRating"}]}}],
+"ijk": [{
+"group": "软解码",
+"options": [{
+    "category": 4,
+    "name": "opensles",
+    "value": "0"
+}, {
+    "category": 4,
+    "name": "overlay-format",
+    "value": "842225234"
+}, {
+    "category": 4,
+    "name": "framedrop",
+    "value": "1"
+}, {
+    "category": 4,
+    "name": "soundtouch",
+    "value": "1"
+}, {
+    "category": 4,
+    "name": "start-on-prepared",
+    "value": "1"
+}, {
+    "category": 1,
+    "name": "http-detect-range-support",
+    "value": "0"
+}, {
+    "category": 1,
+    "name": "fflags",
+    "value": "fastseek"
+}, {
+    "category": 2,
+    "name": "skip_loop_filter",
+    "value": "48"
+}, {
+    "category": 4,
+    "name": "reconnect",
+    "value": "1"
+}, {
+    "category": 4,
+    "name": "enable-accurate-seek",
+    "value": "0"
+}, {
+    "category": 4,
+    "name": "mediacodec",
+    "value": "0"
+}, {
+    "category": 4,
+    "name": "mediacodec-auto-rotate",
+    "value": "0"
+}, {
+    "category": 4,
+    "name": "mediacodec-handle-resolution-change",
+    "value": "0"
+}, {
+    "category": 4,
+    "name": "mediacodec-hevc",
+    "value": "0"
+}, {
+    "category": 1,
+    "name": "dns_cache_timeout",
+    "value": "600000000"
+}]
+}, {
+"group": "硬解码",
+"options": [{
+    "category": 4,
+    "name": "opensles",
+    "value": "0"
+}, {
+    "category": 4,
+    "name": "overlay-format",
+    "value": "842225234"
+}, {
+    "category": 4,
+    "name": "framedrop",
+    "value": "1"
+}, {
+    "category": 4,
+    "name": "soundtouch",
+    "value": "1"
+}, {
+    "category": 4,
+    "name": "start-on-prepared",
+    "value": "1"
+}, {
+    "category": 1,
+    "name": "http-detect-range-support",
+    "value": "0"
+}, {
+    "category": 1,
+    "name": "fflags",
+    "value": "fastseek"
+}, {
+    "category": 2,
+    "name": "skip_loop_filter",
+    "value": "48"
+}, {
+    "category": 4,
+    "name": "reconnect",
+    "value": "1"
+}, {
+    "category": 4,
+    "name": "enable-accurate-seek",
+    "value": "0"
+}, {
+    "category": 4,
+    "name": "mediacodec",
+    "value": "1"
+}, {
+    "category": 4,
+    "name": "mediacodec-auto-rotate",
+    "value": "1"
+}, {
+    "category": 4,
+    "name": "mediacodec-handle-resolution-change",
+    "value": "1"
+}, {
+    "category": 4,
+    "name": "mediacodec-hevc",
+    "value": "1"
+}, {
+    "category": 1,
+    "name": "dns_cache_timeout",
+    "value": "600000000"
+}]
+}],
+"ads": ["mimg.0c1q0l.cn", "www.googletagmanager.com", "www.google-analytics.com", "mc.usihnbcq.cn", "mg.g1mm3d.cn", "mscs.svaeuzh.cn", "cnzz.hhttm.top", "tp.vinuxhome.com", "cnzz.mmstat.com", "www.baihuillq.com", "s23.cnzz.com", "z3.cnzz.com", "c.cnzz.com", "stj.v1vo.top", "z12.cnzz.com", "img.mosflower.cn", "tips.gamevvip.com", "ehwe.yhdtns.com", "xdn.cqqc3.com", "www.jixunkyy.cn", "sp.chemacid.cn", "hm.baidu.com", "s9.cnzz.com", "z6.cnzz.com", "um.cavuc.com", "mav.mavuz.com", "wofwk.aoidf3.com", "z5.cnzz.com", "xc.hubeijieshikj.cn", "tj.tianwenhu.com", "xg.gars57.cn", "k.jinxiuzhilv.com", "cdn.bootcss.com", "ppl.xunzhuo123.com", "xomk.jiangjunmh.top", "img.xunzhuo123.com", "z1.cnzz.com", "s13.cnzz.com", "xg.huataisangao.cn", "z7.cnzz.com", "xg.huataisangao.cn", "z2.cnzz.com", "s96.cnzz.com", "q11.cnzz.com", "thy.dacedsfa.cn", "xg.whsbpw.cn", "s19.cnzz.com", "z8.cnzz.com", "s4.cnzz.com", "f5w.as12df.top", "ae01.alicdn.com", "www.92424.cn", "k.wudejia.com", "vivovip.mmszxc.top", "qiu.xixiqiu.com", "cdnjs.hnfenxun.com", "cms.qdwght.com"]
+}

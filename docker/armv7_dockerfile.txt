@@ -1,0 +1,21 @@
+# 基于的基础镜像-在dockerhub找
+FROM hjdhnx/drpy:armv7
+# 添加描述信息
+MAINTAINER python3.7+drpy+supervisord updated by "hjdhnx"
+# 设置app文件夹是工作目录
+WORKDIR /root/sd/pywork/dr_py
+# RUN rm -rf /root/sd/pywork/dr_py && mkdir -p /root/sd/pywork/dr_py
+# 复制文件及目录过去
+COPY . /root/sd/pywork/dr_py
+
+# 执行指令，安装依赖
+RUN pip3 install -r requirements.txt && pip3 uninstall quickjs && pip3 install ./whl/quickjs-1.19.2-cp37-cp37m-linux_armv7l.whl
+
+# 设置语言支持中文打印
+# ENV LANG C.UTF-8
+# ENV LC_ALL C.UTF-8
+# docker buildx build --platform linux/arm/v7 -f armv7_dockerfile.txt -t hjdhnx/drpy:armv7-v3.9.0 --push .
+# docker run -it -p 5705:5705 -p 9001:9001 --restart=always --name drpy -d hjdhnx/drpy:armv7-v3.9.0
+# docker push hjdhnx/drpy:armv7-v3.9.0
+# CMD supervisord -c /root/sd/pywork/dr_py/super/flask.conf && /bin/bash
+ENTRYPOINT ["/etc/autostart/app.sh","flask"]

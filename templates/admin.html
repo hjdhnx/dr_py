@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>管理员操作中心-{{rules.count}}条规则</title>
+    <meta name="description" content="particles.js is a lightweight JavaScript library for creating particles.">
+    <meta name="author" content="道长" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" media="screen" href="/static/css/admin.css">
+    <link rel="icon" href="/static/img/logo.png" type="image/x-icon">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/grey.js"></script>
+</head>
+
+<body>
+    <script>
+        $(document).ready(function () {
+            $(".view").click(function () {
+                let rule = this.innerText.trim();
+                location.href = '/admin/view/' + rule + '.js';
+            });
+
+            $(".view_home").click(function () {
+                let rule = this.getAttribute('value').trim();
+                location.href = '/vod?{% if js0_password %}pwd={{js0_password}}&{% endif %}rule=' + rule;
+            });
+
+            $(".view_search").click(function () {
+                let rule = this.getAttribute('value').trim();
+                location.href = '/vod?{% if js0_password %}pwd={{js0_password}}&{% endif %}rule=' + rule + '&wd=斗罗大陆';
+            });
+
+            $("#checkUpdate").click(function () {
+                console.log('开始检查升级...');
+                $.get("/admin/get_ver", function (data, status) {
+                    console.log("数据: " + data + "\n状态: " + status);
+                    if (data.msg) {
+                        alert(data.msg);
+                        return false
+                    } else {
+                        if (data.local_ver && data.online_ver && !data.msg) {
+                            if (data.local_ver !== data.online_ver) {
+                                msg = `本地版本:${data.local_ver}\n线上版本:${data.online_ver}\n是否立即执行升级?`;
+                                if (confirm(msg)) {
+                                    $.get("/admin/update_ver", function (data, status) {
+                                        console.log(data);
+                                        if (data.code === 200) {
+                                            // alert(data.msg+'\n除主程序app.py需要自行检测替换升级外,其他关键文件全部更新完毕');
+                                            alert(data.msg);
+                                            location.reload();
+                                        } else {
+                                            alert(data.msg || '未知数据,具体到数据控制台查看');
+                                            console.log('升级失败了...');
+                                            return false
+                                        }
+                                    });
+                                }
+                            } else {
+                                alert('已经是最新版,无需升级!')
+                            }
+                        } else if (data.msg) {
+                            alert('检测升级疑似发生了问题:\n' + data.msg);
+                        } else {
+                            alert('已经是最新版,无需升级!')
+                        }
+                    }
+                });
+            });
+
+            $(".clear").click(function () {
+                let rule = this.getAttribute('value').trim();
+                if (confirm('确认删除内置规则:' + rule + '?')) {
+                    let code = $.ajax({ url: '/admin/clear/' + rule + '.js', async: false }).responseText;
+                    code = typeof (code) === "object" ? code : JSON.parse(code);
+                    if (code.code === 200) {
+                        alert('操作成功!\n' + code.msg);
+                        location.reload()
+                    } else {
+                        alert('操作失败!\n' + code.msg);
+                    }
+                }
+            });
+
+            $('#upload').click(function () {
+                var file_data = $("input[name='file']").prop("files")[0];
+                // console.log(file_data);
+                if (!file_data) {
+                    alert('文件必选');
+                    return false
+                }
+                var name = file_data.name;
+                if (!name.endsWith('.js')) {
+                    alert('仅支持上传js文件');
+                    return false
+                }
+                var form_data = new FormData();
+                // 把所有表单信息
+                form_data.append("id", "001");
+                form_data.append("name", name);
+                form_data.append("file", file_data);
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/upload",
+                    dataType: "json",
+                    processData: false,  // 注意：让jQuery不要处理数据
+                    contentType: false,  // 注意：让jQuery不要设置contentType
+                    data: form_data
+                }).success(function (ret) {
+                    console.log(ret);
+                    alert(ret.msg);
+                    location.reload();
+                }).fail(function (ret) {
+                    console.log(ret);
+                    alert(ret.msg);
+                });
+            });
+
+            $('#update_lives').click(function () {
+                let live_url = $('#live_url').val();
+                // console.log(live_url);
+                let new_live_url = prompt('输入临时同步远程直播源地址(自动获取当前配置)', live_url);
+                if (new_live_url.startsWith('http')) {
+                    $.get("/admin/update_lives?url=" + new_live_url, function (data, status) {
+                        console.log("数据: " + data + "\n状态: " + status);
+                        if (data.code === 200) {
+                            alert('操作成功!\n' + data.msg);
+                            // location.reload();
+                        } else {
+                            alert('操作失败!\n' + data.msg);
+                        }
+                    });
+                }
+            });
+
+            $('#write_lives').click(function () {
+                let live_url = $('#live_url').val();
+                let new_live_url = prompt('请修改默认的远程直播源地址', live_url);
+                if (new_live_url) {
+                    console.log('修改直播源地址为:' + new_live_url);
+                    $.get("/admin/write_live_url?url=" + new_live_url, function (data, status) {
+                        console.log("数据: " + data + "\n状态: " + status);
+                        if (data.code === 200) {
+                            alert('操作成功!\n' + data.msg);
+                            location.reload();
+                        } else {
+                            alert('操作失败!\n' + data.msg);
+                        }
+                    });
+                }
+            });
+
+            $('#force_update').click(function () {
+                let msg = `
+            升级过程中由于新版本升级脚本发生改变可能会导致升级完毕但是升级不完整。
+            此时需要重启服务后执行强制升级操作通过更新后的升级脚本把本地升级包文件再次覆盖完成完整升级。
+            是否继续(请确认你升级完后重启过,不然点确定毫无必要)?
+            `;
+                if (confirm(msg)) {
+                    $.get("/admin/force_update", function (data, status) {
+                        console.log(data);
+                        if (data.code === 200) {
+                            // alert(data.msg+'\n除主程序app.py需要自行检测替换升级外,其他关键文件全部更新完毕');
+                            alert(data.msg);
+                            location.reload();
+                        } else {
+                            alert(data.msg || '未知数据,具体到数据控制台查看');
+                            console.log('升级失败了...');
+                            return false
+                        }
+                    });
+                }
+            });
+
+            $('#use_py').click(function () {
+                $.get("/admin/change_use_py", function (data, status) {
+                    console.log(data);
+                    if (data.code === 200) {
+                        alert(data.msg);
+                        location.reload();
+                    } else {
+                        alert(data.msg);
+                        console.log('升级失败了...');
+                        return false
+                    }
+                });
+            });
+
+            $("#logtail").click(function () {
+                location.href = '/admin/logtail';
+            });
+
+            $('#lives').click(function () {
+                location.href = '/admin/lives'
+            });
+
+        });
+        function getFileSize(fileObj) {
+            $('#file_size').text('文件大小为:' + fileObj.files[0].size / 1024 + 'kb');
+        }
+    </script>
+    <div class="title">欢迎使用DR-PY管理界面<div><span class="ver_title">当前版本: {{ ver }}</span><span
+                class="ver_title">框架开发：道长</span><span class="ver_title">框架美化：蓝莓</span></div>
+    </div>
+        <div class="nav">
+            <!-- 列表 -->
+            <ul>
+                <!-- 一级菜单 -->
+                <li class="nav-litem">
+                    <a href="/index">返回首页</a>
+                </li>
+
+                <li class="nav-litem">
+                    <a href="javascript:;">功能管理</a>
+                    <!-- 二级菜单 -->
+                    <ul>
+                        <li><a href="/admin/settings">设置中心</a></li>
+                        <li><a href="/layui/index">未来功能</a></li>
+                        <li><a href="javascript:void(0);" class="funcbtn" id="logtail">在线日志</a></li>
+                        <li><a href="/vods" class="funcbtn" target="_blank">搜索看板</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-litem">
+                    <a href="javascript:;">项目升级</a>
+                    <!-- 二级菜单 -->
+                    <ul>
+                        <li><a href="javascript:void(0);" class="funcbtn" id="checkUpdate">检测升级</a></li>
+                        <li><a href="javascript:void(0);" class="funcbtn" id="force_update">强制升级</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-litem">
+                    <a href="javascript:;">直播设置</a>
+                    <!-- 二级菜单 -->
+                    <ul>
+                        <li><a href="javascript:void(0);" class="funcbtn" id="write_lives">修改直播源</a></li>
+                        <li><a href="javascript:void(0);" class="funcbtn" id="update_lives">同步直播源</a></li>
+                        <li><a href="javascript:void(0);" class="funcbtn" id="use_py">已{% if pystate=='1' %}启用{% else %}关闭{% endif %}py源</a></li>
+                        <li><a href="javascript:void(0);" class="funcbtn" id="lives">直播源列表</a></li>
+                    </ul>
+                </li>
+
+               
+            </ul>
+        </div>
+
+
+        <input id="live_url" value="{{live_url}}" style="display: none">
+        <p class="box">你可以在此界面在线管理JS目录里规则文件的上传/删除</p>
+  
+    <form action="/admin/upload" method="POST" enctype="multipart/form-data">
+        <!--     <input type = "file" name = "file" class="btn" accept=".js"  onchange="getFileSize(this)"/>-->
+        <input type="file" name="file" class="btn" onchange="getFileSize(this)" />
+        <!--     <input type = "submit" value="上传" class="btn"/>-->
+        <input type="button" id="upload" value="上传" class="btn" />
+    </form>
+    <p id="file_size"></p>
+     <details open>
+          <summary class="xl">数据列表已展开 点击隐藏详情</summary>
+    <h4>规则列表数据-共{{rules.count+cache_count}}条(内置:{{rules.count}} 缓存:{{cache_count}})</h4>
+    {% if rules.count < 1 %} <h3>暂无内置的规则</h3>
+        {% endif %}
+        <div class="zt">
+            {% for rule in rules.list %}
+            <div class="red">
+                <div class="mz"><a class="view" href="javascript:void(0);">{{ rule.name }}</a></div>
+                <div class="sj"><a class="view_home" href="javascript:void(0);" value="{{ rule.name }}">主页</a></div>
+                <div class="ss"><a class="view_search" href="javascript:void(0);" value="{{ rule.name }}">搜索</a></div>
+                <div class="sc"><a class="clear" href="javascript:void(0);" value="{{ rule.name }}">删除</a></div>
+            </div>
+            {% endfor %}
+        </div>
+    </details>
+</body>
+
+</html>
