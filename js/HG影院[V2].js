@@ -6,11 +6,11 @@
 		"key":"dr_HG影院[V2]",
 		"name":"HG影院[V2](drpy)",
 		"type":3,
-		"api":"https://ghproxy.com/https://raw.githubusercontent.com/hjdhnx/dr_py/main/libs/drpy2.min.js",
+		"api":"https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/libs/drpy2.min.js",
 		"searchable":2,
 		"quickSearch":0,
 		"filterable":1,
-		"ext":"https://ghproxy.com/https://raw.githubusercontent.com/hjdhnx/dr_py/main/js/HG影院[V2].js",
+		"ext":"https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/js/HG影院[V2].js",
 		"playerType":2
 	},
 */

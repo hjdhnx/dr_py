@@ -889,7 +889,7 @@ class CMS:
         logger.info(f'{self.getName()}获取分类{fyclass}第{fypage}页耗时:{get_interval(t1)}毫秒,共计{round(len(str(result)) / 1000, 2)} kb')
         nodata = {
             'list': [{'vod_name': '无数据,防无限请求', 'vod_id': 'no_data', 'vod_remarks': '不要点,会崩的',
-                    'vod_pic': 'https://ghproxy.com/https://raw.githubusercontent.com/hjdhnx/dr_py/main/404.jpg'}],
+                    'vod_pic': 'https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/404.jpg'}],
             'total': 1, 'pagecount': 1, 'page': 1, 'limit': 1
         }
         # return result

@@ -383,7 +383,7 @@ function category(tid, pg, filter, extend) {
 				vod_name: item.value,
 				vod_id: 'no_data',
 				vod_remarks: '不要点,会崩的',
-				vod_pic: 'https://ghproxy.com/https://raw.githubusercontent.com/hjdhnx/dr_py/main/404.jpg'
+				vod_pic: 'https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/404.jpg'
 			}
 			allList.push(vod);
 		}
@@ -506,7 +506,7 @@ function getAll(otid,tid,drives,path){
 		return JSON.stringify({ 'list': [vod] });
 	}catch (e) {
 		print(e.message);
-		let list = [{vod_name:'无数据,防无限请求',type_name: "文件夹",vod_id:'no_data',vod_remarks:'不要点,会崩的',vod_pic:'https://ghproxy.com/https://raw.githubusercontent.com/hjdhnx/dr_py/main/static/img/404.jpg',vod_actor:e.message,vod_director: tid,vod_content: otid}];
+		let list = [{vod_name:'无数据,防无限请求',type_name: "文件夹",vod_id:'no_data',vod_remarks:'不要点,会崩的',vod_pic:'https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/static/img/404.jpg',vod_actor:e.message,vod_director: tid,vod_content: otid}];
 		return JSON.stringify({ 'list': list });
 	}
 }

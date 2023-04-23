@@ -4,7 +4,7 @@ let url2 = input+'media_ft';
 let html = request(url1);
 let msg = JSON.parse(html).message;
 if(msg!=='0'){
-    VODS = [{vod_name:KEY + '➢'+msg,vod_id:'no_data',vod_remarks:'别点,缺少bili_cookie',vod_pic:'https://ghproxy.com/https://raw.githubusercontent.com/hjdhnx/dr_py/main/404.jpg'}];
+    VODS = [{vod_name:KEY + '➢'+msg,vod_id:'no_data',vod_remarks:'别点,缺少bili_cookie',vod_pic:'https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/404.jpg'}];
 }else {
     let jo1 = JSON.parse(html).data;
     html = request(url2);

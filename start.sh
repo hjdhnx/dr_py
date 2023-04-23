@@ -2,7 +2,7 @@
 # 建立文件夹
 mkdir -p /home/pywork/dr_py && cd /home/pywork/dr_py
 # 下载仓库包
-wget https://ghproxy.com/https://github.com/hjdhnx/dr_py/archive/refs/heads/main.zip -O dr_py.zip
+wget https://ghproxy.net/https://github.com/hjdhnx/dr_py/archive/refs/heads/main.zip -O dr_py.zip
 # 解压
 unzip dr_py.zip
 # 移动文件到当前目录

@@ -1,7 +1,7 @@
 [comment]: <> (#### 🚀dr模板的python实现🚀)
 <div align="center">
 <h4>🚀第二派-dr模板的python实现🚀</h4>
-  <a href="https://alist.nn.ci"><img height="100px" alt="logo" src="https://ghproxy.com/https://raw.githubusercontent.com/hjdhnx/dr_py/main/static/img/icon.png"/></a>
+  <a href="https://alist.nn.ci"><img height="100px" alt="logo" src="https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/static/img/icon.png"/></a>
   <p><em>🗂️A webServer convert web and x5 movie sites to cms api data</em></p>
   <a href="https://github.com/hjdhnx/dr_py/releases">
     <img src="https://img.shields.io/badge/version-3.9.41-blue" alt="latest version" />
@@ -55,7 +55,7 @@
 #### 项目修复
 进入容器drpy项目根目录执行以下代码
 ```shell
-cd utils && rm update.py && wget https://ghproxy.com/https://raw.githubusercontent.com/hjdhnx/dr_py/main/utils/update.py
+cd utils && rm update.py && wget https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/utils/update.py
 ```
 执行后重启9001或者docker即可正常检测升级
 

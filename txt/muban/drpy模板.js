@@ -1,11 +1,11 @@
 import ch from './cheerio.min.js';
 // import Uri from './uri.min.js';
 // var URI = require('urijs');
-// import 模板 from 'https://ghproxy.com/https://raw.githubusercontent.com/hjdhnx/dr_py/main/js/模板.js'
+// import 模板 from 'https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/js/模板.js'
 // var rule = Object.assign(模板.首图2,{
 // host: 'https://www.zbkk.net',
 // });
-import template from 'https://ghproxy.com/https://raw.githubusercontent.com/hjdhnx/dr_py/main/txt/pluto/template-web.js'
+import template from 'https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/txt/pluto/template-web.js'
 
 var ahtml = template.render('hi, <%=value%>.', {value: 'aui'});
 console.log(ahtml);
