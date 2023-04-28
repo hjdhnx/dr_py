@@ -42,7 +42,7 @@
 
 [更新日志](./doc/更新日志.md)  
 [android&linux&macos搭建教程](./doc/安卓本地搭建说明.md) | [windows搭建教程](./doc/windows搭建说明.md)  
-[写源教程](./doc/写源教程.md)  
+[写源教程](./doc/写源教程.md)  | [js压缩.min.js](./doc/js压缩.md)  
 [十分钟学会python](https://www.w3cschool.cn/iqmrhf/wngzuozt.html)
 
 ---

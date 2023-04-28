@@ -69,13 +69,17 @@ def getLocalVer():
             version = f.read()
     return version
 
-def getOnlineVer():
+def getOnlineVer(update_proxy=''):
     ver = '1.0.1'
     msg = ''
+    update_proxy = (update_proxy or '').strip()
+    logger.info(f'update_proxy:{update_proxy}')
     try:
         # r = requests.get('https://gitcode.net/qq_32394351/dr_py/-/raw/master/js/version.txt',timeout=(2,2))
         # r = requests.get('https://code.gitlink.org.cn/api/v1/repos/hjdhnx/dr_py/raw/master/js/version.txt',timeout=(2,2))
-        r = requests.get('https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/js/version.txt',timeout=(2,2))
+        url = f'{update_proxy}https://raw.githubusercontent.com/hjdhnx/dr_py/main/js/version.txt'
+        logger.info(f'开始检查线上版本号:{url}')
+        r = requests.get(url,headers=headers,timeout=(2,2),verify=False)
         ver = r.text
     except Exception as e:
         # print(f'{e}')
@@ -164,14 +168,16 @@ def copy_to_update():
     logger.info(f'升级程序执行完毕,全部文件已拷贝覆盖')
     return True
 
-def download_new_version():
+def download_new_version(update_proxy=''):
+    update_proxy = (update_proxy or '').strip()
+    logger.info(f'update_proxy:{update_proxy}')
     t1 = getTime()
     base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
     tmp_path = os.path.join(base_path, f'tmp')
     os.makedirs(tmp_path,exist_ok=True)
     # url = 'https://gitcode.net/qq_32394351/dr_py/-/archive/master/dr_py-master.zip'
     # url = 'https://code.gitlink.org.cn/api/v1/repos/hjdhnx/dr_py/archive/master.zip'
-    url = 'https://ghproxy.net/https://github.com/hjdhnx/dr_py/archive/refs/heads/main.zip'
+    url = f'{update_proxy}https://github.com/hjdhnx/dr_py/archive/refs/heads/main.zip'
     # tmp_files = os.listdir(tmp_path)
     # for tp in tmp_files:
     #     print(f'清除缓存文件:{tp}')
@@ -181,7 +187,7 @@ def download_new_version():
     try:
         # print(f'开始下载:{url}')
         logger.info(f'开始下载:{url}')
-        r = requests.get(url,headers=headers,timeout=(20,20))
+        r = requests.get(url,headers=headers,timeout=(20,20),verify=False)
         rb = r.content
         download_path = os.path.join(tmp_path, 'dr_py.zip')
         with open(download_path,mode='wb+') as f:

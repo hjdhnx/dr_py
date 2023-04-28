@@ -136,7 +136,9 @@ def admin_get_ver():
     if not verfy_token():
         # return render_template('login.html')
         return R.error('请登录后再试')
-    online_ver,msg = getOnlineVer()
+    lsg = storage_service()
+    update_proxy = lsg.getItem('UPDATE_PROXY')
+    online_ver,msg = getOnlineVer(update_proxy)
     return jsonify({'local_ver':getLocalVer(),'online_ver':online_ver,'msg':msg})
 
 @admin.route('/update_db')
@@ -161,7 +163,9 @@ def admin_update_db():
 def admin_update_ver():
     if not verfy_token():
         return R.failed('请登录后再试')
-    msg = download_new_version()
+    lsg = storage_service()
+    update_proxy = lsg.getItem('UPDATE_PROXY')
+    msg = download_new_version(update_proxy)
     return R.success(msg)
 
 @admin.route('/rule_state/<int:state>',methods=['POST'])
