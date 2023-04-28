@@ -69,7 +69,7 @@ def getLocalVer():
             version = f.read()
     return version
 
-def getOnlineVer(update_proxy=''):
+def getOnlineVer(update_proxy='https://ghproxy.liuzhicong.com/'):
     ver = '1.0.1'
     msg = ''
     update_proxy = (update_proxy or '').strip()
@@ -168,7 +168,7 @@ def copy_to_update():
     logger.info(f'升级程序执行完毕,全部文件已拷贝覆盖')
     return True
 
-def download_new_version(update_proxy=''):
+def download_new_version(update_proxy='https://ghproxy.liuzhicong.com/'):
     update_proxy = (update_proxy or '').strip()
     logger.info(f'update_proxy:{update_proxy}')
     t1 = getTime()
