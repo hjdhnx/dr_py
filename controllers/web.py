@@ -40,6 +40,10 @@ def custom_static_js(filename):
 @web.route('/<web_name>/<theme>')
 def web_index(web_name, theme):
     ctx = {'web_name': web_name, 'key': '关键词', 'description': '描述'}
+    lsg = storage_service()
+    js0_password = lsg.getItem('JS0_PASSWORD')
+    ctx['pwd'] = js0_password
+    ctx['path'] = request.path
     try:
         return render_template(f'cms/{theme}/homeContent.html', ctx=ctx)
     except Exception as e:
