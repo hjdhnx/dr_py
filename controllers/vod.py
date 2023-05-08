@@ -6,12 +6,13 @@
 import functools
 import json
 
-from flask import Blueprint,abort,request,render_template,render_template_string,jsonify,make_response,redirect,current_app
+from flask import Blueprint, abort, request, render_template, render_template_string, jsonify, make_response, redirect, \
+    current_app
 from time import time
-from utils.web import getParmas,get_interval
+from utils.web import getParmas, get_interval
 from utils.cfg import cfg
 from utils.env import get_env
-from js.rules import getRuleLists,getJxs
+from js.rules import getRuleLists, getJxs
 from base.R import R
 from utils.log import logger
 from utils import parser
@@ -20,11 +21,13 @@ from base.database import db
 from models.ruleclass import RuleClass
 from models.playparse import PlayParse
 from js.rules import getRules
-from controllers.service import storage_service,rules_service
-from concurrent.futures import ThreadPoolExecutor,as_completed,thread  # 引入线程池
-from quickjs import Function,Context
+from controllers.service import storage_service, rules_service
+from concurrent.futures import ThreadPoolExecutor, as_completed, thread  # 引入线程池
+from quickjs import Function, Context
 import ujson
+
 vod = Blueprint("vod", __name__)
+
 
 def search_one_py(rule, wd, before: str = ''):
     t1 = time()
@@ -46,7 +49,8 @@ def search_one_py(rule, wd, before: str = ''):
         print(f'{rule}发生错误:{e}')
         return None
 
-def search_one(rule, wd, before: str = '',env:dict=None,app=None):
+
+def search_one(rule, wd, before: str = '', env: dict = None, app=None):
     t1 = time()
     if not before:
         with open('js/模板.js', encoding='utf-8') as f:
@@ -80,6 +84,7 @@ def search_one(rule, wd, before: str = '',env:dict=None,app=None):
     except Exception as e:
         logger.info(f'{e}')
         return R.failed('爬虫规则加载失败')
+
 
 def multi_search2(wd):
     t1 = time()
@@ -123,7 +128,8 @@ def multi_search2(wd):
         result = {
             'list': []
         }
-        logger.info(f'drpy聚搜{len(search_sites)}个源耗时{get_interval(t2)}毫秒,含准备共计耗时:{get_interval(t1)}毫秒,发生错误:{e}')
+        logger.info(
+            f'drpy聚搜{len(search_sites)}个源耗时{get_interval(t2)}毫秒,含准备共计耗时:{get_interval(t1)}毫秒,发生错误:{e}')
     return jsonify(result)
 
 
@@ -134,6 +140,7 @@ def merged_hide(merged_rules):
     hide_rule_names = list(map(lambda x: x['name'], hide_rules))
     # print('隐藏:',hide_rule_names)
     all_cnt = len(merged_rules)
+
     # print(merged_rules)
 
     def filter_show(x):
@@ -144,21 +151,25 @@ def merged_hide(merged_rules):
 
     merged_rules = list(filter(filter_show, merged_rules))
     # print('隐藏后:',merged_rules)
-    logger.info(f'数据库筛选隐藏规则耗时{get_interval(t1)}毫秒,共计{all_cnt}条规则,隐藏后可渲染{len(merged_rules)}条规则')
+    logger.info(
+        f'数据库筛选隐藏规则耗时{get_interval(t1)}毫秒,共计{all_cnt}条规则,隐藏后可渲染{len(merged_rules)}条规则')
     # merged_rules = []
     return merged_rules
+
 
 def disable_exit_for_threadpool_executor():
     import atexit
     import concurrent.futures
     atexit.unregister(concurrent.futures.thread._python_exit)
 
-def sort_lsg_rules(sites:list):
+
+def sort_lsg_rules(sites: list):
     """
      查询结果按order和write_date 联合排序
     :param sites:
     :return:
     """
+
     def comp(x, y):
         if x['order'] > y['order']:
             return 1
@@ -175,12 +186,14 @@ def sort_lsg_rules(sites:list):
     sites.sort(key=functools.cmp_to_key(comp), reverse=False)
     return sites
 
-def sort_lsg_rules2(sites:list,lsg_rule_names:list):
+
+def sort_lsg_rules2(sites: list, lsg_rule_names: list):
     """
      查询结果按order和write_date 联合排序
     :param sites:
     :return:
     """
+
     def comp(x, y):
         try:
             x1 = lsg_rule_names.index(x)
@@ -200,11 +213,12 @@ def sort_lsg_rules2(sites:list,lsg_rule_names:list):
     sites.sort(key=functools.cmp_to_key(comp), reverse=False)
     return sites
 
+
 def getSearchSites():
     val = {}
     lsg = storage_service()
     try:
-        timeout = round(int(lsg.getItem('SEARCH_TIMEOUT',5000))/1000,2)
+        timeout = round(int(lsg.getItem('SEARCH_TIMEOUT', 5000)) / 1000, 2)
     except:
         timeout = 5
     val['timeout'] = timeout
@@ -236,6 +250,7 @@ def getSearchSites():
     val['search_sites'] = search_sites
     return val
 
+
 def multi_search(wd):
     t1 = time()
     val = getSearchSites()
@@ -259,13 +274,13 @@ def multi_search(wd):
         with ThreadPoolExecutor(max_workers=len(search_sites)) as executor:
             to_do = []
             for site in search_sites:
-                future = executor.submit(search_one, site, wd, before,env,current_app._get_current_object())
+                future = executor.submit(search_one, site, wd, before, env, current_app._get_current_object())
                 to_do.append(future)
             try:
                 for future in as_completed(to_do, timeout=timeout):  # 并发执行
                     ret = future.result()
                     # print(ret)
-                    if ret and isinstance(ret,dict) and ret.get('list'):
+                    if ret and isinstance(ret, dict) and ret.get('list'):
                         res.extend(ret['list'])
             except Exception as e:
                 print(f'发生错误:{e}')
@@ -279,18 +294,20 @@ def multi_search(wd):
         "list": res
     })
 
+
 @vod.route('/vods')
 def vods_search():
     val = getSearchSites()
     print(val)
 
     # return jsonify(val)
-    return render_template('show_search.html',val=val)
+    return render_template('show_search.html', val=val)
+
 
 @vod.route('/vod')
 def vod_home():
     lsg = storage_service()
-    js0_disable = lsg.getItem('JS0_DISABLE',cfg.get('JS0_DISABLE',0))
+    js0_disable = lsg.getItem('JS0_DISABLE', cfg.get('JS0_DISABLE', 0))
     if js0_disable:
         abort(403)
     js0_password = lsg.getItem('JS0_PASSWORD', cfg.get('JS0_PASSWORD', ''))
@@ -331,7 +348,6 @@ def vod_home():
     logger.info(f'参数检验js读取共计耗时:{get_interval(t0)}毫秒')
     t2 = time()
 
-
     # ctx, js_code = parser.runJs(js_path,before=before)
     # if not js_code:
     #     return R.failed('爬虫规则加载失败')
@@ -341,13 +357,13 @@ def vod_home():
 
     ctx = Context()
     try:
-        with open(js_path,encoding='utf-8') as f2:
+        with open(js_path, encoding='utf-8') as f2:
             jscode = f2.read()
         env = get_env()
         for k in env:
             # print(f'${k}',f'{env[k]}')
             if f'${k}' in jscode:
-                jscode = jscode.replace(f'${k}',f'{env[k]}')
+                jscode = jscode.replace(f'${k}', f'{env[k]}')
         # print(env)
         # if env:
         #     jscode = render_template_string(jscode,**env)
@@ -372,14 +388,14 @@ def vod_home():
     logger.info(f'js装载耗时:{get_interval(t2)}毫秒')
     # print(ruleDict)
     # print(rule)
-    cms = CMS(ruleDict,db,RuleClass,PlayParse,cfg,ext)
+    cms = CMS(ruleDict, db, RuleClass, PlayParse, cfg, ext)
     wd = getParmas('wd')
     quick = getParmas('quick')
-    play = getParmas('play') # 类型为4的时候点击播放会带上来
-    flag = getParmas('flag') # 类型为4的时候点击播放会带上来
+    play = getParmas('play')  # 类型为4的时候点击播放会带上来
+    flag = getParmas('flag')  # 类型为4的时候点击播放会带上来
     # myfilter = getParmas('filter')
     t = getParmas('t')
-    pg = getParmas('pg','1')
+    pg = getParmas('pg', '1')
     pg = int(pg)
     q = getParmas('q')
     play_url = getParmas('play_url')
@@ -387,7 +403,7 @@ def vod_home():
     if play:
         jxs = getJxs()
         play_url = play.split('play_url=')[1]
-        play_url = cms.playContent(play_url, jxs,flag)
+        play_url = cms.playContent(play_url, jxs, flag)
         if isinstance(play_url, str):
             # return redirect(play_url)
             # return jsonify({'parse': 0, 'playUrl': play_url, 'jx': 0, 'url': play_url})
@@ -400,10 +416,10 @@ def vod_home():
 
     if play_url:  # 播放
         jxs = getJxs()
-        play_url = cms.playContent(play_url,jxs)
-        if isinstance(play_url,str):
+        play_url = cms.playContent(play_url, jxs)
+        if isinstance(play_url, str):
             return redirect(play_url)
-        elif isinstance(play_url,dict):
+        elif isinstance(play_url, dict):
             return jsonify(play_url)
         else:
             return play_url
@@ -414,21 +430,21 @@ def vod_home():
             fl = json.loads(filters)
         # print(filters,type(filters))
         # print(fl,type(fl))
-        data = cms.categoryContent(t,pg,fl)
+        data = cms.categoryContent(t, pg, fl)
         # print(data)
         return jsonify(data)
-    if ac and ids: # 二级
+    if ac and ids:  # 二级
         id_list = ids.split(',')
         show_name = False
         if ids.find('#') > -1:
-            id_list = list(map(lambda x:x.split('#')[0],id_list))
+            id_list = list(map(lambda x: x.split('#')[0], id_list))
             show_name = True
         # print('app:377',len(id_list))
         # print(id_list)
-        data = cms.detailContent(pg,id_list,show_name)
+        data = cms.detailContent(pg, id_list, show_name)
         # print(data)
         return jsonify(data)
-    if wd: # 搜索
+    if wd:  # 搜索
         if rule == 'drpy':
             print(f'准备单独处理聚合搜索:{wd}')
             return multi_search(wd)

@@ -13,3 +13,4 @@ from . import cls
 from . import classes
 from . import layui
 from . import parse
+from . import web
