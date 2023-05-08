@@ -11,11 +11,10 @@
 <link rel="shortcut icon" href="/static/img/favicon.svg" type="image/x-icon" />
 <link rel="stylesheet" href="/web/cms/mxpro/css/iconfont.css" type="text/css" />
 <link rel="stylesheet" href="/web/cms/mxpro/css/stui_default.css" type="text/css" />
-<script type="text/javascript" src="/web/cms/mxpro/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.min.js "></script>
+<script type="text/javascript" src="/static/js/jquery.lazyload.min.js "></script>
 <script type="text/javascript" src="/web/cms/mxpro/js/index.js"></script>
-<script type="text/javascript" src="/web/cms/mxpro/js/stui_default.js "></script>
-<script type="text/javascript" src="/web/cms/mxpro/js/jquery.cookie.min.js "></script>
-<script type="text/javascript" src="/web/cms/mxpro/js/jquery.lazyload.min.js "></script>
 <script type="text/javascript" src="/web/cms/mxpro/js/home.js"></script>
 <script src="/static/js/vue3.js"></script>
 <script src="/static/js/axios.min.js"></script>
@@ -23,8 +22,8 @@
 
 <script>var maccms={"path":"","mid":"","url":"5imv.cc","wapurl":"www.5imv.cc","mob_status":"2"};</script>
 <!--[if lt IE 9]>
-<script src="https://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<script src="/web/cms/mxpro/js/html5shiv.min.js"></script>
+<script src="/web/cms/mxpro/js/respond.min.js"></script>
 <![endif]-->
 <style type="text/css">
 	.stui-vodlist__thumb.banner{ padding-top: 30%;}
@@ -90,7 +89,7 @@
 
 			</ul>
 			<div class="stui-header__logo">
-				<a class="logo" href="/"></a>
+				<a class="logo" href=""></a>
 			</div>
 			<ul class="stui-header__menu">
 				<li class="active"><a href="/">首页</a></li>
@@ -126,7 +125,7 @@
 
 			<div class="stui-pannel__bd">
 					<div class="stui-vodlist__head">
-                	      <a class="pull-right hidden-xs" ><span class="STYLE1">本站共有视频资源：<span class="STYLE2">108178</span> 部 首页推荐：<span class="STYLE2">{[items.list.length]}</span> 部 </span></a>
+                	      <a class="pull-right hidden-xs" ><span class="STYLE1">本站共有视频资源：<span class="STYLE2">{[items.list.length]}</span> 部 首页推荐：<span class="STYLE2">{[items.list.length]}</span> 部 </span></a>
                 	       <a class="pull-right visible-xs" ><span class="STYLE1">首页推荐：<span class="STYLE2">{[items.list.length]}</span> 部 </span></a>
 						<h3><i class="iconfont icon-hot"></i> 首页推荐</h3>
 					</div>
@@ -134,7 +133,7 @@
         			<ul class="stui-vodlist clearfix">
 						<li v-for="item in items.list">
 							<div class="stui-vodlist__box">
-								<a class="stui-vodlist__thumb lazyload" :href="item.vod_id" :title="item.vod_name" :data-original="item.vod_pic" :src="item.vod_pic">
+								<a class="stui-vodlist__thumb lazyload" :href="item.vod_id" :title="item.vod_name" :data-original="item.vod_pic">
 									<span class="play hidden-xs"></span>
 									<span class="pic-text1 text-right"><b>{[item.no_use.type_name]}</b></span>
 									<span class="pic-text text-right"><b>{[item.vod_remarks]}</b></span>
@@ -205,7 +204,7 @@
 					<ul class="stui-vodlist clearfix">
 						<li style="display: none">
 							<div class="stui-vodlist__box">
-								<a class="stui-vodlist__thumb lazyload" href="/v/106482/" title="妈妈咪呀第八季" data-original="/tu.php?tu=https://pic4.iqiyipic.com/image/20230415/a3/0d/a_100533499_m_601_m1_260_360.jpg">
+								<a class="stui-vodlist__thumb lazyload" href="/v/106482/" title="妈妈咪呀第八季" data-original="https://pic4.iqiyipic.com/image/20230415/a3/0d/a_100533499_m_601_m1_260_360.jpg">
 									<span class="play hidden-xs"></span>
 									<span class="pic-text1 text-right"><b>综艺</b></span>
 									<span class="pic-text text-right"><b>更新至2023-5-6期</b></span>
@@ -230,7 +229,7 @@
 					<ul class="stui-vodlist clearfix">
 						<li style="display: none">
 							<div class="stui-vodlist__box">
-								<a class="stui-vodlist__thumb lazyload" href="/v/26993/" title="绝世战魂动态漫画" data-original="/tu.php?tu=https://pic2.iqiyipic.com/image/20211028/93/7f/a_100445493_m_601_m3_579_772.jpg">
+								<a class="stui-vodlist__thumb lazyload" href="/v/26993/" title="绝世战魂动态漫画" data-original="https://pic2.iqiyipic.com/image/20211028/93/7f/a_100445493_m_601_m3_579_772.jpg">
 									<span class="play hidden-xs"></span>
 									<span class="pic-text1 text-right"><b>动漫</b></span>
 									<span class="pic-text text-right"><b>全剧集</b></span>
@@ -255,7 +254,7 @@
 					<ul class="stui-vodlist clearfix">
 						<li style="display: none">
 							<div class="stui-vodlist__box">
-							<a class="stui-vodlist__thumb lazyload" href="/v/43805/" title="我是不白吃" data-original="/tu.php?tu=https://i0.hdslb.com/bfs/bangumi/image/205c8d7027e989044ae7711879c2f66f14bfa206.jpg">
+							<a class="stui-vodlist__thumb lazyload" href="/v/43805/" title="我是不白吃" data-original="https://i0.hdslb.com/bfs/bangumi/image/205c8d7027e989044ae7711879c2f66f14bfa206.jpg">
 								<span class="play hidden-xs"></span>
 								<span class="pic-text1 text-right"><b>哔哩</b></span>
 								<span class="pic-text text-right"><b>更新至555集</b></span>
@@ -341,10 +340,10 @@
   <div class="popup-main">
     <p style="font-size:18px;color:red"><b>重要提示：</b></p>
     <p>近期，网站遭到不同程度的封锁屏蔽，导致部分地区无法访问。以下方式均可找到备用网址，强烈建议截屏/收藏保存。</p>
-	<p>主用地址01：<a href="https://www.5imv.cc" style="color: #10AEFF;" target="_blank">👉 www.5imv.cc 👈</a></p>
-	<p>主用地址02：<a href="https://www.5imv.net" style="color: #10AEFF;" target="_blank">👉 www.5imv.net 👈</a></p>
-    <p>主用地址03：<a href="https://www.5imv.vip" style="color: #10AEFF;" target="_blank">👉 www.5imv.vip 👈</a></p>
- <p>下载安装【<a href="/app" style="color: #10AEFF;" target="_blank">点击👉安卓客户端👈</a>】</p>
+	<p>主用地址01：<a href="{{ctx.path}}" style="color: #10AEFF;" target="_blank">👉 {{ctx.url}} 👈</a></p>
+<!--	<p>主用地址02：<a href="https://www.5imv.net" style="color: #10AEFF;" target="_blank">👉 www.5imv.net 👈</a></p>-->
+<!--    <p>主用地址03：<a href="https://www.5imv.vip" style="color: #10AEFF;" target="_blank">👉 www.5imv.vip 👈</a></p>-->
+<!-- 	<p>下载安装【<a href="/app" style="color: #10AEFF;" target="_blank">点击👉安卓客户端👈</a>】</p>-->
   	<p>截屏保存本提示</p>
 	<p></p>
   </div>
@@ -352,7 +351,6 @@
 </div>
 
 <script>
-eruda.init();
 const { createApp,reactive, toRefs, ref,getCurrentInstance,onBeforeMount, onMounted,onBeforeUpdate,onUpdated,onBeforeUnmount, onUnmounted, watch,computed } = Vue;
 const app = createApp({
 	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
@@ -363,6 +361,11 @@ const app = createApp({
 			axios.get(`/vod?pwd=${pwd}&rule=${web_name}`).then((resp) => {
             	console.log(resp.data);
             	items.value = resp.data;
+				// console.log(typeof(stui.images.lazyload));
+				setTimeout(function (){
+					stui.images.lazyload();
+					stui.images.carousel();
+				},100);
         	});
 
 			axios.get(`/hotsugg`).then((resp) => {
@@ -413,26 +416,28 @@ axios.defaults.timeout = 5000;
 app.config.globalProperties.$http = axios;
 console.log('---这里最先执行---');
 app.mount('#app');
+eruda.init();
+
 </script>
 
-<script src='/web/cms/mxpro/js/rich-tf.js' id="richid" data='s=7214'></script>
+<!--<script src='/web/cms/mxpro/js/rich-tf.js' id="richid" data='s=7214'></script>-->
 <script charset="UTF-8" id="LA_COLLECT" src="/web/cms/mxpro/js/js-sdk-pro.min.js"></script>
 <script>LA.init({id:"JYQUFCtAOBTUMsNQ",ck:"JYQUFCtAOBTUMsNQ"})</script>
+<script type="text/javascript" src="/web/cms/mxpro/js/stui_default.js "></script>
 <script type="text/javascript">
-	$(".stui_header__user li a").click(function(){
-		$(this).parent().find(".dropdown").toggle();
-	});
-	function notnull() {
-	if (window.document.search.wd.value=="") {
-	alert("您未输入任何信息！");
-	return false;
-	}else {
-	return true;
-	}
-	}
-</script>
 
-<script type="text/javascript">
+$(".stui_header__user li a").click(function(){
+	$(this).parent().find(".dropdown").toggle();
+});
+function notnull() {
+if (window.document.search.wd.value=="") {
+alert("您未输入任何信息！");
+return false;
+}else {
+return true;
+}
+}
+
 $(function(){
 	$(window).scroll(function() {
 		if($(window).scrollTop() >= 100){
@@ -444,6 +449,7 @@ $(function(){
 	$('.ant-back-top').click(function(){
 	$('html,body').animate({scrollTop: '0px'}, 800);});
 });
+
 </script>
 
 </body>

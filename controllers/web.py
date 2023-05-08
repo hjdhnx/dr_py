@@ -44,6 +44,7 @@ def web_index(web_name, theme):
     js0_password = lsg.getItem('JS0_PASSWORD')
     ctx['pwd'] = js0_password
     ctx['path'] = request.path
+    ctx['url'] = request.url
     try:
         return render_template(f'cms/{theme}/homeContent.html', ctx=ctx)
     except Exception as e:
