@@ -27,7 +27,7 @@ body {
 .mz {
     text-align: center;
     display: inline-block;
-    width: 40%;
+    width: 30%;
 }
 
 .mz a {
@@ -42,9 +42,27 @@ body {
     background-color: #cb13b2;
 }
 
+.sa {
+    text-align: center;
+    width: 10%;
+    display: inline-block;
+}
+
+.sa a {
+    border-radius: 25px;
+    border-style: solid;
+    color: #FFFFFF;
+    padding: 2px 7px 2px 7px;
+    border-style: solid;
+    border-color: #17af30;
+    text-decoration: none;
+    background-color: #17af30;
+
+}
+
 .sj {
     text-align: center;
-    width: 18%;
+    width: 20%;
     display: inline-block;
 }
 
@@ -61,7 +79,7 @@ body {
 }
 
 .ss {
-    width: 18%;
+    width: 15%;
     text-align: center;
     display: inline-block;
 }
@@ -80,7 +98,7 @@ body {
 
 .sc {
     text-align: center;
-    width: 18%;
+    width: 15%;
     /*padding-right: 5%;*/
     display: inline-block;
 }
