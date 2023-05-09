@@ -403,8 +403,8 @@ const app = createApp({
 			data:[]
 		});
 		try {
-		items.value = JSON.parse(sessionStorage.getItem('items'));
-		hotsuggs.value = JSON.parse(sessionStorage.getItem('hotsuggs'));
+		items.value = JSON.parse(sessionStorage.getItem('items'))||items.value;
+		hotsuggs.value = JSON.parse(sessionStorage.getItem('hotsuggs'))||hotsuggs.value;
 		}catch (e) {}
 		return {
 			items:items,

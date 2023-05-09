@@ -265,8 +265,8 @@ const app = createApp({
 			// 	hotsuggs.value = resp.data;
 			// 	sessionStorage.setItem('hotsuggs',JSON.stringify(resp.data));
         	// });
-			items.value = JSON.parse(sessionStorage.getItem('items'));
-			hotsuggs.value = JSON.parse(sessionStorage.getItem('hotsuggs'));
+			items.value = JSON.parse(sessionStorage.getItem('items'))||items.value;
+			hotsuggs.value = JSON.parse(sessionStorage.getItem('hotsuggs'))||hotsuggs.value;
 
 		});
 		onBeforeUnmount(()=>{
