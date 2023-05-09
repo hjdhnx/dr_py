@@ -64,7 +64,7 @@
 					<ul class="dropdown type clearfix">
 						<li class="active"><a href="{{ctx.path}}">首页</a></li>
 						<li v-for="item in items.class">
-							<a :href="item.type_id">{[item.type_name]}</a>
+							<a :href="'javascript:alert(\'开发中:'+item.type_id+'\')'">{[item.type_name]}</a>
 						</li>
 					</ul>
 				</li>
@@ -94,7 +94,7 @@
 			<ul class="stui-header__menu">
 				<li class="active"><a href="{{ctx.path}}">首页</a></li>
 				<li v-for="item in items.class">
-					<a :href="item.type_id">{[item.type_name]}</a>
+					<a :href="'javascript:alert(\'开发中:'+item.type_id+'\')'">{[item.type_name]}</a>
 				</li>
 			</ul>
 
@@ -402,6 +402,10 @@ const app = createApp({
 		const hotsuggs = ref({
 			data:[]
 		});
+		try {
+		items.value = JSON.parse(sessionStorage.getItem('items'));
+		hotsuggs.value = JSON.parse(sessionStorage.getItem('hotsuggs'));
+		}catch (e) {}
 		return {
 			items:items,
 			hotsuggs:hotsuggs,

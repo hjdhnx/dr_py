@@ -54,7 +54,7 @@
 					<ul class="dropdown type clearfix">
 						<li ><a href="{{ctx.path}}">首页</a></li>
 						<li v-for="item in items.class">
-							<a :href="item.type_id">{[item.type_name]}</a>
+							<a :href="'javascript:alert(\'开发中:'+item.type_id+'\')'">{[item.type_name]}</a>
 						</li>
 					</ul>
 				</li>
@@ -84,7 +84,7 @@
 			<ul class="stui-header__menu">
 				<li class="active"><a href="{{ctx.path}}">首页</a></li>
 				<li v-for="item in items.class">
-					<a :href="item.type_id">{[item.type_name]}</a>
+					<a :href="'javascript:alert(\'开发中:'+item.type_id+'\')'">{[item.type_name]}</a>
 				</li>
 			</ul>
 			
@@ -119,7 +119,7 @@
 							<a class="detail-more" href="javascript:;">详情 <i class="icon iconfont icon-moreunfold"></i></a>
 						</p>
 						<div class="play-btn">
-							<a href="/p/49064-1-1/">立即播放</a>
+							<a :href="fast_play">立即播放</a>
 <!--							<a href="">收藏</a>-->
 						</div>
 					</div>
@@ -129,41 +129,13 @@
 					</div>
 				</div>
 
-				<div class="stui-vodlist__head">
-				<span class="pull-right1">推荐线路！1080P超清画质无广告高速播放</span>
-				<h3 class="title"><i class="iconfont icon-iconfontplay2"></i> 	LZ线路</h3>
-				<ul class="stui-content__playlist clearfix">
-					<li ><a href="/p/49064-1-1/">原声</a></li>
-					   <li ><a href="/p/49064-1-2/">国语</a></li>
-				   </ul>
-				</div>
-				<div class="stui-vodlist__head">
+				<div v-for="(vod_tab,index) in vod_tabs" class="stui-vodlist__head">
 				<span class="pull-right1">无需安装任何插件</span>
-				<h3 class="title"><i class="iconfont icon-iconfontplay2"></i> 	QY线路</h3>
-				<ul class="stui-content__playlist clearfix">
-					<li ><a href="/p/49064-3-1/">高清正片</a></li>
-				   </ul>
-				</div>
-				<div class="stui-vodlist__head">
-				<span class="pull-right1">无需安装任何插件</span>
-				<h3 class="title"><i class="iconfont icon-iconfontplay2"></i> 	TX线路</h3>
-				<ul class="stui-content__playlist clearfix">
-					<li ><a href="/p/49064-4-1/">高清版</a></li>
-				   </ul>
-				</div>
-				<div class="stui-vodlist__head">
-				<span class="pull-right1">无需安装任何插件</span>
-				<h3 class="title"><i class="iconfont icon-iconfontplay2"></i> 	YK线路</h3>
-				<ul class="stui-content__playlist clearfix">
-					<li ><a href="/p/49064-5-1/">英语高清正片</a></li>
-					   <li ><a href="/p/49064-5-2/">国语高清正片</a></li>
-				   </ul>
-				</div>
-				<div class="stui-vodlist__head">
-				<span class="pull-right1">推荐线路！1080P超清画质无广告高速播放</span>
-				<h3 class="title"><i class="iconfont icon-iconfontplay2"></i> 	FF线路</h3>
-				<ul class="stui-content__playlist clearfix">
-					<li ><a href="/p/49064-2-1/">HD中字</a></li>
+				<h3 class="title"><i class="iconfont icon-iconfontplay2"></i> 	{[vod_tab]}</h3>
+					<ul class="stui-content__playlist clearfix">
+						<li v-for="vod_url in vod_urls[index]">
+							<a :href="vod_url.url">{[vod_url.name]}</a>
+						</li>
 				   </ul>
 				</div>
 
@@ -280,6 +252,7 @@ const app = createApp({
 
 				dinfo.value = details.value.list[0];
 				dinfo.value.vod_desc = dinfo.value.vod_content.slice(0,100)+'...';
+				$('meta[name="description"]').attr('content',dinfo.value.vod_name+'剧情:'+dinfo.value.vod_content);
 				setTimeout(function (){
 					stui.images.lazyload();
 					stui.images.carousel();
@@ -339,6 +312,30 @@ const app = createApp({
   			return dinfo.value.vod_content?dinfo.value.vod_content.slice(0,100)+'...':'';
 		});
 
+		const vod_tabs = computed(() => {
+			console.log('计算vod_tabs');
+  			return dinfo.value.vod_play_from?dinfo.value.vod_play_from.split('$$$'):[];
+		});
+
+		const vod_urls = computed(() => {
+			console.log('计算vod_urls');
+			let urls = [];
+			if(dinfo.value.vod_play_url){
+				let tab_urls = dinfo.value.vod_play_url.split('$$$');
+				tab_urls.forEach(((tab_url,index)=>{
+					let vurls = tab_url.split('#').map(it=>{return {name:it.split('$')[0],url:it.split('$')[1]}});
+					urls.push(vurls);
+				}));
+			}
+			console.log(urls);
+  			return urls
+		});
+
+		const fast_play = computed(() => {
+			console.log('fast_play');
+  			return vod_urls.value&&vod_urls.value.length>0?vod_urls.value[0][0].url:'';
+		});
+
 		return {
 			items:items,
 			hotsuggs:hotsuggs,
@@ -348,6 +345,9 @@ const app = createApp({
 			details:details,
 			dinfo:dinfo,
 			vod_desc:vod_desc,
+			vod_tabs:vod_tabs,
+			vod_urls:vod_urls,
+			fast_play:fast_play,
 		}
 	},
 });
