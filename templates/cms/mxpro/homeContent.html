@@ -62,7 +62,7 @@
 				<li>
 					<a href="javascript:;"><i class="iconfont icon-viewgallery"></i></a>
 					<ul class="dropdown type clearfix">
-						<li class="active"><a href="/">首页</a></li>
+						<li class="active"><a href="{{ctx.path}}">首页</a></li>
 						<li v-for="item in items.class">
 							<a :href="item.type_id">{[item.type_name]}</a>
 						</li>
@@ -92,7 +92,7 @@
 				<a class="logo" href=""></a>
 			</div>
 			<ul class="stui-header__menu">
-				<li class="active"><a href="/">首页</a></li>
+				<li class="active"><a href="{{ctx.path}}">首页</a></li>
 				<li v-for="item in items.class">
 					<a :href="item.type_id">{[item.type_name]}</a>
 				</li>
@@ -133,13 +133,13 @@
         			<ul class="stui-vodlist clearfix">
 						<li v-for="item in items.list">
 							<div class="stui-vodlist__box">
-								<a class="stui-vodlist__thumb lazyload" :href="item.vod_id" :title="item.vod_name" :data-original="item.vod_pic">
+								<a class="stui-vodlist__thumb lazyload" :href="'{{ctx.path}}?vod_id='+item.vod_id+'&vod_name='+item.vod_name" :title="item.vod_name" :data-original="item.vod_pic">
 									<span class="play hidden-xs"></span>
 									<span class="pic-text1 text-right"><b>{[item.no_use.type_name]}</b></span>
 									<span class="pic-text text-right"><b>{[item.vod_remarks]}</b></span>
 								</a>
 								<div class="stui-vodlist__detail">
-									<h4 class="title text-overflow"><a :href="item.vod_id" :title="item.vod_name">{[item.vod_name]}</a></h4>
+									<h4 class="title text-overflow"><a :href="'{{ctx.path}}?vod_id='+item.vod_id+'&vod_name='+item.vod_name" :title="item.vod_name">{[item.vod_name]}</a></h4>
 									<p class="text text-overflow text-muted hidden-xs">{[item.vod_name]}剧情简介</p>
 								</div>
 							</div>
@@ -155,19 +155,19 @@
 						<h3><a href="/vodshow/film/"><i class="iconfont icon-all"></i>  电影</a></h3>
 					</div>
 					<ul class="stui-vodlist clearfix">
-						<li style="display: none">
-							<div class="stui-vodlist__box">
-							<a class="stui-vodlist__thumb lazyload" href="/v/107952/" title="侠盗之簪花乱" data-original="http://img.test.com/upload/vod/20230505-1/c9f06d89004ed80002843ccc849c5777.jpg">
-								<span class="play hidden-xs"></span>
-								<span class="pic-text1 text-right"><b>电影</b></span>
-								<span class="pic-text text-right"><b>HD国语</b></span>
-							</a>
-							<div class="stui-vodlist__detail">
-								<h4 class="title text-overflow"><a href="/v/107952/" title="侠盗之簪花乱">侠盗之簪花乱</a></h4>
-								<p class="text text-overflow text-muted hidden-xs">冯建宇林妍柔</p>
-							</div>
-							</div>
-						</li>
+<!--						<li style="display: none">-->
+<!--							<div class="stui-vodlist__box">-->
+<!--							<a class="stui-vodlist__thumb lazyload" href="/v/107952/" title="侠盗之簪花乱" data-original="http://img.test.com/upload/vod/20230505-1/c9f06d89004ed80002843ccc849c5777.jpg">-->
+<!--								<span class="play hidden-xs"></span>-->
+<!--								<span class="pic-text1 text-right"><b>电影</b></span>-->
+<!--								<span class="pic-text text-right"><b>HD国语</b></span>-->
+<!--							</a>-->
+<!--							<div class="stui-vodlist__detail">-->
+<!--								<h4 class="title text-overflow"><a href="/v/107952/" title="侠盗之簪花乱">侠盗之簪花乱</a></h4>-->
+<!--								<p class="text text-overflow text-muted hidden-xs">冯建宇林妍柔</p>-->
+<!--							</div>-->
+<!--							</div>-->
+<!--						</li>-->
 					</ul>
 
 
@@ -178,19 +178,19 @@
 						<h3><a href="/vodshow/TV/"><i class="iconfont icon-all"></i>  剧集</a></h3>
 					</div>
 					<ul class="stui-vodlist clearfix">
-						<li style="display: none">
-							<div class="stui-vodlist__box">
-							<a class="stui-vodlist__thumb lazyload" href="/v/107075/" title="战火中的青春" data-original="http://m.ykimg.com/050C00006444E3941427220AE6B4613A">
-								<span class="play hidden-xs"></span>
-								<span class="pic-text1 text-right"><b>剧集</b></span>
-								<span class="pic-text text-right"><b>更新至25集</b></span>
-							</a>
-							<div class="stui-vodlist__detail">
-								<h4 class="title text-overflow"><a href="/v/107075/" title="战火中的青春">战火中的青春</a></h4>
-								<p class="text text-overflow text-muted hidden-xs">王鹤棣,周也,叶祖新,胡连馨,贺鹏,王仁君,王羽铮,王玥晞,金志浩,夏梦,李哲豪,陈政阳,于非凡,李普,张量,林典涵,朱梓瑜,黄金成,王劲松,毕彦君,马跃,马少骅,王鑫,蒋恺,李博,俞灏明,王志飞,刘佩琦,高曙光,谭凯,宗平,霍桠明,吴健</p>
-							</div>
-							</div>
-						</li>
+<!--						<li style="display: none">-->
+<!--							<div class="stui-vodlist__box">-->
+<!--							<a class="stui-vodlist__thumb lazyload" href="/v/107075/" title="战火中的青春" data-original="http://m.ykimg.com/050C00006444E3941427220AE6B4613A">-->
+<!--								<span class="play hidden-xs"></span>-->
+<!--								<span class="pic-text1 text-right"><b>剧集</b></span>-->
+<!--								<span class="pic-text text-right"><b>更新至25集</b></span>-->
+<!--							</a>-->
+<!--							<div class="stui-vodlist__detail">-->
+<!--								<h4 class="title text-overflow"><a href="/v/107075/" title="战火中的青春">战火中的青春</a></h4>-->
+<!--								<p class="text text-overflow text-muted hidden-xs">王鹤棣,周也,叶祖新,胡连馨,贺鹏,王仁君,王羽铮,王玥晞,金志浩,夏梦,李哲豪,陈政阳,于非凡,李普,张量,林典涵,朱梓瑜,黄金成,王劲松,毕彦君,马跃,马少骅,王鑫,蒋恺,李博,俞灏明,王志飞,刘佩琦,高曙光,谭凯,宗平,霍桠明,吴健</p>-->
+<!--							</div>-->
+<!--							</div>-->
+<!--						</li>-->
 					</ul>
 
 
@@ -202,19 +202,19 @@
 					</div>
 
 					<ul class="stui-vodlist clearfix">
-						<li style="display: none">
-							<div class="stui-vodlist__box">
-								<a class="stui-vodlist__thumb lazyload" href="/v/106482/" title="妈妈咪呀第八季" data-original="https://pic4.iqiyipic.com/image/20230415/a3/0d/a_100533499_m_601_m1_260_360.jpg">
-									<span class="play hidden-xs"></span>
-									<span class="pic-text1 text-right"><b>综艺</b></span>
-									<span class="pic-text text-right"><b>更新至2023-5-6期</b></span>
-								</a>
-								<div class="stui-vodlist__detail">
-									<h4 class="title text-overflow"><a href="/v/106482/" title="妈妈咪呀第八季">妈妈咪呀第八季</a></h4>
-									<p class="text text-overflow text-muted hidden-xs">内详</p>
-								</div>
-							</div>
-						</li>
+<!--						<li style="display: none">-->
+<!--							<div class="stui-vodlist__box">-->
+<!--								<a class="stui-vodlist__thumb lazyload" href="/v/106482/" title="妈妈咪呀第八季" data-original="https://pic4.iqiyipic.com/image/20230415/a3/0d/a_100533499_m_601_m1_260_360.jpg">-->
+<!--									<span class="play hidden-xs"></span>-->
+<!--									<span class="pic-text1 text-right"><b>综艺</b></span>-->
+<!--									<span class="pic-text text-right"><b>更新至2023-5-6期</b></span>-->
+<!--								</a>-->
+<!--								<div class="stui-vodlist__detail">-->
+<!--									<h4 class="title text-overflow"><a href="/v/106482/" title="妈妈咪呀第八季">妈妈咪呀第八季</a></h4>-->
+<!--									<p class="text text-overflow text-muted hidden-xs">内详</p>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</li>-->
 					</ul>
 
 
@@ -227,19 +227,19 @@
 
 
 					<ul class="stui-vodlist clearfix">
-						<li style="display: none">
-							<div class="stui-vodlist__box">
-								<a class="stui-vodlist__thumb lazyload" href="/v/26993/" title="绝世战魂动态漫画" data-original="https://pic2.iqiyipic.com/image/20211028/93/7f/a_100445493_m_601_m3_579_772.jpg">
-									<span class="play hidden-xs"></span>
-									<span class="pic-text1 text-right"><b>动漫</b></span>
-									<span class="pic-text text-right"><b>全剧集</b></span>
-								</a>
-								<div class="stui-vodlist__detail">
-									<h4 class="title text-overflow"><a href="/v/26993/" title="绝世战魂动态漫画">绝世战魂动态漫画</a></h4>
-									<p class="text text-overflow text-muted hidden-xs">未知</p>
-								</div>
-							</div>
-						</li>
+<!--						<li style="display: none">-->
+<!--							<div class="stui-vodlist__box">-->
+<!--								<a class="stui-vodlist__thumb lazyload" href="/v/26993/" title="绝世战魂动态漫画" data-original="https://pic2.iqiyipic.com/image/20211028/93/7f/a_100445493_m_601_m3_579_772.jpg">-->
+<!--									<span class="play hidden-xs"></span>-->
+<!--									<span class="pic-text1 text-right"><b>动漫</b></span>-->
+<!--									<span class="pic-text text-right"><b>全剧集</b></span>-->
+<!--								</a>-->
+<!--								<div class="stui-vodlist__detail">-->
+<!--									<h4 class="title text-overflow"><a href="/v/26993/" title="绝世战魂动态漫画">绝世战魂动态漫画</a></h4>-->
+<!--									<p class="text text-overflow text-muted hidden-xs">未知</p>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</li>-->
 					</ul>
 
 
@@ -252,19 +252,19 @@
 
 
 					<ul class="stui-vodlist clearfix">
-						<li style="display: none">
-							<div class="stui-vodlist__box">
-							<a class="stui-vodlist__thumb lazyload" href="/v/43805/" title="我是不白吃" data-original="https://i0.hdslb.com/bfs/bangumi/image/205c8d7027e989044ae7711879c2f66f14bfa206.jpg">
-								<span class="play hidden-xs"></span>
-								<span class="pic-text1 text-right"><b>哔哩</b></span>
-								<span class="pic-text text-right"><b>更新至555集</b></span>
-							</a>
-							<div class="stui-vodlist__detail">
-								<h4 class="title text-overflow"><a href="/v/43805/" title="我是不白吃">我是不白吃</a></h4>
-								<p class="text text-overflow text-muted hidden-xs">配音：不白吃</p>
-							</div>
-							</div>
-						</li>
+<!--						<li style="display: none">-->
+<!--							<div class="stui-vodlist__box">-->
+<!--							<a class="stui-vodlist__thumb lazyload" href="/v/43805/" title="我是不白吃" data-original="https://i0.hdslb.com/bfs/bangumi/image/205c8d7027e989044ae7711879c2f66f14bfa206.jpg">-->
+<!--								<span class="play hidden-xs"></span>-->
+<!--								<span class="pic-text1 text-right"><b>哔哩</b></span>-->
+<!--								<span class="pic-text text-right"><b>更新至555集</b></span>-->
+<!--							</a>-->
+<!--							<div class="stui-vodlist__detail">-->
+<!--								<h4 class="title text-overflow"><a href="/v/43805/" title="我是不白吃">我是不白吃</a></h4>-->
+<!--								<p class="text text-overflow text-muted hidden-xs">配音：不白吃</p>-->
+<!--							</div>-->
+<!--							</div>-->
+<!--						</li>-->
 					</ul>
 					<!-- end 分类列表 -->
 					<!-- 最新专题 -->
@@ -361,6 +361,8 @@ const app = createApp({
 			axios.get(`/vod?pwd=${pwd}&rule=${web_name}`).then((resp) => {
             	console.log(resp.data);
             	items.value = resp.data;
+				// 存浏览器session里，然后其它页面好获取出来
+				sessionStorage.setItem('items',JSON.stringify(resp.data));
 				// console.log(typeof(stui.images.lazyload));
 				setTimeout(function (){
 					stui.images.lazyload();
@@ -371,6 +373,7 @@ const app = createApp({
 			axios.get(`/hotsugg`).then((resp) => {
 				console.log(resp.data);
 				hotsuggs.value = resp.data;
+				sessionStorage.setItem('hotsuggs',JSON.stringify(resp.data));
         	});
 
 		});
@@ -421,8 +424,8 @@ eruda.init();
 </script>
 
 <!--<script src='/web/cms/mxpro/js/rich-tf.js' id="richid" data='s=7214'></script>-->
-<script charset="UTF-8" id="LA_COLLECT" src="/web/cms/mxpro/js/js-sdk-pro.min.js"></script>
-<script>LA.init({id:"JYQUFCtAOBTUMsNQ",ck:"JYQUFCtAOBTUMsNQ"})</script>
+<!--<script charset="UTF-8" id="LA_COLLECT" src="/web/cms/mxpro/js/js-sdk-pro.min.js"></script>-->
+<!--<script>LA.init({id:"JYQUFCtAOBTUMsNQ",ck:"JYQUFCtAOBTUMsNQ"})</script>-->
 <script type="text/javascript" src="/web/cms/mxpro/js/stui_default.js "></script>
 <script type="text/javascript">
 
