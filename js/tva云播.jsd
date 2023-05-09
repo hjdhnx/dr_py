@@ -1,3 +1,4 @@
+// 重复源 TVB云播.js
 var rule={
 title:'TVA云播',
 host:'http://www.tvyb03.com',
