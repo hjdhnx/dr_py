@@ -397,6 +397,7 @@ def vod_home():
     t = getParmas('t')
     pg = getParmas('pg', '1')
     pg = int(pg)
+    # print('pg:',pg)
     q = getParmas('q')
     play_url = getParmas('play_url')
 
@@ -450,7 +451,7 @@ def vod_home():
             return multi_search(wd)
             # return multi_search2(wd)
         else:
-            data = cms.searchContent(wd)
+            data = cms.searchContent(wd, pg)
             # print(data)
             return jsonify(data)
     # return jsonify({'rule':rule,'js_code':js_code})

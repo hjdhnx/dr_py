@@ -47,16 +47,23 @@ def web_index(web_name, theme):
     ctx['url'] = request.url
     vod_id = getParmas('vod_id')
     vod_name = getParmas('vod_name')
+    wd = getParmas('wd')
+    pg = getParmas('pg') or '1'
+    tid = getParmas('tid')
     ctx['vod_id'] = vod_id
     ctx['vod_name'] = vod_name
+    ctx['wd'] = wd
+    ctx['pg'] = pg
+    ctx['tid'] = tid
 
-    if vod_id and vod_name:
-        try:
+    try:
+        if vod_id and vod_name:
             return render_template(f'cms/{theme}/detailContent.html', ctx=ctx)
-        except Exception as e:
-            return render_template('404.html', ctx=ctx, error=f'发生错误的原因可能是下面路径未找到:{e}')
-    else:
-        try:
+        elif wd:
+            return render_template(f'cms/{theme}/searchContent.html', ctx=ctx)
+        elif tid:
+            return render_template(f'cms/{theme}/categoryContent.html', ctx=ctx)
+        else:
             return render_template(f'cms/{theme}/homeContent.html', ctx=ctx)
-        except Exception as e:
-            return render_template('404.html', ctx=ctx, error=f'发生错误的原因可能是下面路径未找到:{e}')
+    except Exception as e:
+        return render_template('404.html', ctx=ctx, error=f'发生错误的原因可能是下面路径未找到:{e}')
