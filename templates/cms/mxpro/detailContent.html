@@ -161,7 +161,7 @@ const app = createApp({
 
 		console.log('---setup---');
 		//获取当前实例
-		// const {ctx, proxy} = getCurrentInstance();
+		const {self, proxy} = getCurrentInstance();
 		const web_name = '{{ctx.web_name}}';
 		const pwd = '{{ctx.pwd}}';
 		const vod_id = '{{ctx.vod_id}}';

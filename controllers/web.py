@@ -50,11 +50,13 @@ def web_index(web_name, theme):
     wd = getParmas('wd')
     pg = getParmas('pg') or '1'
     tid = getParmas('tid')
+    tname = getParmas('tname')
     ctx['vod_id'] = vod_id
     ctx['vod_name'] = vod_name
     ctx['wd'] = wd
     ctx['pg'] = pg
     ctx['tid'] = tid
+    ctx['tname'] = tname
 
     try:
         if vod_id and vod_name:

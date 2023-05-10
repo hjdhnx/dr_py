@@ -40,7 +40,7 @@
 		<div class="stui-pannel">
 			<div class="stui-pannel__hd">
 				<!--vue组件-头部导航-->
-				<stu-header :ctx="ctx" :items="items" :hotsuggs="hotsuggs"></stu-header>
+				<stu-header :ctx="ctx" :items="items" :hotsuggs="hotsuggs" :isHome="isHome"></stu-header>
 			</div>
 
 			<!--vue组件-轮播图-->
@@ -260,7 +260,7 @@ const app = createApp({
 
 		console.log('---setup---');
 		//获取当前实例
-		// const {ctx, proxy} = getCurrentInstance();
+		const {self, proxy} = getCurrentInstance();
 		const web_name = '{{ctx.web_name}}';
 		const pwd = '{{ctx.pwd}}';
 		console.log(web_name);
@@ -280,6 +280,7 @@ const app = createApp({
 		const hotsuggs = ref({
 			data:[]
 		});
+		const isHome = ref(true);
 		try {
 		items.value = JSON.parse(sessionStorage.getItem('items'))||items.value;
 		hotsuggs.value = JSON.parse(sessionStorage.getItem('hotsuggs'))||hotsuggs.value;
@@ -288,7 +289,8 @@ const app = createApp({
 			ctx:ctx,
 			items:items,
 			hotsuggs:hotsuggs,
-			web_name:web_name
+			web_name:web_name,
+			isHome:isHome,
 		}
 	},
 });

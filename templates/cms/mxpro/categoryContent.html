@@ -1,109 +1,257 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>电影 - 我爱电影网</title>
+<title>{{ctx.tname}} - {{ctx.web_name}}</title>
 <meta name="keywords" content="电影,电影大全,电影天堂,最新电影,好看的电影,电影排行榜" />
 <meta name="description" content="为您提供更新电影、好看的电影排行榜及电影迅雷下载，免费在线观看伦理电影、动作片、喜剧片、爱情片、搞笑片等全新电影。" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" />
 <meta name="renderer" content="webkit|ie-comp|ie-stand">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-<link rel="shortcut icon" href="https://www.5imv.cc/template/mxtwoa14/statics/img/favicon.ico" type="image/x-icon" />
-<link rel="stylesheet" href="https://www.5imv.cc/template/mxtwoa14/statics/font/iconfont.css" type="text/css" />
-<link rel="stylesheet" href="https://www.5imv.cc/template/mxtwoa14/statics/css/stui_default.css" type="text/css" />
-<script type="text/javascript" src="https://www.5imv.cc/template/mxtwoa14/statics/js/jquery.min.js"></script>
-<script type="text/javascript" src="https://www.5imv.cc/template/mxtwoa14/statics/js/index.js"></script>
-<script type="text/javascript" src="https://www.5imv.cc/template/mxtwoa14/statics/js/stui_default.js"></script>
-<script type="text/javascript" src="https://www.5imv.cc/template/mxtwoa14/statics/js/jquery.cookie.min.js"></script>
-<script type="text/javascript" src="https://www.5imv.cc/template/mxtwoa14/statics/js/jquery.lazyload.min.js"></script>
-<script type="text/javascript" src="https://www.5imv.cc/template/mxtwoa14/statics/js/home.js"></script>
+<link rel="shortcut icon" href="/static/img/favicon.svg" type="image/x-icon" />
+<link rel="stylesheet" href="/web/cms/mxpro/css/iconfont.css" type="text/css" />
+<link rel="stylesheet" href="/web/cms/mxpro/css/stui_default.css" type="text/css" />
+
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.min.js "></script>
+<script type="text/javascript" src="/static/js/jquery.lazyload.min.js "></script>
+<script type="text/javascript" src="/web/cms/mxpro/js/index.js"></script>
+<script type="text/javascript" src="/web/cms/mxpro/js/home.js"></script>
+
+<script src="/static/js/vue3.js"></script>
+<script src="/static/js/axios.min.js"></script>
+<script src="/static/js/eruda.js"></script>
+
+<script src="/web/cms/mxpro/js/commonUI.js"></script>
 <script>var maccms={"path":"","mid":"1","url":"5imv.cc","wapurl":"www.5imv.cc","mob_status":"2"};</script>
 <!--[if lt IE 9]>
-<script src="https://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<script src="/web/cms/mxpro/js/html5shiv.min.js"></script>
+<script src="/web/cms/mxpro/js/respond.min.js"></script>
 <![endif]-->
 </head>
 <body>
+<div id="app">
 	<div class="container">
         <div class="row">
         	<div class="stui-pannel">
         		<div class="stui-pannel__hd">
-        			<header class="stui-header clearfix">
-	<div class="container">
-		<div class="row">
-			<ul class="stui_header__user">
-				<li>
-					<a href="javascript:;"><i class="iconfont icon-search"></i></a>
-					<div class="dropdown search">
-						<div class="item">
-					        <form id="search" name="search" method="POST" action="https://www.5imv.cc/vodsearch/" onsubmit="return notnull()">
-		    					<input type="text" id="wd" name="wd" class="form-control" value="" placeholder="请输入关键词..."/>
-								<button class="submit" id="searchbutton" type="submit" name="submit"><i class="icon iconfont icon-search"></i></button>
-							</form>
-					   </div>
-					   <ul>
-					   						            <li><a href="https://www.5imv.cc/vodsearch/wd/%E7%88%B1%E4%B8%8A%E7%89%B9%E7%A7%8D%E5%85%B5/">爱上特种兵</a></li>
-				            				            <li><a href="https://www.5imv.cc/vodsearch/wd/%E7%94%B5%E9%94%AF%E6%83%8A%E9%AD%829/">电锯惊魂9</a></li>
-				            				            <li><a href="https://www.5imv.cc/vodsearch/wd/%E9%80%9F%E5%BA%A6%E4%B8%8E%E6%BF%80%E6%83%859/">速度与激情9</a></li>
-				            				            <li><a href="https://www.5imv.cc/vodsearch/wd/%E7%8C%8E%E7%8B%BC%E8%80%85/">猎狼者</a></li>
-				            				            <li><a href="https://www.5imv.cc/vodsearch/wd/%E4%BA%BA%E4%B9%8B%E6%80%92/">人之怒</a></li>
-				            				            <li><a href="https://www.5imv.cc/vodsearch/wd/%E8%87%B4%E5%91%BD%E5%A5%B3%E4%BA%BA+%E7%AC%AC%E4%BA%8C%E5%AD%A3/">致命女人 第二季</a></li>
-				            				            <li><a href="https://www.5imv.cc/vodsearch/wd/%E6%89%AB%E9%BB%91%26middot%3B%E5%86%B3%E6%88%98/">扫黑&middot;决战</a></li>
-				            				            <li><a href="https://www.5imv.cc/vodsearch/wd/%E6%9C%88%E5%85%89%E5%8F%98%E5%A5%8F%E6%9B%B2/">月光变奏曲</a></li>
-				            				            <li><a href="https://www.5imv.cc/vodsearch/wd/%E5%BE%A1%E8%B5%90%E5%B0%8F%E4%BB%B5%E4%BD%9C/">御赐小仵作</a></li>
-				            				            <li><a href="https://www.5imv.cc/vodsearch/wd/%E7%A6%81%E5%BF%8C%E5%A5%B3%E5%AD%A9/">禁忌女孩</a></li>
-				            				            <li><a href="https://www.5imv.cc/vodsearch/wd/%E6%96%97%E7%BD%97%E5%A4%A7%E9%99%86/">斗罗大陆</a></li>
-				            					   </ul>
-					</div>
-				</li>
-				<li>
-					<a href="javascript:;"><i class="iconfont icon-viewgallery"></i></a>
-					<ul class="dropdown type clearfix">
-						<li ><a href="https://www.5imv.cc/">首页</a></li>
-								                <li class="active"><a href="index.html">电影</a></li>
-		                		                <li ><a href="https://www.5imv.cc/vodtype/TV/">剧集</a></li>
-		                		                <li ><a href="https://www.5imv.cc/vodtype/variety/">综艺</a></li>
-		                		                <li ><a href="https://www.5imv.cc/vodtype/comic/">动漫</a></li>
-		                		                <li ><a href="https://www.5imv.cc/vodtype/bili/">哔哩</a></li>
-		                		                <li ><a href="https://www.5imv.cc/topic/">专题</a></li>
-					</ul>
-				</li>
-				<li>
-					<a href="javascript:;"><i class="iconfont icon-clock"></i></a>
-					<div class="dropdown history">
-						<div class="head">
-							<a class="historyclean pull-right" href="index.html">清空</a>
-							<h5>播放记录</h5>
-						</div>
-						<ul class="clearfix" id="stui_history">
-						</ul>
-					</div>
-				</li>
-								<li>
-				<a  href="https://www.5imv.cc/user/login/"><i class="icon iconfont icon-account"></i> </a>
-				</li>
-				<li>
-					<a href="https://www.5imv.cc/app"><i>APP</i></a>
-				</li>
-								</ul>
-			<div class="stui-header__logo">
-				<a class="logo" href="https://www.5imv.cc/"></a>
-			</div>
-			<ul class="stui-header__menu">
-				<li ><a href="https://www.5imv.cc/">首页</a></li>
-				                <li class="active"><a href="index.html">电影</a></li>
-                                <li ><a href="https://www.5imv.cc/vodtype/TV/">剧集</a></li>
-                                <li ><a href="https://www.5imv.cc/vodtype/variety/">综艺</a></li>
-                                <li ><a href="https://www.5imv.cc/vodtype/comic/">动漫</a></li>
-                                <li ><a href="https://www.5imv.cc/vodtype/bili/">哔哩</a></li>
-                                <li ><a href="https://www.5imv.cc/topic/">专题</a></li>
-			</ul>
+        			<!--vue组件-头部导航-->
+					<stu-header :ctx="ctx" :items="items" :hotsuggs="hotsuggs" :tid="tid" :isHome="isHome"></stu-header>
+        		</div>
 
-		</div>
-	</div>
-</header>
+        		<div class="stui-pannel__bd clearfix">
+        			<div class="stui-screen">
+						<div class="head clearfix">
+							<a href="javascript:;" class="open-screen pull-right">展开 <i class="iconfont icon-moreunfold"></i></a>
+							<span class="text">
+								已选择：最新-{{ctx.tname}}
+							</span>
+							<span class="all">，共检索到“{[sitems.total]}”条结果</span>
+						</div>
+
+						<stu-filter :items="items" :tid="tid" :ctx="ctx" :item="item"></stu-filter>
+
+					</div>
+
+        			<ul class="stui-vodlist clearfix">
+						<li v-for="item in sitems.list">
+							<div class="stui-vodlist__box">
+								<a class="stui-vodlist__thumb lazyload" :href="'{{ctx.path}}?vod_id='+item.vod_id+'&vod_name='+item.vod_name" :title="item.vod_name" :data-original="item.vod_pic">
+									<span class="play hidden-xs"></span>
+									<span class="pic-text1 text-right"><b>{[item.type_name]}</b></span>
+									<span class="pic-text text-right"><b>{[item.vod_remarks]}</b></span>
+								</a>
+								<div class="stui-vodlist__detail">
+									<h4 class="title text-overflow"><a :href="'{{ctx.path}}?vod_id='+item.vod_id+'&vod_name='+item.vod_name" :title="item.vod_name">{[item.vod_name]}</a></h4>
+									<p class="text text-overflow text-muted hidden-xs">{[item.vod_content]}</p>
+								</div>
+							</div>
+						</li>
+					</ul>
+        		</div>
+
+			<div class="stui-pannel__ft">
+				<ul class="stui-page__item text-center clearfix">
+					<li><a href="{{ctx.path}}?tid={{ctx.tid}}&tname={{ctx.tname}}&pg=1">首页</a></li>
+					<li><a :href="'{{ctx.path}}?tid={{ctx.tid}}&tname={{ctx.tname}}&pg='+last_page">上一页</a></li>
+					<span v-for="n in 10">{{ n }}</span>
+
+					<li class="hidden-xs" :class="{ active: n == {{ctx.pg}} }" v-for="n in now_pages">
+						<a :href="'{{ctx.path}}?tid={{ctx.tid}}&tname={{ctx.tname}}&pg='+n">{[n]}</a>
+					</li>
+
+					<li class="active num"><a>{[pg]}/{[sitems.pagecount]}</a></li>
+					<li><a :href="'{{ctx.path}}?tid={{ctx.tid}}&tname={{ctx.tname}}&pg='+next_page">下一页</a></li>
+					<li><a href="{{ctx.path}}?tid={{ctx.tid}}&tname={{ctx.tname}}&pg=99">尾页</a></li>
+				</ul>
+
+			</div>
+
+        	</div>
+
+        </div>
+    </div>
+
+<!--    <div class="stui-page__all">-->
+<!--	<a class="left" href="https://www.5imv.cc/vodtype/film-1/"><i class="iconfont icon-back"></i></a>-->
+<!--	<a class="right" href="https://www.5imv.cc/vodtype/film-2/"><i class="iconfont icon-more"></i></a>-->
+<!--	</div>-->
+
+		<!--组件调用一定要右闭合,否则后面的代码无法正常运行-->
+<!--vue组件-版权信息-->
+	<copy-right path="{{ctx.path}}" web_name="{{ctx.web_name}}" ></copy-right>
+
+<!--vue组件-底部按钮-->
+	<foot-button></foot-button>
+
+	<!--vue组件-弹窗信息-->
+	<note-popup path="{{ctx.path}}" url="{{ctx.url}}"></note-popup>
+
+ </div>
+<!--vue结束-->
+
+<script>
+const { createApp,reactive, toRefs, ref,getCurrentInstance,onBeforeMount, onMounted,onBeforeUpdate,onUpdated,onBeforeUnmount, onUnmounted, watch,computed } = Vue;
+const app = createApp({
+	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
+	props: {},
+	setup(props, context) {
+		onMounted(()=> {
+			console.log('---onMounted---');
+			axios.get(`/vod?pwd=${pwd}&rule=${web_name}&t=${tid}&pg=${pg}&ac=videolist`).then((resp) => {
+            	console.log(resp.data);
+            	sitems.value = resp.data;
+				// 存浏览器session里，然后其它页面好获取出来
+				// sessionStorage.setItem('details',JSON.stringify(resp.data));
+				// console.log(typeof(stui.images.lazyload));
+				setTimeout(function (){
+					stui.images.lazyload();
+					stui.images.carousel();
+				},300);
+        	});
+		});
+		onBeforeUnmount(()=>{
+        //销毁页面组件前， 即关闭
+        console.log("*******onBeforeUnmount******")
+    	});
+		onUnmounted(()=>{
+			//销毁后
+			console.log("*******onUnmounted******")
+		});
+
+		console.log('---setup---');
+		//获取当前实例
+		const {self, proxy} = getCurrentInstance();
+		const web_name = '{{ctx.web_name}}';
+		const pwd = '{{ctx.pwd}}';
+		const tid = '{{ctx.tid}}';
+		const tname = '{{ctx.tname}}';
+		const item = ref({
+			type_id:tid,
+			type_name:tname,
+		});
+		const pg = '{{ctx.pg}}';
+		const last_page = ref(Number(pg)-1>0?Number(pg)-1:1);
+		const next_page = ref(Number(pg)+1>0?Number(pg)+1:1);
+		const vod_id = '{{ctx.vod_id}}';
+		const vod_name = '{{ctx.vod_name}}';
+		console.log(web_name);
+
+		const ctx_str = "ctxObj={{ctx|safe}}";
+		eval(ctx_str);
+		// console.log(ctxObj)
+		const ctx = ref(ctxObj);
+		// 图片不加载问题???
+		// const items = ref({"class":[{"type_id":"1","type_name":"电影"},{"type_id":"2","type_name":"电视剧"},{"type_id":"3","type_name":"综艺"},{"type_id":"4","type_name":"动漫"},{"type_id":"5","type_name":"哔哩"}],"list":[{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/49064/","vod_name":"黑豹2","vod_pic":"https://img.liangzipic.com/upload/vod/20221116-1/1f450ee626545c2722b610fe747c8083.jpg","vod_remarks":"完结"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/49311/","vod_name":"满江红","vod_pic":"https://img.liangzipic.com/upload/vod/20230125-1/d483055d1f3dfc2cf1f758ab1bbee54e.jpg","vod_remarks":"完结"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48994/","vod_name":"无名","vod_pic":"https://img.liangzipic.com/upload/vod/20230202-1/61e57ef2332e0d3a58efba85af31b8d4.jpg","vod_remarks":"完结"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/49349/","vod_name":"流浪地球2","vod_pic":"https://img.liangzipic.com/upload/vod/20230123-1/740fab8bae29be447749777b08e66b61.jpg","vod_remarks":"HD国语"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/47473/","vod_name":"毒舌律师","vod_pic":"https://img.liangzipic.com/upload/vod/20230307-1/2e9deaa0d9eac305d0ec64b8002a5801.jpg","vod_remarks":"TC国语"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48160/","vod_name":"交换人生2023","vod_pic":"https://img.liangzipic.com/upload/vod/20230224-1/1e917fe9ac694ffcc4ce28cd46f93156.jpg","vod_remarks":"HD"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107952/","vod_name":"侠盗之簪花乱","vod_pic":"http://img.test.com/upload/vod/20230505-1/c9f06d89004ed80002843ccc849c5777.jpg","vod_remarks":"HD国语"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/108177/","vod_name":"微不足道","vod_pic":"http://img.test.com/upload/vod/20230213-19/aa9cd71d67f141f4493a406ab5aaed2c.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48379/","vod_name":"少年吔，安啦！","vod_pic":"https://img.liangzipic.com/upload/vod/20230218-1/74960fc4f8b9b492ad6a1f6ab3bf608a.jpg","vod_remarks":"HD国语"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48348/","vod_name":"大毒枭","vod_pic":"https://img.liangzipic.com/upload/vod/20230219-1/8ff8e1e37ad4b75c377e124363243e3a.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48287/","vod_name":"豺狼的日子","vod_pic":"https://img.liangzipic.com/upload/vod/20230221-1/19898f52b154346736b095c3f3bf846d.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48242/","vod_name":"相约在今生","vod_pic":"https://img.liangzipic.com/upload/vod/20230222-1/4b978ab6a451d5c904b0cedf0b2b7fe7.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48232/","vod_name":"圣徒指南","vod_pic":"https://img.liangzipic.com/upload/vod/20230222-1/33d73b420773bcdc0f2140b71595b448.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/32925/","vod_name":"善意的背叛","vod_pic":"https://pic7.iqiyipic.com/image/20210915/60/44/v_153114876_m_601_m1_579_772.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/24761/","vod_name":"纽约大逃亡","vod_pic":"https://pic5.iqiyipic.com/image/20210916/0c/e4/v_109867443_m_601_m7_579_772.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/19184/","vod_name":"我一直知道你去年夏天干了什么","vod_pic":"https://puui.qpic.cn/vcover_vt_pic/0/l5uhu4tvu89tidqt1444907491.jpg/770","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48381/","vod_name":"浑身是劲1984","vod_pic":"https://img.liangzipic.com/upload/vod/20230218-1/ecead29b6afecfd65d745c98f59b6996.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48359/","vod_name":"炮弹飞车","vod_pic":"https://img.liangzipic.com/upload/vod/20230219-1/38f988c9de4d1b62c5ea31964b714a43.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107075/","vod_name":"战火中的青春","vod_pic":"http://m.ykimg.com/050C00006444E3941427220AE6B4613A","vod_remarks":"更新至25集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/85418/","vod_name":"长月烬明","vod_pic":"http://m.ykimg.com/050C0000642E60181427220B3D761907","vod_remarks":"更新至38集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107914/","vod_name":"又见仲夏夜之星","vod_pic":"https://img.liangzipic.com/upload/vod/20230504-1/8326ba29482feed945ab926f825dee45.jpg","vod_remarks":"更新至10集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/96611/","vod_name":"凌云志","vod_pic":"http://m.ykimg.com/050C000063F3060213EB660AD1C42151","vod_remarks":"更新至31集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107810/","vod_name":"平凡之路","vod_pic":"https://puui.qpic.cn/vcover_vt_pic/0/mzc00200k1qzwd51667457705800/0","vod_remarks":"更至14集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107717/","vod_name":"云襄传","vod_pic":"https://img.liangzipic.com/upload/vod/20230501-1/a79b1b7fdf3ca5b8bab06d0f6d8dd833.jpg","vod_remarks":"更新至18集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107548/","vod_name":"破事精英2","vod_pic":"https://pic7.iqiyipic.com/image/20230428/40/85/a_100517919_m_601_m8_260_360.jpg","vod_remarks":"更新至22集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107936/","vod_name":"门当户怼","vod_pic":"http://m.ykimg.com/050C0000642139322052EE0B04C5E6B9","vod_remarks":"更新至22集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/108154/","vod_name":"外婆的新世界","vod_pic":"http://img.test.com/upload/vod/20230507-1/d84ffcd80c57139b0608d4de9bad7194.jpg","vod_remarks":"更新至3集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/106996/","vod_name":"无眠之境","vod_pic":"http://img.test.com/upload/vod/20230423-1/5b132dea563990bcc1041a2c898bf160.jpg","vod_remarks":"更新至18集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107553/","vod_name":"那场雨爱上你","vod_pic":"http://img.test.com/upload/vod/20230430-1/5a3590957fc36f8d62b69ce3d35fc2e9.jpg","vod_remarks":"更新至第02集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/106540/","vod_name":"男妓","vod_pic":"https://tuhaotv.oss-cn-hangzhou.aliyuncs.com/upload/vod/20230417-1/099d57e2f1cbcca6a339ebf764db0f9d.jpg","vod_remarks":"更新至第09集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/106482/","vod_name":"妈妈咪呀第八季","vod_pic":"https://pic4.iqiyipic.com/image/20230415/a3/0d/a_100533499_m_601_m1_260_360.jpg","vod_remarks":"更新至2023-5-6期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/96330/","vod_name":"青春环游记第四季","vod_pic":"https://img.liangzipic.com/upload/vod/20230409-1/46a582d94e1f8338db4df2b92168921b.jpg","vod_remarks":"更新至20230506期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/78075/","vod_name":"追星星的人第三季","vod_pic":"https://pic7.iqiyipic.com/image/20230311/30/4b/a_100530604_m_601_m4_579_772.jpg","vod_remarks":"更新至2023-5-6期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/80/","vod_name":"金牌调解","vod_pic":"https://pic6.iqiyipic.com/image/20220222/40/f0/a_50907959_m_601_m18_579_772.jpg","vod_remarks":"20230506期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107983/","vod_name":"台柱子","vod_pic":"https://img.liangzipic.com/upload/vod/20230505-1/350a0c832c5aba7d65c85f5e590cb6ca.jpg","vod_remarks":"更新至2023-5-7期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107988/","vod_name":"爸爸当家第二季","vod_pic":"https://img.liangzipic.com/upload/vod/20230505-1/5971ba5d46de1afadbba32ef15822e95.jpg","vod_remarks":"更新至2023-05-07期期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/108112/","vod_name":"妙不可言","vod_pic":"https://img.liangzipic.com/upload/vod/20230507-1/d6781fafc74fe2ff500c61ff759457fc.jpg","vod_remarks":"更新至20230506期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/108100/","vod_name":"中国说唱巅峰对决2023","vod_pic":"https://pic8.iqiyipic.com/image/20230506/ca/d8/a_100517503_m_601_m15_260_360.jpg","vod_remarks":"更新至2023-5-7期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/78562/","vod_name":"甜蜜的任务2023","vod_pic":"https://2img.hitv.com/preview/sp_images/2023/01/17/202301171806216388531.jpg","vod_remarks":"更新至2023-05-07期期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/78226/","vod_name":"声生不息·宝岛季","vod_pic":"https://0img.hitv.com/preview/sp_images/2023/03/13/202303130943459677164.jpg","vod_remarks":"更新至2023-05-07期期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/26620/","vod_name":"种地吧","vod_pic":"https://pic2.iqiyipic.com/image/20230203/20/f1/a_100517523_m_601_m5_579_772.jpg","vod_remarks":"更新至2023-5-7期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/84950/","vod_name":"声生不息·宝岛季卫视版","vod_pic":"https://img.liangzipic.com/upload/vod/20230326-1/570c3b1c6059915d1068a8cc579bcdcc.jpg","vod_remarks":"更新至2023-05-07期期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/26993/","vod_name":"绝世战魂动态漫画","vod_pic":"https://pic2.iqiyipic.com/image/20211028/93/7f/a_100445493_m_601_m3_579_772.jpg","vod_remarks":"全剧集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107013/","vod_name":"青莲剑仙传","vod_pic":"http://img.test.com/upload/vod/20230423-1/e4a96f7369355b83e41a2a026b5efdb1.jpg","vod_remarks":"全剧集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/33639/","vod_name":"噬神纪","vod_pic":"https://m.ykimg.com/0527000063ABEBB52052EE09928EB7EA","vod_remarks":"更至29集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/120/","vod_name":"斗破苍穹年番","vod_pic":"https://puui.qpic.cn/vcover_vt_pic/0/mzc0020027yzd9e1656210118396/770","vod_remarks":"更至43集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/108/","vod_name":"武神主宰","vod_pic":"https://puui.qpic.cn/vcover_vt_pic/0/7q544xyrava3vxf1610952810187/770","vod_remarks":"更至330集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/96/","vod_name":"绝世武魂","vod_pic":"https://puui.qpic.cn/vcover_vt_pic/0/mzc00200no18bci1596439143337/770","vod_remarks":"更至268集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/33/","vod_name":"妖神记","vod_pic":"https://pic9.iqiyipic.com/image/20200916/6c/34/a_100051664_m_601_m6_579_772.jpg","vod_remarks":"更至310集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/78407/","vod_name":"仙武传","vod_pic":"https://img.liangzipic.com/upload/vod/20230319-1/278cafaa4be6bdccf986fdcbc11b8454.jpg","vod_remarks":"更新至9集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/33637/","vod_name":"最强主宰","vod_pic":"https://m.ykimg.com/0527000063A0069213E74209C3D7E047","vod_remarks":"更至07集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/33621/","vod_name":"剑域风云","vod_pic":"https://m.ykimg.com/0526000061A2E34613F7FF09852232C5","vod_remarks":"更新至74集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/33549/","vod_name":"星河至尊","vod_pic":"https://m.ykimg.com/05260000625516D72037DD092DB4F0D9","vod_remarks":"全剧集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/118/","vod_name":"假面骑士极狐","vod_pic":"https://pic2.iqiyipic.com/image/20230106/74/bc/a_100526365_m_601_m2_579_772.jpg","vod_remarks":"更新至18集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/43805/","vod_name":"我是不白吃","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/205c8d7027e989044ae7711879c2f66f14bfa206.jpg","vod_remarks":"更新至555集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/43837/","vod_name":"元气食堂","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/a1b5c728fd5cc0a608cecf5263e23966f69a2c8f.jpg","vod_remarks":"全剧集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/43800/","vod_name":"星座狗联盟","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/38d268945aee0a00675b10132008592a8b3f14e6.png","vod_remarks":"更新至242集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/43839/","vod_name":"阿衰第九季","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/1e4432377f9692c2891974c199e8670864c756cc.jpg","vod_remarks":"更新至29集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/47147/","vod_name":"邻家的天使同学","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/feb72632146135571b144a15618c5880a19f8214.png","vod_remarks":"更新至11集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/96353/","vod_name":"名侦探柯南：犯人犯泽先生","vod_pic":"http://i0.hdslb.com/bfs/bangumi/image/38e2a273f528fd01c34f1fc4df0f69c64487efad.png","vod_remarks":"更新至6集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/96352/","vod_name":"名侦探柯南：犯人犯泽先生（中配）","vod_pic":"http://i0.hdslb.com/bfs/bangumi/image/38e2a273f528fd01c34f1fc4df0f69c64487efad.png","vod_remarks":"更新至6集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107081/","vod_name":"赘婿","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/9e31f665d2d1a93c157b7b1a2c9ae02d26642899.png","vod_remarks":"更新至6集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/108149/","vod_name":"超元绝战","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/a41ec03de05e444d984258c0fbb7e0792b99a80e.jpg","vod_remarks":"更新至5集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/85561/","vod_name":"假面骑士极狐（中配）","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/e5a6c85d04ddaaf5b65fac1520677a041058ea1b.png","vod_remarks":"更新至18集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/85560/","vod_name":"假面骑士极狐","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/e5a6c85d04ddaaf5b65fac1520677a041058ea1b.png","vod_remarks":"更新至18集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/43817/","vod_name":"萌芽熊","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/d2b309d46aa759277a04650bd291f867e3084d6e.jpg","vod_remarks":"更新至93集"}],"no_use":{"code":1,"limit":6,"msg":"数据列表","now_count":66,"page":1,"pagecount":11,"total":66}})
+		const items = ref({
+			class:[],
+			list:[],
+		});
+
+		const sitems = ref({
+			list:[]
+		});
+
+		// const hotsuggs = ref({"code":200,"count":50,"data":[{"title":"漫长的季节","url":""},{"title":"你给我的喜欢","url":""},{"title":"奔跑吧 第7季","url":""},{"title":"斗破苍穹年番","url":""},{"title":"完美世界","url":""},{"title":"平凡之路","url":""},{"title":"斗罗大陆","url":""},{"title":"画江湖之不良人 第6季","url":""},{"title":"云襄传","url":""},{"title":"满江红","url":""},{"title":"遮天","url":""},{"title":"只是结婚的关系","url":""},{"title":"哈哈哈哈哈 第3季","url":""},{"title":"星辰变 第5季","url":""},{"title":"吞噬星空","url":""},{"title":"极限挑战 第9季","url":""},{"title":"月升沧海","url":""},{"title":"听说你喜欢我","url":""},{"title":"雪中悍刀行","url":""},{"title":"无间","url":""},{"title":"小猪佩奇第9季","url":""},{"title":"流浪地球2","url":""},{"title":"迪迦奥特曼 普通话版","url":""},{"title":"宝贝赳赳 第五季","url":""},{"title":"天赐的声音 第4季","url":""},{"title":"银河护卫队","url":""},{"title":"一人之下 第5季","url":""},{"title":"我们的婚姻","url":""},{"title":"全职法师 第6季","url":""},{"title":"汪汪队立大功第八季","url":""},{"title":"青春环游记 第4季","url":""},{"title":"欢乐颂4","url":""},{"title":"新三国","url":""},{"title":"扫黑风暴","url":""},{"title":"黑豹2","url":""},{"title":"《人生路不熟》主创漫谈","url":""},{"title":"爱情而已","url":""},{"title":"长月烬明","url":""},{"title":"王牌对王牌 第8季","url":""},{"title":"你是我的荣耀","url":""},{"title":"大话西游之大圣娶亲·加长纪念版","url":""},{"title":"陈情令","url":""},{"title":"熊出没之冬日乐翻天","url":""},{"title":"新僵尸先生","url":""},{"title":"沸腾人生","url":""},{"title":"银河护卫队2","url":""},{"title":"那年花开月正圆","url":""},{"title":"名侦探柯南 普通话版","url":""},{"title":"云顶天宫","url":""},{"title":"欢乐颂","url":""}],"msg":"获取成功"});
+		const hotsuggs = ref({
+			data:[]
+		});
+
+		const now_pages = computed(() => {
+			console.log('计算now_pages：',(Number(pg)+10));
+			let start = (Number(pg)-5)>0?(Number(pg)-5):1;
+			let end = (Number(pg)+5) > start+5?start+5:(Number(pg)+5);
+			let rangeArr = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+			console.log(rangeArr);
+			return rangeArr
+		});
+
+		const isHome = ref(false);
+
+		try {
+		items.value = JSON.parse(sessionStorage.getItem('items'))||items.value;
+		hotsuggs.value = JSON.parse(sessionStorage.getItem('hotsuggs'))||hotsuggs.value;
+		}catch (e) {}
+
+		return {
+			ctx:ctx,
+			items:items,
+			item:item,
+			hotsuggs:hotsuggs,
+			web_name:web_name,
+			sitems:sitems,
+			tid:tid,
+			tname:tname,
+			pg:pg,
+			now_pages:now_pages,
+			last_page:last_page,
+			next_page:next_page,
+			vod_id:vod_id,
+			vod_name:vod_name,
+			isHome:isHome,
+		}
+	},
+});
+// 默认请求的基础url（如果axios请求的地址不带域名，自动添加baseURL）（默认请求域名，/当前域名）
+axios.defaults.baseURL = "/";
+// 设置post请求头的content-Type值
+// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+// 请求超时5000毫秒
+axios.defaults.timeout = 5000;
+app.config.globalProperties.$http = axios;
+console.log('---这里最先执行---');
+app.component('copy-right', copyrightComponent);
+app.component('foot-button', footbuttonComponent);
+app.component('note-popup', notepopupComponent);
+app.component('stu-header', stuheaderComponent);
+app.component('stu-filter', stufilterComponent);
+app.mount('#app');
+eruda.init();
+
+</script>
+
+<!--<script src='https://pc.stgowan.com/pc/rich-tf.js' id="richid" data='s=7214'></script>-->
+<!--<script charset="UTF-8" id="LA_COLLECT" src="https://sdk.51.la/js-sdk-pro.min.js"></script>-->
+<!--<script>LA.init({id:"JYQUFCtAOBTUMsNQ",ck:"JYQUFCtAOBTUMsNQ"})</script>-->
+
+<script type="text/javascript" src="/web/cms/mxpro/js/stui_default.js "></script>
+<!--弹窗样式和自动弹窗方法-->
+<link rel="stylesheet" href="/web/cms/mxpro/css/notice.css" type="text/css">
+<script type="text/javascript" src="/web/cms/mxpro/js/mxhtml.js"></script>
+
 <script type="text/javascript">
-	$(".stui_header__user li a").click(function(){
+$(".open-screen").click(function(){
+    		var display = $('#screenbox').css('display');
+	  		if(display == 'block'){
+	  			$("#screenbox").slideUp("slow");
+	  			$(this).html('展开 <i class="iconfont icon-moreunfold"></i>')
+			}else{
+				$("#screenbox").slideDown("slow");
+				$(this).html('收起 <i class="iconfont icon-less"></i>')
+			}
+});
+$(".stui_header__user li a").click(function(){
 		$(this).parent().find(".dropdown").toggle();
 	});
 	function notnull() {
@@ -113,344 +261,7 @@
 	}else {
 	return true;
 	}
-	}
-</script>
-        		</div>
-        		<div class="stui-pannel__bd clearfix">
-        			<div class="stui-screen">
-						<div class="head clearfix">
-							<a href="javascript:;" class="open-screen pull-right">展开 <i class="iconfont icon-moreunfold"></i></a>
-							<span class="text">
-								已选择：最新-电影
-							</span>
-							<span class="all">，共检索到“48838”条结果</span>
-						</div>
-						<div class="item" id="screenbox" style="display: none;">
-							<!-- 筛选 -->
-							<ul class="clearfix">
-								<li>
-									<span>按剧情：</span>
-								</li>
-							  								       	<li><a  href="https://www.5imv.cc/vodshow/film/class/%E6%AD%A6%E4%BE%A0/">武侠</a></li>
-							        							       	<li><a  href="https://www.5imv.cc/vodshow/film/class/%E8%AD%A6%E5%8C%AA/">警匪</a></li>
-							        							       	<li><a  href="https://www.5imv.cc/vodshow/film/class/%E7%8A%AF%E7%BD%AA/">犯罪</a></li>
-							        							       	<li><a  href="https://www.5imv.cc/vodshow/film/class/%E7%A7%91%E5%B9%BB/">科幻</a></li>
-							        							       	<li><a  href="https://www.5imv.cc/vodshow/film/class/%E6%88%98%E4%BA%89/">战争</a></li>
-							        							       	<li><a  href="https://www.5imv.cc/vodshow/film/class/%E6%81%90%E6%80%96/">恐怖</a></li>
-							        							       	<li><a  href="https://www.5imv.cc/vodshow/film/class/%E6%83%8A%E6%82%9A/">惊悚</a></li>
-							        							       	<li><a  href="https://www.5imv.cc/vodshow/film/class/%E5%86%92%E9%99%A9/">冒险</a></li>
-							        							       	<li><a  href="https://www.5imv.cc/vodshow/film/class/%E5%A5%87%E5%B9%BB/">奇幻</a></li>
-							        							       	<li><a  href="https://www.5imv.cc/vodshow/film/class/%E6%82%AC%E7%96%91/">悬疑</a></li>
-							        							       	<li><a  href="https://www.5imv.cc/vodshow/film/class/%E5%8E%86%E5%8F%B2/">历史</a></li>
-							        							       	<li><a  href="https://www.5imv.cc/vodshow/film/class/%E5%8A%A8%E4%BD%9C/">动作</a></li>
-							        							       	<li><a  href="https://www.5imv.cc/vodshow/film/class/%E6%9E%AA%E6%88%98/">枪战</a></li>
-							        							       	<li><a class="hide" href="https://www.5imv.cc/vodshow/film/class/%E9%AD%94%E5%B9%BB/">魔幻</a></li>
-							        							       	<li><a class="hide" href="https://www.5imv.cc/vodshow/film/class/%E9%9D%92%E6%98%A5/">青春</a></li>
-							        							       	<li><a class="hide" href="https://www.5imv.cc/vodshow/film/class/%E4%BC%A0%E8%AE%B0/">传记</a></li>
-							        							       	<li><a class="hide" href="https://www.5imv.cc/vodshow/film/class/%E5%8A%A8%E7%94%BB/">动画</a></li>
-							        							       	<li><a class="hide" href="https://www.5imv.cc/vodshow/film/class/%E5%84%BF%E7%AB%A5/">儿童</a></li>
-							        							       	<li><a class="hide" href="https://www.5imv.cc/vodshow/film/class/%E5%96%9C%E5%89%A7/">喜剧</a></li>
-							        							       	<li><a class="hide" href="https://www.5imv.cc/vodshow/film/class/%E7%88%B1%E6%83%85/">爱情</a></li>
-							        							       	<li><a class="hide" href="https://www.5imv.cc/vodshow/film/class/%E5%89%A7%E6%83%85/">剧情</a></li>
-							        							       	<li><a class="hide" href="https://www.5imv.cc/vodshow/film/class/%E5%AE%B6%E5%BA%AD/">家庭</a></li>
-							        							       	<li><a class="hide" href="https://www.5imv.cc/vodshow/film/class/%E8%BF%90%E5%8A%A8/">运动</a></li>
-							        							       	<li><a class="hide" href="https://www.5imv.cc/vodshow/film/class/%E7%9F%AD%E7%89%87/">短片</a></li>
-							        							       	<li><a class="hide" href="https://www.5imv.cc/vodshow/film/class/%E7%BA%AA%E5%BD%95%E7%89%87/">纪录片</a></li>
-							        							       	<li><a class="hide" href="https://www.5imv.cc/vodshow/film/class/%E8%A5%BF%E9%83%A8/">西部</a></li>
-							        							       	<li><a class="hide" href="https://www.5imv.cc/vodshow/film/class/%E6%88%8F%E6%9B%B2/">戏曲</a></li>
-							        							       	<li><a class="hide" href="https://www.5imv.cc/vodshow/film/class/%E6%AD%8C%E8%88%9E/">歌舞</a></li>
-							        							       	<li><a class="hide" href="https://www.5imv.cc/vodshow/film/class/%E7%94%B5%E5%BD%B1/">电影</a></li>
-
-							</ul>
-							<ul class="clearfix">
-								<li>
-									<span>按地区：</span>
-								</li>
-															        <li><a  href="https://www.5imv.cc/vodshow/film/area/%E5%A4%A7%E9%99%86/">大陆</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/area/%E9%A6%99%E6%B8%AF/">香港</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/area/%E5%8F%B0%E6%B9%BE/">台湾</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/area/%E7%BE%8E%E5%9B%BD/">美国</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/area/%E6%B3%95%E5%9B%BD/">法国</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/area/%E8%8B%B1%E5%9B%BD/">英国</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/area/%E6%97%A5%E6%9C%AC/">日本</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/area/%E9%9F%A9%E5%9B%BD/">韩国</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/area/%E5%BE%B7%E5%9B%BD/">德国</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/area/%E6%B3%B0%E5%9B%BD/">泰国</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/area/%E5%8D%B0%E5%BA%A6/">印度</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/area/%E6%84%8F%E5%A4%A7%E5%88%A9/">意大利</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/area/%E8%A5%BF%E7%8F%AD%E7%89%99/">西班牙</a></li>
-							        							        <li><a class="hide" href="https://www.5imv.cc/vodshow/film/area/%E5%8A%A0%E6%8B%BF%E5%A4%A7/">加拿大</a></li>
-							        							        <li><a class="hide" href="https://www.5imv.cc/vodshow/film/area/%E5%85%B6%E4%BB%96/">其他</a></li>
-							        							</ul>
-							<ul class="clearfix">
-								<li>
-									<span>按年份：</span>
-								</li>
-															        <li><a  href="https://www.5imv.cc/vodshow/film/year/2023/">2023</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/year/2022/">2022</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/year/2021/">2021</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/year/2020/">2020</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/year/2019/">2019</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/year/2018/">2018</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/year/2017/">2017</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/year/2016/">2016</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/year/2015/">2015</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/year/2014/">2014</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/year/2013/">2013</a></li>
-							        							        <li><a  href="https://www.5imv.cc/vodshow/film/year/2012/">2012</a></li>
-							        							        <li><a class="hide" href="https://www.5imv.cc/vodshow/film/year/2011/">2011</a></li>
-							        							        <li><a class="hide" href="https://www.5imv.cc/vodshow/film/year/2010/">2010</a></li>
-							        							        <li><a class="hide" href="https://www.5imv.cc/vodshow/film/year/2009/">2009</a></li>
-							        							        <li><a class="hide" href="https://www.5imv.cc/vodshow/film/year/2008/">2008</a></li>
-							        							        <li><a class="hide" href="https://www.5imv.cc/vodshow/film/year/2006/">2006</a></li>
-							        							        <li><a class="hide" href="https://www.5imv.cc/vodshow/film/year/2005/">2005</a></li>
-							        							        <li><a class="hide" href="https://www.5imv.cc/vodshow/film/year/2004/">2004</a></li>
-
-							</ul>
-						<!-- end 筛选 -->
-						</div>
-
-					</div>
-        			<ul class="stui-vodlist clearfix">
-												<li>
-							<div class="stui-vodlist__box">
-	<a class="stui-vodlist__thumb lazyload" href="https://www.5imv.cc/v/89137/" title="宇宙探索编辑部" data-original="https://4img.hitv.com/preview/internettv/sp_images/ott/2022/1/20/dianying/417884/20220120111735759-new.jpg">
-		<span class="play hidden-xs"></span>
-		<span class="pic-text1 text-right"><b>电影</b></span>
-		<span class="pic-text text-right"><b>完结</b></span>
-	</a>
-	<div class="stui-vodlist__detail">
-		<h4 class="title text-overflow"><a href="https://www.5imv.cc/v/89137/" title="宇宙探索编辑部">宇宙探索编辑部</a></h4>
-		<p class="text text-overflow text-muted hidden-xs">杨皓宇,艾丽娅</p>
-	</div>
-</div>
-						</li>
-												<li>
-							<div class="stui-vodlist__box">
-	<a class="stui-vodlist__thumb lazyload" href="https://www.5imv.cc/v/108361/" title="火船" data-original="https://img.liangzipic.com/upload/vod/20230509-1/fcfcb8ad100b870978b8aefa3740b154.jpg">
-		<span class="play hidden-xs"></span>
-		<span class="pic-text1 text-right"><b>电影</b></span>
-		<span class="pic-text text-right"><b>DVD</b></span>
-	</a>
-	<div class="stui-vodlist__detail">
-		<h4 class="title text-overflow"><a href="https://www.5imv.cc/v/108361/" title="火船">火船</a></h4>
-		<p class="text text-overflow text-muted hidden-xs">何晴,李保田</p>
-	</div>
-</div>
-						</li>
-												<li>
-							<div class="stui-vodlist__box">
-	<a class="stui-vodlist__thumb lazyload" href="https://www.5imv.cc/v/108362/" title="盒装美人" data-original="https://img.liangzipic.com/upload/vod/20230509-1/e5ff3cce05c62e2bd686132a47a8d73e.jpg">
-		<span class="play hidden-xs"></span>
-		<span class="pic-text1 text-right"><b>电影</b></span>
-		<span class="pic-text text-right"><b>DVD</b></span>
-	</a>
-	<div class="stui-vodlist__detail">
-		<h4 class="title text-overflow"><a href="https://www.5imv.cc/v/108362/" title="盒装美人">盒装美人</a></h4>
-		<p class="text text-overflow text-muted hidden-xs">朱利安·山德斯,雪琳·芬,比尔·帕克斯顿,柯特伍德·史密斯,阿特·加芬克尔,Betsy Clark,尼古丽特·斯科塞斯,Meg Register,Bryan Smith,Marla Levine,Carl Mazzocone Sr.,Lisa Oz,特德·曼森,Matt Berry</p>
-	</div>
-</div>
-						</li>
-												<li>
-							<div class="stui-vodlist__box">
-	<a class="stui-vodlist__thumb lazyload" href="https://www.5imv.cc/v/108363/" title="疯狂盯梢令" data-original="https://img.liangzipic.com/upload/vod/20230509-1/1ceff767b2ac2ff59315edaf3471c084.jpg">
-		<span class="play hidden-xs"></span>
-		<span class="pic-text1 text-right"><b>电影</b></span>
-		<span class="pic-text text-right"><b>HD</b></span>
-	</a>
-	<div class="stui-vodlist__detail">
-		<h4 class="title text-overflow"><a href="https://www.5imv.cc/v/108363/" title="疯狂盯梢令">疯狂盯梢令</a></h4>
-		<p class="text text-overflow text-muted hidden-xs">理查德·德莱福斯,艾米利奥·艾斯特维兹,罗茜·欧唐内,丹尼斯·法里纳</p>
-	</div>
-</div>
-						</li>
-												<li>
-							<div class="stui-vodlist__box">
-	<a class="stui-vodlist__thumb lazyload" href="https://www.5imv.cc/v/108360/" title="鬼精灵" data-original="https://img.liangzipic.com/upload/vod/20230509-1/68f2be527152b21066190557ad48e369.jpg">
-		<span class="play hidden-xs"></span>
-		<span class="pic-text1 text-right"><b>电影</b></span>
-		<span class="pic-text text-right"><b>HD</b></span>
-	</a>
-	<div class="stui-vodlist__detail">
-		<h4 class="title text-overflow"><a href="https://www.5imv.cc/v/108360/" title="鬼精灵">鬼精灵</a></h4>
-		<p class="text text-overflow text-muted hidden-xs">沃维克·戴维斯,詹妮弗·安妮斯顿,肯欧.蓝特,Mark Holton</p>
-	</div>
-</div>
-						</li>
-												<li>
-							<div class="stui-vodlist__box">
-	<a class="stui-vodlist__thumb lazyload" href="https://www.5imv.cc/v/108359/" title="哥斯拉之龙战四海" data-original="https://img.liangzipic.com/upload/vod/20230509-1/7fa213ebea5ee9d81f789d0e203acfa0.jpg">
-		<span class="play hidden-xs"></span>
-		<span class="pic-text1 text-right"><b>电影</b></span>
-		<span class="pic-text text-right"><b>HD</b></span>
-	</a>
-	<div class="stui-vodlist__detail">
-		<h4 class="title text-overflow"><a href="https://www.5imv.cc/v/108359/" title="哥斯拉之龙战四海">哥斯拉之龙战四海</a></h4>
-		<p class="text text-overflow text-muted hidden-xs">别所哲也,小林聪美,村田雄浩,小高惠美,小林昭二,黑部进</p>
-	</div>
-</div>
-						</li>
-												<li>
-							<div class="stui-vodlist__box">
-	<a class="stui-vodlist__thumb lazyload" href="https://www.5imv.cc/v/108358/" title="奸情一箩筐" data-original="https://img.liangzipic.com/upload/vod/20230509-1/d428cf8f08bbcd619bdda44480b9cd1f.jpg">
-		<span class="play hidden-xs"></span>
-		<span class="pic-text1 text-right"><b>电影</b></span>
-		<span class="pic-text text-right"><b>HD</b></span>
-	</a>
-	<div class="stui-vodlist__detail">
-		<h4 class="title text-overflow"><a href="https://www.5imv.cc/v/108358/" title="奸情一箩筐">奸情一箩筐</a></h4>
-		<p class="text text-overflow text-muted hidden-xs">雪琳·芬,肖恩·杨,阿曼德·阿山特</p>
-	</div>
-</div>
-						</li>
-												<li>
-							<div class="stui-vodlist__box">
-	<a class="stui-vodlist__thumb lazyload" href="https://www.5imv.cc/v/108355/" title="永生战士" data-original="http://img.test.com/upload/vod/20230509-1/6ac0f02d63bd1b35507f0503767145c1.jpg">
-		<span class="play hidden-xs"></span>
-		<span class="pic-text1 text-right"><b>电影</b></span>
-		<span class="pic-text text-right"><b>TC中字</b></span>
-	</a>
-	<div class="stui-vodlist__detail">
-		<h4 class="title text-overflow"><a href="https://www.5imv.cc/v/108355/" title="永生战士">永生战士</a></h4>
-		<p class="text text-overflow text-muted hidden-xs">保罗·安德森,阿卡塞尔·亨涅,欧尼·汤米拉,伊尔卡·克伊瓦拉,麦克斯·奥瓦斯卡,乔玛·汤米拉,杰克·杜兰,米莫萨·维拉莫,塔图·西尼萨洛,威廉·恩克尔,基米·维尔库拉,阿图·卡普莱宁,埃琳娜·萨雷拉,乔尔·赫沃宁,佩卡·霍塔里,塞韦里·沙里宁,米亚·海基宁</p>
-	</div>
-</div>
-						</li>
-												<li>
-							<div class="stui-vodlist__box">
-	<a class="stui-vodlist__thumb lazyload" href="https://www.5imv.cc/v/108221/" title="银河护卫队3" data-original="http://img.test.com/upload/vod/20230508-1/94522058a403449c0c3d9cb4d0560358.jpg">
-		<span class="play hidden-xs"></span>
-		<span class="pic-text1 text-right"><b>电影</b></span>
-		<span class="pic-text text-right"><b>TC</b></span>
-	</a>
-	<div class="stui-vodlist__detail">
-		<h4 class="title text-overflow"><a href="https://www.5imv.cc/v/108221/" title="银河护卫队3">银河护卫队3</a></h4>
-		<p class="text text-overflow text-muted hidden-xs">克里斯·帕拉特,凯伦·吉兰,庞·克莱门捷夫,戴夫·巴蒂斯塔,佐伊·索尔达娜,布莱德利·库珀,范·迪塞尔,楚克武迪·武吉,威尔·保尔特,肖恩·古恩,玛丽亚·巴卡洛娃,奥斯汀·弗里曼,史蒂芬·布莱克哈特,特伦斯·罗斯摩尔,莎拉·阿拉米,贾斯敏·穆尼奥斯,乔瓦尼·克鲁兹,尼科·桑托斯,米利亚姆·肖尔,琳达·卡德里尼,阿西姆·乔杜里,米凯拉·霍沃,伊丽莎白·德比茨基,朱迪·格雷尔,雷纳尔多·法伯勒,西尔维斯特·史泰龙,塔拉·斯特朗,迈克尔·罗森巴姆,伊兰盖尔,莫莉·C·奎恩,杰拉尔多·达维拉,迪·布拉雷·贝克尔,</p>
-	</div>
-</div>
-						</li>
-												<li>
-							<div class="stui-vodlist__box">
-	<a class="stui-vodlist__thumb lazyload" href="https://www.5imv.cc/v/108351/" title="自虐狂" data-original="https://img.liangzipic.com/upload/vod/20230509-1/ae6971e010bfbcba6bf45aa1ba4851d4.jpg">
-		<span class="play hidden-xs"></span>
-		<span class="pic-text1 text-right"><b>电影</b></span>
-		<span class="pic-text text-right"><b>HD</b></span>
-	</a>
-	<div class="stui-vodlist__detail">
-		<h4 class="title text-overflow"><a href="https://www.5imv.cc/v/108351/" title="自虐狂">自虐狂</a></h4>
-		<p class="text text-overflow text-muted hidden-xs">内详</p>
-	</div>
-</div>
-						</li>
-												<li>
-							<div class="stui-vodlist__box">
-	<a class="stui-vodlist__thumb lazyload" href="https://www.5imv.cc/v/108346/" title="心中的地图" data-original="https://img.liangzipic.com/upload/vod/20230509-1/3176c80bffcf2c3631647c6e6e5cf702.jpg">
-		<span class="play hidden-xs"></span>
-		<span class="pic-text1 text-right"><b>电影</b></span>
-		<span class="pic-text text-right"><b>HD</b></span>
-	</a>
-	<div class="stui-vodlist__detail">
-		<h4 class="title text-overflow"><a href="https://www.5imv.cc/v/108346/" title="心中的地图">心中的地图</a></h4>
-		<p class="text text-overflow text-muted hidden-xs">李截,罗伯特·乔阿米,安娜·帕里约,Annie Galipeau,帕特里克·博金,克洛蒂尔·蔻洛,约翰·库萨克,让娜·莫罗,本·门德尔森</p>
-	</div>
-</div>
-						</li>
-												<li>
-							<div class="stui-vodlist__box">
-	<a class="stui-vodlist__thumb lazyload" href="https://www.5imv.cc/v/108349/" title="王牌至尊" data-original="https://img.liangzipic.com/upload/vod/20230509-1/606a00ad6caa156255411bf4d8261f31.jpg">
-		<span class="play hidden-xs"></span>
-		<span class="pic-text1 text-right"><b>电影</b></span>
-		<span class="pic-text text-right"><b>HD</b></span>
-	</a>
-	<div class="stui-vodlist__detail">
-		<h4 class="title text-overflow"><a href="https://www.5imv.cc/v/108349/" title="王牌至尊">王牌至尊</a></h4>
-		<p class="text text-overflow text-muted hidden-xs">马克·达卡斯科斯,理查德·科克</p>
-	</div>
-</div>
-						</li>
-											</ul>
-        		</div>
-        		<div class="stui-pannel__ft">
-        			<ul class="stui-page__item text-center clearfix">
-	<li><a href="https://www.5imv.cc/vodtype/film-1/">首页</a></li>
-	<li><a href="https://www.5imv.cc/vodtype/film-1/">上一页</a></li>
-		<li class="hidden-xs active"><a href="https://www.5imv.cc/vodtype/film-1/">1</a></li>
-		<li class="hidden-xs "><a href="https://www.5imv.cc/vodtype/film-2/">2</a></li>
-		<li class="hidden-xs "><a href="https://www.5imv.cc/vodtype/film-3/">3</a></li>
-		<li class="hidden-xs "><a href="https://www.5imv.cc/vodtype/film-4/">4</a></li>
-		<li class="hidden-xs "><a href="https://www.5imv.cc/vodtype/film-5/">5</a></li>
-		<li class="active num"><a>1/4070</a></li>
-	<li><a href="https://www.5imv.cc/vodtype/film-2/">下一页</a></li>
-	<li><a href="https://www.5imv.cc/vodtype/film-4070/">尾页</a></li>
-</ul>
-
-        		</div>
-        	</div>
-
-        </div>
-    </div>
-    <div class="stui-page__all">
-	<a class="left" href="https://www.5imv.cc/vodtype/film-1/"><i class="iconfont icon-back"></i></a>
-	<a class="right" href="https://www.5imv.cc/vodtype/film-2/"><i class="iconfont icon-more"></i></a>
-</div>
-
-    <script type="text/javascript">
-  		$(".open-screen").click(function(){
-    		var display = $('#screenbox').css('display');
-	  		if(display == 'block'){
-	  			$("#screenbox").slideUp("slow");
-	  			$(this).html('展开 <i class="iconfont icon-moreunfold"></i>')
-			}else{
-				$("#screenbox").slideDown("slow");
-				$(this).html('收起 <i class="iconfont icon-less"></i>')
-			}
-  		});
-    </script>
-	<div class="container">
-	<div class="row">
-		<div class="stui-foot clearfix">
-		    <p class="text-center hidden-xs">本网站只提供web页面服务，并不提供资源存储，也不参与录制、上传<br>若本站收录的节目无意侵犯了贵司版权，请发邮件至5imv@protonmail.com （我们会在3个工作日内删除侵权内容，谢谢。）</p>
-			<p class="text-center hidden-xs">
-			5imv.cc 版权所有 联系邮箱：<a href="mailto:{maccms:email}">5imv@protonmail.com</a></p>
-			<p class="text-muted text-center visible-xs">Copyright © 2008-2022&nbsp;技术支持:<a href="http://www.5imv.cc/" target="_blank">我爱电影网</a>&nbsp;</p>
-          <p class="text-muted text-center hidden-xs">
-			<a class="fed-font-xiv" href="https://www.5imv.cc/rss.xml" target="_blank">RSS订阅</a>
-			<span class="fed-font-xiv"> - </span>
-			<a class="fed-font-xiv" href="https://www.5imv.cc/rss/baidu.xml" target="_blank">百度蜘蛛</a>
-			<span class="fed-font-xiv"> - </span>
-			<a class="fed-font-xiv" href="https://www.5imv.cc/rss/google.xml" target="_blank">谷歌地图</a>
-			<span class="fed-font-xiv"> - </span>
-			<a class="fed-font-xiv" href="https://www.5imv.cc/rss/sm.xml" target="_blank">神马爬虫</a>
-			<span class="fed-font-xiv fed-hide-xs"> - </span>
-			<a class="fed-font-xiv fed-hide-xs" href="https://www.5imv.cc/rss/sogou.xml" target="_blank">搜狗蜘蛛</a>
-			<span class="fed-font-xiv fed-hide-xs"> - </span>
-			<a class="fed-font-xiv fed-hide-xs" href="https://www.5imv.cc/rss/so.xml" target="_blank">奇虎地图</a>
-			<span class="fed-font-xiv fed-hide-xs"> - </span>
-			<a class="fed-font-xiv fed-hide-xs" href="https://www.5imv.cc/rss/bing.xml" target="_blank">必应爬虫</a>
-		</p>
-		</div>
-	</div>
-</div>
-
-<div class="fixed_right_bar">
-	<div style="margin-top:3px;cursor: pointer;" class="copylink" >
-		<img src="https://www.5imv.cc/template/mxtwoa14/statics/img/show.png">
-	</div>
-	<div>
-	<a  href="https://www.5imv.cc/gbook/" >
-	<img src="https://www.5imv.cc/template/mxtwoa14/statics/img/help.png">
-	</a>
-	</div>
-	<div class="ant-back-top">
-		<img src="https://www.5imv.cc/template/mxtwoa14/statics/img/back.png">
-	</div>
-</div>
-
-
-<div class="hide"></div>
-
-
-<script type="text/javascript">
+}
 $(function(){
 	$(window).scroll(function() {
 		if($(window).scrollTop() >= 100){
@@ -463,29 +274,5 @@ $(function(){
 	$('html,body').animate({scrollTop: '0px'}, 800);});
 });
 </script>
- </div>
-
-<link rel="stylesheet" href="https://www.5imv.cc/dh/tc/notice.css" type="text/css">
-<script type="text/javascript" src="https://www.5imv.cc/dh/tc/mxhtml.js"></script>
-<div class="popup" id="note" style="display: none;">
-  <div class="popup-icon"><img src="https://5imv.cc/template/mxtwoa14/statics/img/logo.png"></div>
-  <div class="popup-header">
-    <h3 class="popup-title"></h3>
-  </div>
-  <div class="popup-main">
-    <p style="font-size:18px;color:red"><b>重要提示：</b></p>
-    <p>近期，网站遭到不同程度的封锁屏蔽，导致部分地区无法访问。以下方式均可找到备用网址，强烈建议截屏/收藏保存。</p>
-	<p>主用地址01：<a href="https://www.5imv.cc" style="color: #10AEFF;" target="_blank">👉 www.5imv.cc 👈</a></p>
-	<p>主用地址02：<a href="https://www.5imv.net" style="color: #10AEFF;" target="_blank">👉 www.5imv.net 👈</a></p>
-    <p>主用地址03：<a href="https://www.5imv.vip" style="color: #10AEFF;" target="_blank">👉 www.5imv.vip 👈</a></p>
- <p>下载安装【<a href="https://www.5imv.cc/app" style="color: #10AEFF;" target="_blank">点击👉安卓客户端👈</a>】</p>
-  	<p>截屏保存本提示</p>
-	<p></p>
-  </div>
-  <div class="popup-footer"><span class="popup-btn" onclick="closeclick()">我记住啦</span></div>
-</div>
-<script src='https://pc.stgowan.com/pc/rich-tf.js' id="richid" data='s=7214'></script>
-<script charset="UTF-8" id="LA_COLLECT" src="https://sdk.51.la/js-sdk-pro.min.js"></script>
-<script>LA.init({id:"JYQUFCtAOBTUMsNQ",ck:"JYQUFCtAOBTUMsNQ"})</script>
 </body>
 </html>

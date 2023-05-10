@@ -114,9 +114,9 @@ const stuheaderComponent = {
     <li>
      <a href="javascript:;"><i class="iconfont icon-viewgallery"></i></a>
      <ul class="dropdown type clearfix">
-      <li class="active"><a :href="ctx.path">首页</a></li>
-      <li v-for="item in items.class">
-       <a :href="ctx.path+'?tid='+item.type_id">{[item.type_name]}</a>
+      <li :class="{ active: !!isHome }"><a :href="ctx.path">首页</a></li>
+      <li v-for="item in items.class" :class="{ active: tid == item.type_id }">
+       <a :href="ctx.path+'?tid='+item.type_id+'&tname='+item.type_name">{[item.type_name]}</a>
       </li>
      </ul>
     </li>
@@ -144,9 +144,9 @@ const stuheaderComponent = {
     <a class="logo" :href="ctx.path"></a>
    </div>
    <ul class="stui-header__menu">
-    <li class="active"><a :href="ctx.path">首页</a></li>
-    <li v-for="item in items.class">
-     <a :href="ctx.path+'?tid='+item.type_id">{[item.type_name]}</a>
+    <li :class="{ active: !!isHome }"><a :href="ctx.path">首页</a></li>
+    <li v-for="item in items.class" :class="{ active: tid == item.type_id }">
+     <a :href="ctx.path+'?tid='+item.type_id+'&tname='+item.type_name">{[item.type_name]}</a>
     </li>
    </ul>
    
@@ -163,6 +163,8 @@ const stuheaderComponent = {
 		ctx:{},
 		items:{class:[],list:[]},
 		hotsuggs:{data:[]},
+		tid:String,
+		isHome:Boolean,
 	},  //配置需要传入的属性
 	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
 };
@@ -199,6 +201,49 @@ const stubannerComponent = {
 		ctx:{},
 		items:{class:[],list:[]},
 		hotsuggs:{data:[]},
+	},  //配置需要传入的属性
+	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
+}
+
+const stufilterComponent = {
+	template:`
+	<div class="item" id="screenbox" style="display: none;">
+       <!-- 筛选 -->
+       <ul class="clearfix" v-for="filters in now_filters">
+        <li>
+         <span>按{[filters.name]}：</span>
+        </li>
+
+        <li v-for="obj in filters.value">
+         <a  :href="ctx.path+'?tid='+item.type_id+'&tname='+item.type_name+'&filter='+obj.v">{[obj.n]}</a>
+        </li>
+
+       </ul>
+       <!-- end 筛选 -->
+      </div>
+	`,
+	setup(props, context) {
+		console.log('stufilter组件加载完毕');
+		// console.log(props);
+		const items = props.items;
+		const tid = props.tid;
+		const now_filters = computed(() => {
+			console.log('计算now_filters');
+			// items.value.class.find(it=>it.type_id===tid);
+			let now_filters = items&&items.filters? items.filters[tid]:[];
+			console.log(now_filters);
+			return now_filters
+		});
+		return {
+			now_filters:now_filters
+		}
+	},
+	props:{
+		items:{},
+		now_filters:[],
+		tid:String,
+		ctx:{},
+		item:{},
 	},  //配置需要传入的属性
 	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
 }
