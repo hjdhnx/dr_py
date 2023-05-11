@@ -51,6 +51,7 @@
 							<button v-show="iframeShow" @click="openTestVideo">测试直链</button>
 							<iframe id="iframe-player" :src="iframeSrc" v-show="iframeShow"
 							allowfullscreen="true" allowtransparency="true" webkitallowfullscreen="true" mozallowfullscreen="true"
+							allow-same-origin="true"
 							name="iframe-player" scrolling="no" frameborder="0" ref="iframeRef"
 							></iframe>
 						</a>
@@ -284,17 +285,20 @@ const app = createApp({
 							for(const resource of resources){
 								let res_url = resource.name;
 								let res_url2 = res_url.split('?')[0];
-								if(res_url2.endsWith('.m3u8')){
+								if(res_url.endsWith('.m3u8')||res_url2.endsWith('.m3u8')){
 									console.log(`嗅探到m3u8文件:${res_url},共计嗅探:${counter}次`);
 									clearInterval(sniffer);
+									methods.setPlayUrl(res_url);
 									break;
-								}else if(res_url2.endsWith('.mp4')){
+								}else if(res_url.endsWith('.mp4')||res_url2.endsWith('.mp4')){
 									console.log(`嗅探到mp4文件:${res_url},共计嗅探:${counter}次`);
 									clearInterval(sniffer);
+									methods.setPlayUrl(res_url);
 									break;
-								}else if(/\.(m4a|mp3|flv|aac)$/.test(res_url2)){
+								}else if(/\.(m4a|mp3|flv|aac)$/.test(res_url)||/\.(m4a|mp3|flv|aac)$/.test(res_url2)){
 									console.log(`嗅探到音频文件:${res_url},共计嗅探:${counter}次`);
 									clearInterval(sniffer);
+									methods.setPlayUrl(res_url);
 									break;
 								}
 							}
@@ -317,6 +321,9 @@ const app = createApp({
 			},
 			openTestVideo(e){
 				iframeSrc.value = ctx.value.path+'?url='+'https://sf9-dycdn-tos.pstatp.com/obj/tos-cn-i-8gu37r9deh/7c399215485c40cb9f1d1da640354a12?filename=1.mp4';
+			},
+			setPlayUrl(url){
+				iframeSrc.value = ctx.value.path+'?url='+url;
 			}
 		}
 		return {
