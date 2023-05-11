@@ -2,9 +2,10 @@
 <html>
 <head>
 <title>{{ctx.tname}} - {{ctx.web_name}}</title>
+<meta name="referrer" content="no-referrer" />
 <meta name="keywords" content="电影,电影大全,电影天堂,最新电影,好看的电影,电影排行榜" />
 <meta name="description" content="为您提供更新电影、好看的电影排行榜及电影迅雷下载，免费在线观看伦理电影、动作片、喜剧片、爱情片、搞笑片等全新电影。" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" />
 <meta name="renderer" content="webkit|ie-comp|ie-stand">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -23,6 +24,7 @@
 <script src="/static/js/eruda.js"></script>
 
 <script src="/web/cms/mxpro/js/commonUI.js"></script>
+<link rel="stylesheet" href="/web/cms/mxpro/css/commonUI.css" type="text/css"/>
 <script>var maccms={"path":"","mid":"1","url":"5imv.cc","wapurl":"www.5imv.cc","mob_status":"2"};</script>
 <!--[if lt IE 9]>
 <script src="/web/cms/mxpro/js/html5shiv.min.js"></script>
@@ -36,7 +38,7 @@
         	<div class="stui-pannel">
         		<div class="stui-pannel__hd">
         			<!--vue组件-头部导航-->
-					<stu-header :ctx="ctx" :items="items" :hotsuggs="hotsuggs" :tid="tid" :isHome="isHome"></stu-header>
+					<stu-header :ctx="ctx" :items="items" :hotsuggs="hotsuggs" :tid="tid" :is_home="is_home"></stu-header>
         		</div>
 
         		<div class="stui-pannel__bd clearfix">
@@ -56,13 +58,13 @@
         			<ul class="stui-vodlist clearfix">
 						<li v-for="item in sitems.list">
 							<div class="stui-vodlist__box">
-								<a class="stui-vodlist__thumb lazyload" :href="'{{ctx.path}}?vod_id='+item.vod_id+'&vod_name='+item.vod_name" :title="item.vod_name" :data-original="item.vod_pic">
+								<a class="stui-vodlist__thumb lazyload" :href="'{{ctx.path}}?vod_id='+item.vod_id+'&vod_name='+item.vod_name+'&tid='+tid" :title="item.vod_name" :data-original="item.vod_pic">
 									<span class="play hidden-xs"></span>
 									<span class="pic-text1 text-right"><b>{[item.type_name]}</b></span>
 									<span class="pic-text text-right"><b>{[item.vod_remarks]}</b></span>
 								</a>
 								<div class="stui-vodlist__detail">
-									<h4 class="title text-overflow"><a :href="'{{ctx.path}}?vod_id='+item.vod_id+'&vod_name='+item.vod_name" :title="item.vod_name">{[item.vod_name]}</a></h4>
+									<h4 class="title text-overflow"><a :href="'{{ctx.path}}?vod_id='+item.vod_id+'&vod_name='+item.vod_name+'&tid='+tid" :title="item.vod_name">{[item.vod_name]}</a></h4>
 									<p class="text text-overflow text-muted hidden-xs">{[item.vod_content]}</p>
 								</div>
 							</div>
@@ -178,15 +180,15 @@ const app = createApp({
 		});
 
 		const now_pages = computed(() => {
-			console.log('计算now_pages：',(Number(pg)+10));
+			// console.log('计算now_pages：',(Number(pg)+10));
 			let start = (Number(pg)-5)>0?(Number(pg)-5):1;
-			let end = (Number(pg)+5) > start+5?start+5:(Number(pg)+5);
+			let end = (Number(pg)+5) > start+10?start+10:(Number(pg)+5);
 			let rangeArr = Array.from({ length: end - start + 1 }, (_, i) => start + i);
-			console.log(rangeArr);
+			// console.log(rangeArr);
 			return rangeArr
 		});
 
-		const isHome = ref(false);
+		const is_home = ref(false);
 
 		try {
 		items.value = JSON.parse(sessionStorage.getItem('items'))||items.value;
@@ -208,7 +210,7 @@ const app = createApp({
 			next_page:next_page,
 			vod_id:vod_id,
 			vod_name:vod_name,
-			isHome:isHome,
+			is_home:is_home,
 		}
 	},
 });
@@ -221,11 +223,11 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.timeout = 5000;
 app.config.globalProperties.$http = axios;
 console.log('---这里最先执行---');
-app.component('copy-right', copyrightComponent);
-app.component('foot-button', footbuttonComponent);
-app.component('note-popup', notepopupComponent);
-app.component('stu-header', stuheaderComponent);
-app.component('stu-filter', stufilterComponent);
+app.component('copy-right',  copyRightComponent);
+app.component('foot-button', footButtonComponent);
+app.component('note-popup',  notePopup);
+app.component('stu-header', stuHeaderComponent);
+app.component('stu-filter', stuFilterComponent);
 app.mount('#app');
 eruda.init();
 

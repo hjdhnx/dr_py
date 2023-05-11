@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>{{ctx.vod_name}}详情介绍-{{ctx.vod_name}}在线观看-{{ctx.vod_name}}迅雷下载 - {{ctx.web_name}}</title>
+<meta name="referrer" content="no-referrer" />
 <meta name="keywords" content="{{ctx.vod_name}}在线收看,{{ctx.vod_name}}迅雷下载" />
 <meta name="description" content="{{ctx.vod_name}}剧情:" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -22,6 +23,7 @@
 <script src="/static/js/eruda.js"></script>
 
 <script src="/web/cms/mxpro/js/commonUI.js"></script>
+<link rel="stylesheet" href="/web/cms/mxpro/css/commonUI.css" type="text/css" />
 <script>var maccms={"path":"","mid":"1","url":"5imv.cc","wapurl":"www.5imv.cc","mob_status":"2"};</script>
 <!--[if lt IE 9]>
 <script src="/web/cms/mxpro/js/html5shiv.min.js"></script>
@@ -32,7 +34,7 @@
 <body>
 <div id="app">
 	<!--vue组件-头部导航-->
-	<stu-header :ctx="ctx" :items="items" :hotsuggs="hotsuggs"></stu-header>
+	<stu-header :ctx="ctx" :items="items" :hotsuggs="hotsuggs" :is_home="is_home" :tid="tid"></stu-header>
 
     <div class="container">
         <div class="row">      
@@ -164,6 +166,7 @@ const app = createApp({
 		const {self, proxy} = getCurrentInstance();
 		const web_name = '{{ctx.web_name}}';
 		const pwd = '{{ctx.pwd}}';
+		const tid = '{{ctx.tid}}';
 		const vod_id = '{{ctx.vod_id}}';
 		const vod_name = '{{ctx.vod_name}}';
 		console.log(web_name);
@@ -220,7 +223,7 @@ const app = createApp({
 			console.log('fast_play');
   			return vod_urls.value&&vod_urls.value.length>0?vod_urls.value[0][0].url:'';
 		});
-
+		const is_home = ref(true);
 		try {
 		items.value = JSON.parse(sessionStorage.getItem('items'))||items.value;
 		hotsuggs.value = JSON.parse(sessionStorage.getItem('hotsuggs'))||hotsuggs.value;
@@ -228,8 +231,10 @@ const app = createApp({
 		return {
 			ctx:ctx,
 			items:items,
+			is_home:is_home,
 			hotsuggs:hotsuggs,
 			web_name:web_name,
+			tid:tid,
 			vod_id:vod_id,
 			vod_name:vod_name,
 			details:details,
@@ -250,10 +255,10 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.timeout = 5000;
 app.config.globalProperties.$http = axios;
 console.log('---这里最先执行---');
-app.component('copy-right', copyrightComponent);
-app.component('foot-button', footbuttonComponent);
-app.component('note-popup', notepopupComponent);
-app.component('stu-header', stuheaderComponent);
+app.component('copy-right',  copyRightComponent);
+app.component('foot-button', footButtonComponent);
+app.component('note-popup',  notePopup);
+app.component('stu-header', stuHeaderComponent);
 app.mount('#app');
 eruda.init();
 

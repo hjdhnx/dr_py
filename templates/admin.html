@@ -195,6 +195,16 @@
             $('#lives').click(function () {
                 location.href = '/admin/lives'
             });
+            $("summary").click(function() {
+                // console.log('summary被点击');
+                const details = $('details');
+                if(details.attr("open")){
+                    $(this).text('数据列表已隐藏 点击展开详情');
+                }else{
+                    $(this).text('数据列表已展开 点击隐藏详情');
+                }
+                details.click();
+            });
 
         });
         function getFileSize(fileObj) {

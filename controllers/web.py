@@ -57,6 +57,7 @@ def web_index(web_name, theme):
     ctx['pg'] = pg
     ctx['tid'] = tid
     ctx['tname'] = tname
+    print('tid:',tid)
 
     try:
         if vod_id and vod_name:

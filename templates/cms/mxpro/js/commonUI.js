@@ -1,4 +1,4 @@
-const copyrightComponent = {
+const copyRightComponent = {
 	template:`
 <div class="container">
 			<div class="row">
@@ -27,8 +27,8 @@ const copyrightComponent = {
 </div>
 			`,
 			setup(props, context) {
-				console.log('copyright组件加载完毕');
-				console.log(props);
+				console.log('copyRight组件加载完毕');
+				// console.log(props);
 			},
 			props:{
 				path:'',
@@ -37,7 +37,7 @@ const copyrightComponent = {
 			delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
 };
 
-const footbuttonComponent = {
+const footButtonComponent = {
 	template: `
 	<div class="fixed_right_bar">
 		<div style="margin-top:3px;cursor: pointer;" class="copylink" >
@@ -54,14 +54,14 @@ const footbuttonComponent = {
 	</div>	
 	`,
 	setup(props, context) {
-		console.log('footbutton组件加载完毕');
+		console.log('footButton组件加载完毕');
 		// console.log(props);
 	},
 	props:{},  //配置需要传入的属性
 	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
 };
 
-const notepopupComponent = {
+const notePopup = {
 	template: `
 <div class="hide"></div>
 <div class="popup" id="note" style="display: none;">
@@ -79,8 +79,8 @@ const notepopupComponent = {
   <div class="popup-footer"><span class="popup-btn" onclick="closeclick()">我记住啦</span></div>
 </div>`,
 	setup(props, context) {
-		console.log('note-popup组件加载完毕');
-		console.log(props);
+		console.log('notePopup组件加载完毕');
+		// console.log(props);
 	},
 	props:{
 		path:'',
@@ -89,7 +89,7 @@ const notepopupComponent = {
 	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
 };
 
-const stuheaderComponent = {
+const stuHeaderComponent = {
 	template: `
 <header class="stui-header clearfix">
  <div class="container"> 
@@ -114,7 +114,7 @@ const stuheaderComponent = {
     <li>
      <a href="javascript:;"><i class="iconfont icon-viewgallery"></i></a>
      <ul class="dropdown type clearfix">
-      <li :class="{ active: !!isHome }"><a :href="ctx.path">首页</a></li>
+      <li :class="{ active: !!is_home && !tid }"><a :href="ctx.path">首页</a></li>
       <li v-for="item in items.class" :class="{ active: tid == item.type_id }">
        <a :href="ctx.path+'?tid='+item.type_id+'&tname='+item.type_name">{[item.type_name]}</a>
       </li>
@@ -144,7 +144,7 @@ const stuheaderComponent = {
     <a class="logo" :href="ctx.path"></a>
    </div>
    <ul class="stui-header__menu">
-    <li :class="{ active: !!isHome }"><a :href="ctx.path">首页</a></li>
+    <li :class="{ active: !!is_home }"><a :href="ctx.path">首页</a></li>
     <li v-for="item in items.class" :class="{ active: tid == item.type_id }">
      <a :href="ctx.path+'?tid='+item.type_id+'&tname='+item.type_name">{[item.type_name]}</a>
     </li>
@@ -156,20 +156,57 @@ const stuheaderComponent = {
 	
 	`,
 	setup(props, context) {
-		console.log('stuheader组件加载完毕');
-		console.log(props);
+		console.log('stuHeader组件加载完毕');
+		// console.log(props);
 	},
 	props:{
 		ctx:{},
 		items:{class:[],list:[]},
 		hotsuggs:{data:[]},
 		tid:String,
-		isHome:Boolean,
+		is_home:Boolean,
 	},  //配置需要传入的属性
 	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
 };
 
-const stubannerComponent = {
+const stuCategoryComponent = {
+	template: `
+	<v v-for="item in items.class">
+	<div class="stui-vodlist__head">
+      <a class="pull-right" :href="ctx.path+'?tid='+item.type_id+'&tname='+item.type_name">更多 <i class="iconfont icon-more"></i></a>
+      <p>
+            </p>
+      <h3><a :href="ctx.path+'?tid='+item.type_id+'&tname='+item.type_name"><i class="iconfont icon-all"></i>  {[item.type_name]}</a></h3>
+     </div>
+     <ul class="stui-vodlist clearfix">
+      <li style="display: none">
+       <div class="stui-vodlist__box">
+       <a class="stui-vodlist__thumb lazyload" href="/v/107952/" title="侠盗之簪花乱" data-original="">
+        <span class="play hidden-xs"></span>
+        <span class="pic-text1 text-right"><b>电影</b></span>
+        <span class="pic-text text-right"><b>HD国语</b></span>
+       </a>
+       <div class="stui-vodlist__detail">
+        <h4 class="title text-overflow"><a href="/v/107952/" title="侠盗之簪花乱">侠盗之簪花乱</a></h4>
+        <p class="text text-overflow text-muted hidden-xs">冯建宇林妍柔</p>
+       </div>
+       </div>
+      </li>
+     </ul>
+     </v>
+	`,
+	setup(props, context) {
+		console.log('stuCategory组件加载完毕');
+		// console.log(props);
+	},
+	props:{
+		ctx:{},
+		items:{class:[],list:[]},
+	},  //配置需要传入的属性
+	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
+};
+
+const stuBannerComponent = {
 	template:`
 <div class="stui-pannel__bd">
     <div class="carousel carousel_default flickity-page">
@@ -194,8 +231,8 @@ const stubannerComponent = {
 	
 	`,
 	setup(props, context) {
-		console.log('stubanner组件加载完毕');
-		console.log(props);
+		console.log('stuBanner组件加载完毕');
+		// console.log(props);
 	},
 	props:{
 		ctx:{},
@@ -203,9 +240,9 @@ const stubannerComponent = {
 		hotsuggs:{data:[]},
 	},  //配置需要传入的属性
 	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
-}
+};
 
-const stufilterComponent = {
+const stuFilterComponent = {
 	template:`
 	<div class="item" id="screenbox" style="display: none;">
        <!-- 筛选 -->
@@ -223,15 +260,15 @@ const stufilterComponent = {
       </div>
 	`,
 	setup(props, context) {
-		console.log('stufilter组件加载完毕');
+		console.log('stuFilter组件加载完毕');
 		// console.log(props);
 		const items = props.items;
 		const tid = props.tid;
 		const now_filters = computed(() => {
-			console.log('计算now_filters');
+			// console.log('计算now_filters');
 			// items.value.class.find(it=>it.type_id===tid);
 			let now_filters = items&&items.filters? items.filters[tid]:[];
-			console.log(now_filters);
+			// console.log(now_filters);
 			return now_filters
 		});
 		return {
@@ -246,11 +283,52 @@ const stufilterComponent = {
 		item:{},
 	},  //配置需要传入的属性
 	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
-}
+};
+
+
+const stuTopicComponent = {
+	template:`
+	<div class="stui-vodlist__head">
+      <h3><a :href="link"><i class="iconfont icon-all"></i> 最新专题</a></h3>
+ 	</div>
+     <ul class="stui-vodlist clearfix">
+     </ul>
+	`,
+	setup(props, context) {
+		console.log('stuTopic组件加载完毕');
+		// console.log(props);
+	},
+	props:{
+		link:'',
+	},  //配置需要传入的属性
+	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
+};
+
+const stuLinksComponent = {
+	template:`
+	<ul class="stui-link__text clearfix">
+      <li><span>友情链接：</span>
+       <a v-for='link in links' :href="link.url" class="links" target="_blank">{[link.name]}</a>
+      </li>
+     </ul>
+	`,
+	setup(props, context) {
+		console.log('stuLinks组件加载完毕');
+		// console.log(props);
+	},
+	props:{
+		links:[],
+	},  //配置需要传入的属性
+	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
+};
 
 //下面的注册组件方法无法使用,需要在app里去注册
-// Vue.component('copy-right', copyrightComponent);
-// Vue.component('foot-button', footbuttonComponent);
-// Vue.component('note-popup', notepopupComponent);
-// Vue.component('stu-header', stuheaderComponent);
-// Vue.component('stu-banner', stubannerComponent);
+// Vue.component('copy-right',  copyRightComponent);
+// Vue.component('foot-button', footButtonComponent);
+// Vue.component('note-popup',  notePopup);
+// Vue.component('stu-header', stuHeaderComponent);
+// Vue.component('stu-banner', stuBannerComponent);
+
+/*注意事项
+封装组件过程中传递属性名称一定不能含有大写,比如isHome会被强制识别为is-home，所以应该传递为is_home
+ */
