@@ -37,14 +37,16 @@
 	<stu-header :ctx="ctx" :items="items" :hotsuggs="hotsuggs" :is_home="is_home" :tid="tid"></stu-header>
 
     <div class="container">
-        <div class="row">      
+        <div class="row">
+
 		<div class="stui-pannel clearfix">
 		<div class="stui-pannel-box">
 			<div class="stui-pannel__bd">
 				<div class="stui-content">
 					<div class="stui-content__thumb">
 						<a class="pic" href="" title="{{ctx.vod_name}}">
-							<img class="lazyload" :data-original="dinfo.vod_pic" src="/web/cms/mxpro/img/load.gif" />
+							<img class="lazyload" :data-original="dinfo.vod_pic" src="/web/cms/mxpro/img/load.gif" v-show="!iframeShow"/>
+							<iframe :src="iframeSrc" v-show="iframeShow" frameborder="0" scrolling="no"></iframe>
 						</a>
 					</div>
 					<div class="stui-content__detail">
@@ -78,7 +80,7 @@
 				<h3 class="title"><i class="iconfont icon-iconfontplay2"></i> 	{[vod_tab]}</h3>
 					<ul class="stui-content__playlist clearfix">
 						<li v-for="vod_url in vod_urls[index]">
-							<a :href="vod_url.url">{[vod_url.name]}</a>
+							<a :href="vod_url.url" @click.prevent="lazyPlay(vod_url.url)">{[vod_url.name]}</a>
 						</li>
 				   </ul>
 				</div>
@@ -228,7 +230,26 @@ const app = createApp({
 		items.value = JSON.parse(sessionStorage.getItem('items'))||items.value;
 		hotsuggs.value = JSON.parse(sessionStorage.getItem('hotsuggs'))||hotsuggs.value;
 		}catch (e) {}
+
+		const iframeSrc = ref('');
+		const iframeShow = ref(false);
+
+		const methods = {
+			async lazyPlay(url){
+				iframeShow.value = true;
+				console.log('准备处理播放地址:'+url);
+				try {
+					const res = await axios.get(url,{maxRedirects: 0});
+					console.log(res.data);
+				}catch (e) {
+					console.log('抓到了错误:'+e.message);
+					console.log('iframeSrc.value:',iframeSrc.value);
+					iframeSrc.value = url;
+				}
+			},
+		};
 		return {
+			...methods,
 			ctx:ctx,
 			items:items,
 			is_home:is_home,
@@ -243,6 +264,8 @@ const app = createApp({
 			vod_tabs:vod_tabs,
 			vod_urls:vod_urls,
 			fast_play:fast_play,
+			iframeSrc:iframeSrc,
+			iframeShow:iframeShow,
 		}
 	},
 });

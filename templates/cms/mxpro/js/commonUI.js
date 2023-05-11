@@ -171,7 +171,7 @@ const stuHeaderComponent = {
 
 const stuCategoryComponent = {
 	template: `
-	<v v-for="item in items.class">
+	<div v-for="item in items.class">
 	<div class="stui-vodlist__head">
       <a class="pull-right" :href="ctx.path+'?tid='+item.type_id+'&tname='+item.type_name">更多 <i class="iconfont icon-more"></i></a>
       <p>
@@ -193,7 +193,7 @@ const stuCategoryComponent = {
        </div>
       </li>
      </ul>
-     </v>
+     </div>
 	`,
 	setup(props, context) {
 		console.log('stuCategory组件加载完毕');
@@ -317,7 +317,7 @@ const stuLinksComponent = {
 		// console.log(props);
 	},
 	props:{
-		links:[],
+		links:Array,
 	},  //配置需要传入的属性
 	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
 };

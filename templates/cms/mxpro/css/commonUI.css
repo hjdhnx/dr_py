@@ -1,3 +1,8 @@
 a.links{
 	margin-right: 5px;
 }
+
+.stui-content__thumb .pic iframe{
+max-width: 100%;
+border-radius: 2px;height:155px;
+}

@@ -157,7 +157,7 @@ const app = createApp({
 
 		const ctx_str = "ctxObj={{ctx|safe}}";
 		eval(ctx_str);
-		// console.log(ctxObj)
+		console.log(ctxObj)
 		const ctx = ref(ctxObj);
 
 		const items = ref({
@@ -175,7 +175,9 @@ const app = createApp({
 		try {
 		items.value = JSON.parse(sessionStorage.getItem('items'))||items.value;
 		hotsuggs.value = JSON.parse(sessionStorage.getItem('hotsuggs'))||hotsuggs.value;
-		}catch (e) {}
+		}catch (e) {
+			console.log(e.message)
+		}
 		return {
 			ctx:ctx,
 			items:items,
