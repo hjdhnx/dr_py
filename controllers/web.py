@@ -5,6 +5,7 @@
 # Date  : 2022/9/6
 import functools
 import json
+import os
 
 from flask import Blueprint, abort, request, render_template, send_from_directory, render_template_string, jsonify, \
     make_response, redirect, \
@@ -32,10 +33,16 @@ web = Blueprint("web", __name__)
 
 
 @web.route('/cms/<path:filename>')
-def custom_static_js(filename):
+def custom_static_cms(filename):
     # 自定义静态目录 {{ url_for('custom_static',filename='help.txt')}}
     # print(filename)
     return send_from_directory('templates/cms', filename)
+
+@web.route('/player/<path:filename>')
+def custom_static_player(filename):
+    # 自定义静态目录 {{ url_for('custom_static',filename='help.txt')}}
+    # print(filename)
+    return send_from_directory('templates/player', filename)
 
 @web.route('/<web_name>/<theme>')
 def web_index(web_name, theme):
@@ -51,16 +58,26 @@ def web_index(web_name, theme):
     pg = getParmas('pg') or '1'
     tid = getParmas('tid')
     tname = getParmas('tname')
+    url = getParmas('url')
+    player = getParmas('player') or 'mui'
     ctx['vod_id'] = vod_id
     ctx['vod_name'] = vod_name
     ctx['wd'] = wd
     ctx['pg'] = pg
     ctx['tid'] = tid
     ctx['tname'] = tname
+    ctx['url'] = url
     print('tid:',tid)
 
+    file_path = os.path.abspath(f'js/{web_name}.js')
+    print(file_path)
+    if not os.path.exists(file_path):
+        return render_template('404.html', ctx=ctx, error=f'发生错误的原因可能是下面路径未找到:{file_path}')
+
     try:
-        if vod_id and vod_name:
+        if url:
+            return render_template(f'player/{player}/index.html', ctx=ctx)
+        elif vod_id and vod_name:
             return render_template(f'cms/{theme}/detailContent.html', ctx=ctx)
         elif wd:
             return render_template(f'cms/{theme}/searchContent.html', ctx=ctx)

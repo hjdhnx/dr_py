@@ -46,7 +46,7 @@
 					<div class="stui-content__thumb">
 						<a class="pic" href="" title="{{ctx.vod_name}}">
 							<img class="lazyload" :data-original="dinfo.vod_pic" src="/web/cms/mxpro/img/load.gif" v-show="!iframeShow"/>
-							<iframe :src="iframeSrc" v-show="iframeShow" frameborder="0" scrolling="no"></iframe>
+							<iframe :src="iframeSrc" v-show="iframeShow" frameborder="no" scrolling="no"></iframe>
 						</a>
 					</div>
 					<div class="stui-content__detail">
@@ -241,6 +241,10 @@ const app = createApp({
 				try {
 					const res = await axios.get(url,{maxRedirects: 0});
 					console.log(res.data);
+					if(!res.data.parse&&res.data.url){
+						console.log(ctx.value);
+						iframeSrc.value = ctx.value.path+'?url='+res.data.url;
+					}
 				}catch (e) {
 					console.log('抓到了错误:'+e.message);
 					console.log('iframeSrc.value:',iframeSrc.value);
