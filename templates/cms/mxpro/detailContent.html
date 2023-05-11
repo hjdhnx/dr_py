@@ -253,7 +253,9 @@ const app = createApp({
 					if(!res.data.parse&&res.data.url){
 						console.log(ctx.value);
 						iframeSrc.value = ctx.value.path+'?url='+res.data.url;
-					}else if(res.data.parse&&res.data.url){
+					}else if(/url=/.test(res.data.url)){
+						iframeSrc.value = res.data.url;
+					} else if((res.data.parse||res.data.jx)&&res.data.url){
 						console.log(ctx.value);
 						iframeSrc.value = res.data.url;
 						if(confirm('该视频来自其它正版地址,drpy网页暂未实现解析功能,是否跳到正版站通过油猴插件等手段播放?')){
