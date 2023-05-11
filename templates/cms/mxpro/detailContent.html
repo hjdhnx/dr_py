@@ -242,17 +242,33 @@ const app = createApp({
 		const iframeShow = ref(false);
 		const photoVisible = ref(false);
 		const iframeRef = ref(null);
+		var sniffer;
 
 		const methods = {
 			async lazyPlay(url){
 				iframeShow.value = true;
 				console.log('准备处理播放地址:'+url);
+				clearInterval(sniffer);
 				try {
+					if(/\.(m3u8|mp4)/.test(url)){
+						console.log('直接播放');
+						methods.setPlayUrl(url);
+						return
+					}
 					const res = await axios.get(url,{maxRedirects: 0});
+					const { status, headers: { Location } } = res;
+					// console.log(status);
+					console.log(res.request.responseURL);
+					if (status === 302) {
+						console.log(Location);
+					}
 					console.log(res.data);
-					if(!res.data.parse&&res.data.url){
-						console.log(ctx.value);
-						iframeSrc.value = ctx.value.path+'?url='+res.data.url;
+					if(typeof(res.data)==='string' && /#EXTM3U/.test(res.data)){
+						iframeRef.value.contentWindow.location.reload();
+						iframeSrc.value = url;
+						throw new Error('重定向类文件无法直接播放,尝试嗅探');
+					} else if(!res.data.parse&&res.data.url){
+						methods.setPlayUrl(res.data.url);
 					}else if(/url=/.test(res.data.url)){
 						iframeSrc.value = res.data.url;
 					} else if((res.data.parse||res.data.jx)&&res.data.url){
@@ -267,12 +283,11 @@ const app = createApp({
 					console.log('iframeSrc.value:',iframeSrc.value);
 					iframeSrc.value = url;
 					const total_time = 10000;
-					var sniffer;
 					var counter = 1; // 嗅探计数
 					var speeder = 250; // 嗅探间隔
 					var total_counter = total_time/speeder;
 					let iframeWindow = iframeRef.value.contentWindow;
-					clearInterval(sniffer);
+
 					console.log(`开始嗅探,最多嗅探:${total_counter}次...`);
 					sniffer = setInterval(function (){
 						console.log(`第${counter}次嗅探开始`);
@@ -322,7 +337,8 @@ const app = createApp({
 				}
 			},
 			openTestVideo(e){
-				iframeSrc.value = ctx.value.path+'?url='+'https://sf9-dycdn-tos.pstatp.com/obj/tos-cn-i-8gu37r9deh/7c399215485c40cb9f1d1da640354a12?filename=1.mp4';
+				methods.lazyPlay('https://sf9-dycdn-tos.pstatp.com/obj/tos-cn-i-8gu37r9deh/7c399215485c40cb9f1d1da640354a12?filename=1.mp4');
+				// iframeSrc.value = ctx.value.path+'?url='+'https://sf9-dycdn-tos.pstatp.com/obj/tos-cn-i-8gu37r9deh/7c399215485c40cb9f1d1da640354a12?filename=1.mp4';
 			},
 			setPlayUrl(url){
 				iframeSrc.value = ctx.value.path+'?url='+url;
@@ -348,6 +364,7 @@ const app = createApp({
 			iframeShow:iframeShow,
 			photoVisible:photoVisible,
 			iframeRef:iframeRef,
+			sniffer:sniffer,
 		}
 	},
 });
@@ -358,6 +375,7 @@ axios.defaults.baseURL = "/";
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 // 请求超时5000毫秒
 axios.defaults.timeout = 5000;
+axios.defaults.withCredentials = true;
 app.config.globalProperties.$http = axios;
 console.log('---这里最先执行---');
 app.component('copy-right',  copyRightComponent);
