@@ -322,6 +322,41 @@ const stuLinksComponent = {
 	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
 };
 
+const StuImageComponent = {
+	template:`
+	<div v-show="visible" @click="closeImage" class="showPhoto">
+    	<img class="img" :src="url" alt="图片加载失败" />
+  	</div>
+	`,
+	setup(props, context) {
+		console.log('StuImage组件加载完毕');
+		const methods = {
+			closeImage(e) {
+			  //子组件可以使用 context.emit 触发父组件的自定义事件
+				// console.log(context.emit);
+				// console.log('调用父组件 closeImage');
+				context.emit('close_image');
+			},
+		};
+		return {
+			...methods,
+			// visible
+		}
+	},
+	props: {
+		url: {
+			type: String,
+			default: "",
+		},
+		visible: {
+			type: Boolean,
+			default: false,
+		},
+	},//配置需要传入的属性
+	emits :['close_image'],
+	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
+}
+
 //下面的注册组件方法无法使用,需要在app里去注册
 // Vue.component('copy-right',  copyRightComponent);
 // Vue.component('foot-button', footButtonComponent);

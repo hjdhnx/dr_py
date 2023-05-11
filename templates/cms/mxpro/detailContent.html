@@ -44,9 +44,15 @@
 			<div class="stui-pannel__bd">
 				<div class="stui-content">
 					<div class="stui-content__thumb">
-						<a class="pic" href="" title="{{ctx.vod_name}}">
-							<img class="lazyload" :data-original="dinfo.vod_pic" src="/web/cms/mxpro/img/load.gif" v-show="!iframeShow"/>
-							<iframe :src="iframeSrc" v-show="iframeShow" frameborder="no" scrolling="no"></iframe>
+						<a class="pic" title="{{ctx.vod_name}}">
+							<img class="lazyload" :data-original="dinfo.vod_pic" src="/web/cms/mxpro/img/load.gif" v-show="!iframeShow" @click.self="showBigImage($event)"/>
+							<stu-image :visible="photoVisible" :url="dinfo.vod_pic" @close_image="photoVisible=false"></stu-image>
+							<button v-show="iframeShow" onclick="openFullScreen()">全屏播放</button>
+							<button v-show="iframeShow" @click="openTestVideo">测试直链</button>
+							<iframe id="iframe-player" :src="iframeSrc" v-show="iframeShow"
+							allowfullscreen="true" allowtransparency="true" webkitallowfullscreen="true" mozallowfullscreen="true"
+							name="iframe-player" scrolling="no" frameborder="0" ref="iframeRef"
+							></iframe>
 						</a>
 					</div>
 					<div class="stui-content__detail">
@@ -65,7 +71,7 @@
 							<a class="detail-more" href="javascript:;">详情 <i class="icon iconfont icon-moreunfold"></i></a>
 						</p>
 						<div class="play-btn">
-							<a :href="fast_play">立即播放</a>
+							<a :href="fast_play" @click.prevent="lazyPlay(fast_play)">立即播放</a>
 <!--							<a href="">收藏</a>-->
 						</div>
 					</div>
@@ -124,7 +130,7 @@
 <!--vue结束-->
 
 <script>
-const { createApp,reactive, toRefs, ref,getCurrentInstance,onBeforeMount, onMounted,onBeforeUpdate,onUpdated,onBeforeUnmount, onUnmounted, watch,computed } = Vue;
+const { createApp,defineEmits,reactive, toRefs, ref,getCurrentInstance,onBeforeMount, onMounted,onBeforeUpdate,onUpdated,onBeforeUnmount, onUnmounted, watch,computed } = Vue;
 const app = createApp({
 	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
 	props: {},
@@ -233,6 +239,8 @@ const app = createApp({
 
 		const iframeSrc = ref('');
 		const iframeShow = ref(false);
+		const photoVisible = ref(false);
+		const iframeRef = ref(null);
 
 		const methods = {
 			async lazyPlay(url){
@@ -244,14 +252,73 @@ const app = createApp({
 					if(!res.data.parse&&res.data.url){
 						console.log(ctx.value);
 						iframeSrc.value = ctx.value.path+'?url='+res.data.url;
+					}else if(res.data.parse&&res.data.url){
+						console.log(ctx.value);
+						iframeSrc.value = res.data.url;
+						if(confirm('该视频来自其它正版地址,drpy网页暂未实现解析功能,是否跳到正版站通过油猴插件等手段播放?')){
+							open(res.data.url);
+						}
 					}
 				}catch (e) {
 					console.log('抓到了错误:'+e.message);
 					console.log('iframeSrc.value:',iframeSrc.value);
 					iframeSrc.value = url;
+					const total_time = 10000;
+					var sniffer;
+					var counter = 1; // 嗅探计数
+					var speeder = 250; // 嗅探间隔
+					var total_counter = total_time/speeder;
+					let iframeWindow = iframeRef.value.contentWindow;
+					clearInterval(sniffer);
+					console.log(`开始嗅探,最多嗅探:${total_counter}次...`);
+					sniffer = setInterval(function (){
+						console.log(`第${counter}次嗅探开始`);
+						if(counter >= total_counter){
+							clearInterval(sniffer);
+							console.log(`嗅探超时并结束,共计嗅探:${counter}次`);
+							return
+						}
+						try {
+							let resources = iframeWindow.performance.getEntriesByType('resource');
+							console.log(resources);
+							for(const resource of resources){
+								let res_url = resource.name;
+								let res_url2 = res_url.split('?')[0];
+								if(res_url2.endsWith('.m3u8')){
+									console.log(`嗅探到m3u8文件:${res_url},共计嗅探:${counter}次`);
+									clearInterval(sniffer);
+									break;
+								}else if(res_url2.endsWith('.mp4')){
+									console.log(`嗅探到mp4文件:${res_url},共计嗅探:${counter}次`);
+									clearInterval(sniffer);
+									break;
+								}else if(/\.(m4a|mp3|flv|aac)$/.test(res_url2)){
+									console.log(`嗅探到音频文件:${res_url},共计嗅探:${counter}次`);
+									clearInterval(sniffer);
+									break;
+								}
+							}
+						}catch (e) {
+							console.log(`第${counter}次嗅探发生错误:`,e.message);
+						}
+						console.log(`第${counter}次嗅探完毕`);
+						counter+=1;
+
+					},speeder);
+
 				}
 			},
-		};
+			showBigImage(e) {//点击图片函数，点击后，把photoVisible设置成true
+				// console.log('showBigImage:',e);
+				if (e !== "") {
+				  // this.photoVisible = true; // 这样也可以
+					photoVisible.value = true;
+				}
+			},
+			openTestVideo(e){
+				iframeSrc.value = ctx.value.path+'?url='+'https://sf9-dycdn-tos.pstatp.com/obj/tos-cn-i-8gu37r9deh/7c399215485c40cb9f1d1da640354a12?filename=1.mp4';
+			}
+		}
 		return {
 			...methods,
 			ctx:ctx,
@@ -270,6 +337,8 @@ const app = createApp({
 			fast_play:fast_play,
 			iframeSrc:iframeSrc,
 			iframeShow:iframeShow,
+			photoVisible:photoVisible,
+			iframeRef:iframeRef,
 		}
 	},
 });
@@ -286,6 +355,7 @@ app.component('copy-right',  copyRightComponent);
 app.component('foot-button', footButtonComponent);
 app.component('note-popup',  notePopup);
 app.component('stu-header', stuHeaderComponent);
+app.component('stu-image', StuImageComponent);
 app.mount('#app');
 eruda.init();
 
@@ -323,6 +393,19 @@ $(function(){
 	$('.ant-back-top').click(function(){
 	$('html,body').animate({scrollTop: '0px'}, 800);});
 });
+function openFullScreen(){
+	console.log('点击全屏');
+	let elem = document.getElementById('iframe-player');
+	if (elem.requestFullScreen) {
+		elem.requestFullScreen();
+	} else if (elem.mozRequestFullScreen) {/* Firefox */
+		elem.mozRequestFullScreen();
+	} else if (elem.webkitRequestFullScreen) { /* Chrome, Safari and Opera */
+		elem.webkitRequestFullScreen();
+	} else if (elem.msRequestFullScreen) { /* IE/Edge */
+		elem.msRequestFullScreen();
+	}
+}
 </script>
 
 </body>
