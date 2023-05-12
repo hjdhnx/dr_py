@@ -56,3 +56,4 @@ JS_PROXY = 'http://localhost:5705/admin/view/=>https://ghproxy.net/https://raw.g
 ALI_TOKEN = ''  # 适用于初始配置的阿里云token
 ENV = '{"bili_cookie":""}'  # 自定义环境变量
 UPDATE_PROXY = 'https://ghproxy.net/'  # 检测升级代理
+Thread = True  # 开启windows多线程调用

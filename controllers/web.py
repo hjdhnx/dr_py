@@ -6,10 +6,11 @@
 import functools
 import json
 import os
-
+from urllib.parse import urljoin
+import requests
 from flask import Blueprint, abort, request, render_template, send_from_directory, render_template_string, jsonify, \
     make_response, redirect, \
-    current_app
+    current_app, url_for
 from time import time
 from utils.web import getParmas, get_interval
 from utils.cfg import cfg
@@ -38,11 +39,13 @@ def custom_static_cms(filename):
     # print(filename)
     return send_from_directory('templates/cms', filename)
 
+
 @web.route('/player/<path:filename>')
 def custom_static_player(filename):
     # 自定义静态目录 {{ url_for('custom_static',filename='help.txt')}}
     # print(filename)
     return send_from_directory('templates/player', filename)
+
 
 @web.route('/<web_name>/<theme>')
 def web_index(web_name, theme):
@@ -67,7 +70,7 @@ def web_index(web_name, theme):
     ctx['tid'] = tid
     ctx['tname'] = tname
     ctx['url'] = url
-    print('tid:',tid)
+    print('tid:', tid)
 
     file_path = os.path.abspath(f'js/{web_name}.js')
     print(file_path)
@@ -87,3 +90,50 @@ def web_index(web_name, theme):
             return render_template(f'cms/{theme}/homeContent.html', ctx=ctx)
     except Exception as e:
         return render_template('404.html', ctx=ctx, error=f'发生错误的原因可能是下面路径未找到:{e}')
+
+
+@web.route('/302redirect')
+def get302UrlResponse():
+    url = getParmas('url')
+    if not url:
+        abort(403)
+    params = {}
+    if not url.startswith('http'):
+        url = urljoin(request.root_url, url)
+        # url = urljoin('http://localhost:5705/',url)
+        print(url)
+        items = url.split('vod?')[1].split('&')
+        for item in items:
+            params[item.split('=')[0]] = item.split('=')[1]
+        print(params)
+        # abort(403)
+
+    timeout = getParmas('timeout') or 5000
+    rurl = url
+    try:
+        timeout = int(timeout)
+        headers = {
+            # 'referer': url,
+            'user-agent': 'Mozilla/5.0'
+        }
+        print('开始调用接口:', url)
+        r = requests.get(url, headers=headers, timeout=timeout, verify=False)
+        rurl = r.url
+
+        # rurl = url_for('vod.vod_home', **params)
+        # print(rurl)
+        print('结束调用接口:', rurl)
+        return jsonify({
+            'url': rurl,
+            'redirect': rurl != url,
+            'data': r.text,
+        })
+
+    except Exception as e:
+        logger.info(f'发生了错误:{e}')
+        return jsonify({
+            'url': rurl,
+            'redirect': rurl != url,
+            'data': None,
+            'error': f'{e}',
+        })

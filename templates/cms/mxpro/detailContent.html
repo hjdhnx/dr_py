@@ -22,6 +22,7 @@
 <script src="/static/js/axios.min.js"></script>
 <script src="/static/js/eruda.js"></script>
 
+<script type="text/javascript" src="/web/cms/mxpro/js/commonUtil.js"></script>
 <script src="/web/cms/mxpro/js/commonUI.js"></script>
 <link rel="stylesheet" href="/web/cms/mxpro/css/commonUI.css" type="text/css" />
 <script>var maccms={"path":"","mid":"1","url":"5imv.cc","wapurl":"www.5imv.cc","mob_status":"2"};</script>
@@ -243,39 +244,72 @@ const app = createApp({
 		const photoVisible = ref(false);
 		const iframeRef = ref(null);
 		var sniffer;
-
+		const {isVideo,getRealUrl} = commonUtil;
+		// get302UrlResponse('/vod?pwd=dzyyds&rule=007影视&ext=&play_url=https%3A//www.007ts.me/play/69636-3-1.html',(resp)=>{
+		// 	console.log('重定向到:',resp);
+		// });
+		// getRealUrl('/vod?pwd=dzyyds&rule=007影视&ext=&play_url=https%3A//www.007ts.me/play/69636-3-1.html',(res)=>{
+		// 	console.log('重定向到:',res);
+		// });
 		const methods = {
 			async lazyPlay(url){
 				iframeShow.value = true;
 				console.log('准备处理播放地址:'+url);
 				clearInterval(sniffer);
 				try {
-					if(/\.(m3u8|mp4)/.test(url)){
+					if(isVideo(url)){
 						console.log('直接播放');
 						methods.setPlayUrl(url);
 						return
 					}
-					const res = await axios.get(url,{maxRedirects: 0});
-					const { status, headers: { Location } } = res;
-					// console.log(status);
-					console.log(res.request.responseURL);
-					if (status === 302) {
-						console.log(Location);
+					const res =await getRealUrl(url,(resp)=>{
+						// console.log('代理数据:',resp.data);
+						return resp.data
+					});
+					// console.log(res);
+					let res_data = res.data;
+					try {
+						res_data = JSON.parse(res_data);
+					}catch (e) {
+
 					}
-					console.log(res.data);
-					if(typeof(res.data)==='string' && /#EXTM3U/.test(res.data)){
+					// console.log(res_data);
+					// console.log(res.url);
+					// console.log(res.redirect);
+					if(res.redirect){ // 重定向的直接设置播放器的值
+						if(isVideo(res.url)){ // 判断重定向的为直链
+							methods.setPlayUrl(res.url);
+						}else{
+							console.log('重定向待嗅探页面,但是由于跨域问题,只好内嵌播放页播放');
+							iframeSrc.value = res.url;
+						}
+						return
+						// throw new Error('重定向网页直接播放,尝试嗅探(存在跨域无法嗅探问题,暂时考虑直接内嵌人家的播放页)');
+					}
+
+					// const res = await axios.get(url,{maxRedirects: 0});
+					// const { status, headers: { Location } } = res;
+					// // console.log(status);
+					// console.log(res.request.responseURL);
+					// if (status === 302) {
+					// 	console.log(Location);
+					// }
+					// console.log(res.data);
+
+					console.log(res_data);
+					if(typeof(res_data)==='string'){
 						iframeRef.value.contentWindow.location.reload();
 						iframeSrc.value = url;
-						throw new Error('重定向类文件无法直接播放,尝试嗅探');
-					} else if(!res.data.parse&&res.data.url){
-						methods.setPlayUrl(res.data.url);
-					}else if(/url=/.test(res.data.url)){
-						iframeSrc.value = res.data.url;
-					} else if((res.data.parse||res.data.jx)&&res.data.url){
+						throw new Error('返回的数据是文本无法直接播放,尝试嗅探');
+					} else if(!res_data.parse&&res_data.url){
+						methods.setPlayUrl(res_data.url);
+					}else if(/url=/.test(res_data.url)){
+						iframeSrc.value = res_data.url;
+					} else if((res_data.parse||res_data.jx)&&res_data.url){
 						console.log(ctx.value);
-						iframeSrc.value = res.data.url;
+						iframeSrc.value = res_data.url;
 						if(confirm('该视频来自其它正版地址,drpy网页暂未实现解析功能,是否跳到正版站通过油猴插件等手段播放?')){
-							open(res.data.url);
+							open(res_data.url);
 						}
 					}
 				}catch (e) {
@@ -365,6 +399,7 @@ const app = createApp({
 			photoVisible:photoVisible,
 			iframeRef:iframeRef,
 			sniffer:sniffer,
+			isVideo,getRealUrl
 		}
 	},
 });
@@ -392,6 +427,7 @@ eruda.init();
 <!--<script charset="UTF-8" id="LA_COLLECT" src="/web/cms/mxpro/js/js-sdk-pro.min.js"></script>-->
 <!--<script>LA.init({id:"JYQUFCtAOBTUMsNQ",ck:"JYQUFCtAOBTUMsNQ"})</script>-->
 <script type="text/javascript" src="/web/cms/mxpro/js/stui_default.js "></script>
+
 <!--弹窗样式和自动弹窗方法-->
 <link rel="stylesheet" href="/web/cms/mxpro/css/notice.css" type="text/css">
 <script type="text/javascript" src="/web/cms/mxpro/js/mxhtml.js"></script>
