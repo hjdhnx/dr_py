@@ -6,7 +6,7 @@
 import functools
 import json
 import os
-from urllib.parse import urljoin
+from urllib.parse import urljoin, unquote
 import requests
 from flask import Blueprint, abort, request, render_template, send_from_directory, render_template_string, jsonify, \
     make_response, redirect, \
@@ -116,24 +116,30 @@ def get302UrlResponse():
             # 'referer': url,
             'user-agent': 'Mozilla/5.0'
         }
-        print('开始调用接口:', url)
+        logger.info(f'开始调用接口:{url}')
         r = requests.get(url, headers=headers, timeout=timeout, verify=False)
         rurl = r.url
+        res_data = r.text
+        try:
+            res_data = r.json()
+        except:
+            pass
 
         # rurl = url_for('vod.vod_home', **params)
         # print(rurl)
-        print('结束调用接口:', rurl)
+        logger.info(f'结束调用接口:{rurl}')
+        is_redirect = unquote(rurl) != unquote(url)
         return jsonify({
             'url': rurl,
-            'redirect': rurl != url,
-            'data': r.text,
+            'redirect': is_redirect,
+            'data': res_data,
         })
 
     except Exception as e:
         logger.info(f'发生了错误:{e}')
         return jsonify({
             'url': rurl,
-            'redirect': rurl != url,
+            'redirect': False,
             'data': None,
             'error': f'{e}',
         })
