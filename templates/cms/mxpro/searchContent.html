@@ -141,7 +141,7 @@ const app = createApp({
 
 		console.log('---setup---');
 		//获取当前实例
-		const {self, proxy} = getCurrentInstance();
+		// const {self, proxy} = getCurrentInstance();
 		const web_name = '{{ctx.web_name}}';
 		const pwd = '{{ctx.pwd}}';
 		const wd = '{{ctx.wd}}';
@@ -151,7 +151,6 @@ const app = createApp({
 		const vod_id = '{{ctx.vod_id}}';
 		const vod_name = '{{ctx.vod_name}}';
 		console.log(web_name);
-
 		const ctx_str = "ctxObj={{ctx|safe}}";
 		eval(ctx_str);
 		// console.log(ctxObj)
@@ -168,47 +167,9 @@ const app = createApp({
 			list:[]
 		});
 
-		const details = ref({
-			list:[],
-		});
-
-		const dinfo = ref({
-			vod_content:''
-		});
-
 		// const hotsuggs = ref({"code":200,"count":50,"data":[{"title":"漫长的季节","url":""},{"title":"你给我的喜欢","url":""},{"title":"奔跑吧 第7季","url":""},{"title":"斗破苍穹年番","url":""},{"title":"完美世界","url":""},{"title":"平凡之路","url":""},{"title":"斗罗大陆","url":""},{"title":"画江湖之不良人 第6季","url":""},{"title":"云襄传","url":""},{"title":"满江红","url":""},{"title":"遮天","url":""},{"title":"只是结婚的关系","url":""},{"title":"哈哈哈哈哈 第3季","url":""},{"title":"星辰变 第5季","url":""},{"title":"吞噬星空","url":""},{"title":"极限挑战 第9季","url":""},{"title":"月升沧海","url":""},{"title":"听说你喜欢我","url":""},{"title":"雪中悍刀行","url":""},{"title":"无间","url":""},{"title":"小猪佩奇第9季","url":""},{"title":"流浪地球2","url":""},{"title":"迪迦奥特曼 普通话版","url":""},{"title":"宝贝赳赳 第五季","url":""},{"title":"天赐的声音 第4季","url":""},{"title":"银河护卫队","url":""},{"title":"一人之下 第5季","url":""},{"title":"我们的婚姻","url":""},{"title":"全职法师 第6季","url":""},{"title":"汪汪队立大功第八季","url":""},{"title":"青春环游记 第4季","url":""},{"title":"欢乐颂4","url":""},{"title":"新三国","url":""},{"title":"扫黑风暴","url":""},{"title":"黑豹2","url":""},{"title":"《人生路不熟》主创漫谈","url":""},{"title":"爱情而已","url":""},{"title":"长月烬明","url":""},{"title":"王牌对王牌 第8季","url":""},{"title":"你是我的荣耀","url":""},{"title":"大话西游之大圣娶亲·加长纪念版","url":""},{"title":"陈情令","url":""},{"title":"熊出没之冬日乐翻天","url":""},{"title":"新僵尸先生","url":""},{"title":"沸腾人生","url":""},{"title":"银河护卫队2","url":""},{"title":"那年花开月正圆","url":""},{"title":"名侦探柯南 普通话版","url":""},{"title":"云顶天宫","url":""},{"title":"欢乐颂","url":""}],"msg":"获取成功"});
 		const hotsuggs = ref({
 			data:[]
-		});
-
-
-		const vod_desc = computed(() => {
-			console.log('计算vod_desc');
-  			return dinfo.value.vod_content?dinfo.value.vod_content.slice(0,100)+'...':'';
-		});
-
-		const vod_tabs = computed(() => {
-			console.log('计算vod_tabs');
-  			return dinfo.value.vod_play_from?dinfo.value.vod_play_from.split('$$$'):[];
-		});
-
-		const vod_urls = computed(() => {
-			console.log('计算vod_urls');
-			let urls = [];
-			if(dinfo.value.vod_play_url){
-				let tab_urls = dinfo.value.vod_play_url.split('$$$');
-				tab_urls.forEach(((tab_url,index)=>{
-					let vurls = tab_url.split('#').map(it=>{return {name:it.split('$')[0],url:it.split('$')[1]}});
-					urls.push(vurls);
-				}));
-			}
-			console.log(urls);
-  			return urls
-		});
-
-		const fast_play = computed(() => {
-			console.log('fast_play');
-  			return vod_urls.value&&vod_urls.value.length>0?vod_urls.value[0][0].url:'';
 		});
 
 		try {
@@ -216,24 +177,18 @@ const app = createApp({
 		hotsuggs.value = JSON.parse(sessionStorage.getItem('hotsuggs'))||hotsuggs.value;
 		}catch (e) {}
 		return {
-			ctx:ctx,
-			is_home:is_home,
-			items:items,
-			hotsuggs:hotsuggs,
-			web_name:web_name,
-			sitems:sitems,
-			wd:wd,
-			pg:pg,
-			last_page:last_page,
-			next_page:next_page,
-			vod_id:vod_id,
-			vod_name:vod_name,
-			details:details,
-			dinfo:dinfo,
-			vod_desc:vod_desc,
-			vod_tabs:vod_tabs,
-			vod_urls:vod_urls,
-			fast_play:fast_play,
+			ctx,
+			is_home,
+			items,
+			hotsuggs,
+			web_name,
+			sitems,
+			wd,
+			pg,
+			last_page,
+			next_page,
+			vod_id,
+			vod_name,
 		}
 	},
 });

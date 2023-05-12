@@ -204,7 +204,6 @@ const app = createApp({
 			data:[]
 		});
 
-
 		const vod_desc = computed(() => {
 			console.log('计算vod_desc');
   			return dinfo.value.vod_content?dinfo.value.vod_content.slice(0,100)+'...':'';
@@ -380,25 +379,25 @@ const app = createApp({
 		}
 		return {
 			...methods,
-			ctx:ctx,
-			items:items,
-			is_home:is_home,
-			hotsuggs:hotsuggs,
-			web_name:web_name,
-			tid:tid,
-			vod_id:vod_id,
-			vod_name:vod_name,
-			details:details,
-			dinfo:dinfo,
-			vod_desc:vod_desc,
-			vod_tabs:vod_tabs,
-			vod_urls:vod_urls,
-			fast_play:fast_play,
-			iframeSrc:iframeSrc,
-			iframeShow:iframeShow,
-			photoVisible:photoVisible,
-			iframeRef:iframeRef,
-			sniffer:sniffer,
+			ctx,
+			items,
+			is_home,
+			hotsuggs,
+			web_name,
+			tid,
+			vod_id,
+			vod_name,
+			details,
+			dinfo,
+			vod_desc,
+			vod_tabs,
+			vod_urls,
+			fast_play,
+			iframeSrc,
+			iframeShow,
+			photoVisible,
+			iframeRef,
+			sniffer,
 			isVideo,getRealUrl
 		}
 	},

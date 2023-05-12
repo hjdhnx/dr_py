@@ -355,7 +355,56 @@ const StuImageComponent = {
 	},//配置需要传入的属性
 	emits :['close_image'],
 	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
-}
+};
+
+const StuPagerComponent = {
+	template:`
+	<div class="stui-pannel__ft">
+    <ul class="stui-page__item text-center clearfix">
+     <li><a :href="ctx.path+'?tid='+ctx.tid+'&tname='+ctx.tname+'&pg=1'">首页</a></li>
+     <li><a :href="ctx.path+'?tid='+ctx.tid+'&tname='+ctx.tname+'&pg='+last_page">上一页</a></li>
+<!--     <span v-for="n in 10">{{ n }}</span>-->
+     <li class="hidden-xs" :class="{ active: n == ctx.pg }" v-for="n in now_pages">
+      <a :href="ctx.path+'?tid='+ctx.tid+'&tname='+ctx.tname+'&pg='+n">{[n]}</a>
+     </li>
+
+     <li class="active num"><a>{[pg]}/{[pagecount]}</a></li>
+     <li><a :href="ctx.path+'?tid='+ctx.tid+'&tname='+ctx.tname+'&pg='+next_page">下一页</a></li>
+     <li><a :href="ctx.path+'?tid='+ctx.tid+'&tname='+ctx.tname+'&pg=99'">尾页</a></li>
+    </ul>
+
+   </div>
+	`,
+	setup(props, context) {
+		console.log('StuPager组件加载完毕');
+		let pg = props.pg; //pg非ref变量,直接就可以拿到，不需要.value
+		// console.log('pg:',pg);
+		const last_page = ref(Number(pg)-1>0?Number(pg)-1:1);
+		const next_page = ref(Number(pg)+1>0?Number(pg)+1:1);
+		const now_pages = computed(() => {
+			// console.log('计算now_pages：',(Number(pg)+10));
+			let start = (Number(pg)-5)>0?(Number(pg)-5):1;
+			let end = (Number(pg)+5) > start+10?start+10:(Number(pg)+5);
+			let rangeArr = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+			// console.log(rangeArr);
+			return rangeArr
+		});
+
+		const methods = {
+			// closeImage(e) {
+			// 	context.emit('close_image');
+			// },
+		};
+		return {
+			...methods,
+			last_page,
+			next_page,
+			now_pages,
+		}
+	},
+	props: ['ctx','pg','pagecount'],
+	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
+};
 
 //下面的注册组件方法无法使用,需要在app里去注册
 // Vue.component('copy-right',  copyRightComponent);

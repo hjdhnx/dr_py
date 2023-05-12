@@ -149,7 +149,7 @@ const app = createApp({
 
 		console.log('---setup---');
 		//获取当前实例
-		const {self, proxy} = getCurrentInstance();
+		// const {self, proxy} = getCurrentInstance();
 		const web_name = '{{ctx.web_name}}';
 		const pwd = '{{ctx.pwd}}';
 		console.log(web_name);
@@ -179,12 +179,12 @@ const app = createApp({
 			console.log(e.message)
 		}
 		return {
-			ctx:ctx,
-			items:items,
-			links:links,
-			hotsuggs:hotsuggs,
-			web_name:web_name,
-			is_home:is_home,
+			ctx,
+			items,
+			links,
+			hotsuggs,
+			web_name,
+			is_home,
 		}
 	},
 });

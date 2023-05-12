@@ -72,22 +72,8 @@
 					</ul>
         		</div>
 
-			<div class="stui-pannel__ft">
-				<ul class="stui-page__item text-center clearfix">
-					<li><a href="{{ctx.path}}?tid={{ctx.tid}}&tname={{ctx.tname}}&pg=1">首页</a></li>
-					<li><a :href="'{{ctx.path}}?tid={{ctx.tid}}&tname={{ctx.tname}}&pg='+last_page">上一页</a></li>
-					<span v-for="n in 10">{{ n }}</span>
-
-					<li class="hidden-xs" :class="{ active: n == {{ctx.pg}} }" v-for="n in now_pages">
-						<a :href="'{{ctx.path}}?tid={{ctx.tid}}&tname={{ctx.tname}}&pg='+n">{[n]}</a>
-					</li>
-
-					<li class="active num"><a>{[pg]}/{[sitems.pagecount]}</a></li>
-					<li><a :href="'{{ctx.path}}?tid={{ctx.tid}}&tname={{ctx.tname}}&pg='+next_page">下一页</a></li>
-					<li><a href="{{ctx.path}}?tid={{ctx.tid}}&tname={{ctx.tname}}&pg=99">尾页</a></li>
-				</ul>
-
-			</div>
+				<!--vue组件-底部分页-->
+				<stu-pager :ctx="ctx" :pg="pg" :pagecount="sitems.pagecount"></stu-pager>
 
         	</div>
 
@@ -143,7 +129,7 @@ const app = createApp({
 
 		console.log('---setup---');
 		//获取当前实例
-		const {self, proxy} = getCurrentInstance();
+		// const {self, proxy} = getCurrentInstance();
 		const web_name = '{{ctx.web_name}}';
 		const pwd = '{{ctx.pwd}}';
 		const tid = '{{ctx.tid}}';
@@ -153,39 +139,26 @@ const app = createApp({
 			type_name:tname,
 		});
 		const pg = '{{ctx.pg}}';
-		const last_page = ref(Number(pg)-1>0?Number(pg)-1:1);
-		const next_page = ref(Number(pg)+1>0?Number(pg)+1:1);
 		const vod_id = '{{ctx.vod_id}}';
 		const vod_name = '{{ctx.vod_name}}';
-		console.log(web_name);
+		// console.log(web_name);
 
 		const ctx_str = "ctxObj={{ctx|safe}}";
 		eval(ctx_str);
 		// console.log(ctxObj)
 		const ctx = ref(ctxObj);
 		// 图片不加载问题???
-		// const items = ref({"class":[{"type_id":"1","type_name":"电影"},{"type_id":"2","type_name":"电视剧"},{"type_id":"3","type_name":"综艺"},{"type_id":"4","type_name":"动漫"},{"type_id":"5","type_name":"哔哩"}],"list":[{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/49064/","vod_name":"黑豹2","vod_pic":"https://img.liangzipic.com/upload/vod/20221116-1/1f450ee626545c2722b610fe747c8083.jpg","vod_remarks":"完结"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/49311/","vod_name":"满江红","vod_pic":"https://img.liangzipic.com/upload/vod/20230125-1/d483055d1f3dfc2cf1f758ab1bbee54e.jpg","vod_remarks":"完结"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48994/","vod_name":"无名","vod_pic":"https://img.liangzipic.com/upload/vod/20230202-1/61e57ef2332e0d3a58efba85af31b8d4.jpg","vod_remarks":"完结"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/49349/","vod_name":"流浪地球2","vod_pic":"https://img.liangzipic.com/upload/vod/20230123-1/740fab8bae29be447749777b08e66b61.jpg","vod_remarks":"HD国语"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/47473/","vod_name":"毒舌律师","vod_pic":"https://img.liangzipic.com/upload/vod/20230307-1/2e9deaa0d9eac305d0ec64b8002a5801.jpg","vod_remarks":"TC国语"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48160/","vod_name":"交换人生2023","vod_pic":"https://img.liangzipic.com/upload/vod/20230224-1/1e917fe9ac694ffcc4ce28cd46f93156.jpg","vod_remarks":"HD"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107952/","vod_name":"侠盗之簪花乱","vod_pic":"http://img.test.com/upload/vod/20230505-1/c9f06d89004ed80002843ccc849c5777.jpg","vod_remarks":"HD国语"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/108177/","vod_name":"微不足道","vod_pic":"http://img.test.com/upload/vod/20230213-19/aa9cd71d67f141f4493a406ab5aaed2c.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48379/","vod_name":"少年吔，安啦！","vod_pic":"https://img.liangzipic.com/upload/vod/20230218-1/74960fc4f8b9b492ad6a1f6ab3bf608a.jpg","vod_remarks":"HD国语"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48348/","vod_name":"大毒枭","vod_pic":"https://img.liangzipic.com/upload/vod/20230219-1/8ff8e1e37ad4b75c377e124363243e3a.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48287/","vod_name":"豺狼的日子","vod_pic":"https://img.liangzipic.com/upload/vod/20230221-1/19898f52b154346736b095c3f3bf846d.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48242/","vod_name":"相约在今生","vod_pic":"https://img.liangzipic.com/upload/vod/20230222-1/4b978ab6a451d5c904b0cedf0b2b7fe7.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48232/","vod_name":"圣徒指南","vod_pic":"https://img.liangzipic.com/upload/vod/20230222-1/33d73b420773bcdc0f2140b71595b448.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/32925/","vod_name":"善意的背叛","vod_pic":"https://pic7.iqiyipic.com/image/20210915/60/44/v_153114876_m_601_m1_579_772.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/24761/","vod_name":"纽约大逃亡","vod_pic":"https://pic5.iqiyipic.com/image/20210916/0c/e4/v_109867443_m_601_m7_579_772.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/19184/","vod_name":"我一直知道你去年夏天干了什么","vod_pic":"https://puui.qpic.cn/vcover_vt_pic/0/l5uhu4tvu89tidqt1444907491.jpg/770","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48381/","vod_name":"浑身是劲1984","vod_pic":"https://img.liangzipic.com/upload/vod/20230218-1/ecead29b6afecfd65d745c98f59b6996.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/48359/","vod_name":"炮弹飞车","vod_pic":"https://img.liangzipic.com/upload/vod/20230219-1/38f988c9de4d1b62c5ea31964b714a43.jpg","vod_remarks":"HD中字"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107075/","vod_name":"战火中的青春","vod_pic":"http://m.ykimg.com/050C00006444E3941427220AE6B4613A","vod_remarks":"更新至25集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/85418/","vod_name":"长月烬明","vod_pic":"http://m.ykimg.com/050C0000642E60181427220B3D761907","vod_remarks":"更新至38集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107914/","vod_name":"又见仲夏夜之星","vod_pic":"https://img.liangzipic.com/upload/vod/20230504-1/8326ba29482feed945ab926f825dee45.jpg","vod_remarks":"更新至10集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/96611/","vod_name":"凌云志","vod_pic":"http://m.ykimg.com/050C000063F3060213EB660AD1C42151","vod_remarks":"更新至31集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107810/","vod_name":"平凡之路","vod_pic":"https://puui.qpic.cn/vcover_vt_pic/0/mzc00200k1qzwd51667457705800/0","vod_remarks":"更至14集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107717/","vod_name":"云襄传","vod_pic":"https://img.liangzipic.com/upload/vod/20230501-1/a79b1b7fdf3ca5b8bab06d0f6d8dd833.jpg","vod_remarks":"更新至18集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107548/","vod_name":"破事精英2","vod_pic":"https://pic7.iqiyipic.com/image/20230428/40/85/a_100517919_m_601_m8_260_360.jpg","vod_remarks":"更新至22集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107936/","vod_name":"门当户怼","vod_pic":"http://m.ykimg.com/050C0000642139322052EE0B04C5E6B9","vod_remarks":"更新至22集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/108154/","vod_name":"外婆的新世界","vod_pic":"http://img.test.com/upload/vod/20230507-1/d84ffcd80c57139b0608d4de9bad7194.jpg","vod_remarks":"更新至3集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/106996/","vod_name":"无眠之境","vod_pic":"http://img.test.com/upload/vod/20230423-1/5b132dea563990bcc1041a2c898bf160.jpg","vod_remarks":"更新至18集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107553/","vod_name":"那场雨爱上你","vod_pic":"http://img.test.com/upload/vod/20230430-1/5a3590957fc36f8d62b69ce3d35fc2e9.jpg","vod_remarks":"更新至第02集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/106540/","vod_name":"男妓","vod_pic":"https://tuhaotv.oss-cn-hangzhou.aliyuncs.com/upload/vod/20230417-1/099d57e2f1cbcca6a339ebf764db0f9d.jpg","vod_remarks":"更新至第09集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/106482/","vod_name":"妈妈咪呀第八季","vod_pic":"https://pic4.iqiyipic.com/image/20230415/a3/0d/a_100533499_m_601_m1_260_360.jpg","vod_remarks":"更新至2023-5-6期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/96330/","vod_name":"青春环游记第四季","vod_pic":"https://img.liangzipic.com/upload/vod/20230409-1/46a582d94e1f8338db4df2b92168921b.jpg","vod_remarks":"更新至20230506期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/78075/","vod_name":"追星星的人第三季","vod_pic":"https://pic7.iqiyipic.com/image/20230311/30/4b/a_100530604_m_601_m4_579_772.jpg","vod_remarks":"更新至2023-5-6期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/80/","vod_name":"金牌调解","vod_pic":"https://pic6.iqiyipic.com/image/20220222/40/f0/a_50907959_m_601_m18_579_772.jpg","vod_remarks":"20230506期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107983/","vod_name":"台柱子","vod_pic":"https://img.liangzipic.com/upload/vod/20230505-1/350a0c832c5aba7d65c85f5e590cb6ca.jpg","vod_remarks":"更新至2023-5-7期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107988/","vod_name":"爸爸当家第二季","vod_pic":"https://img.liangzipic.com/upload/vod/20230505-1/5971ba5d46de1afadbba32ef15822e95.jpg","vod_remarks":"更新至2023-05-07期期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/108112/","vod_name":"妙不可言","vod_pic":"https://img.liangzipic.com/upload/vod/20230507-1/d6781fafc74fe2ff500c61ff759457fc.jpg","vod_remarks":"更新至20230506期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/108100/","vod_name":"中国说唱巅峰对决2023","vod_pic":"https://pic8.iqiyipic.com/image/20230506/ca/d8/a_100517503_m_601_m15_260_360.jpg","vod_remarks":"更新至2023-5-7期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/78562/","vod_name":"甜蜜的任务2023","vod_pic":"https://2img.hitv.com/preview/sp_images/2023/01/17/202301171806216388531.jpg","vod_remarks":"更新至2023-05-07期期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/78226/","vod_name":"声生不息·宝岛季","vod_pic":"https://0img.hitv.com/preview/sp_images/2023/03/13/202303130943459677164.jpg","vod_remarks":"更新至2023-05-07期期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/26620/","vod_name":"种地吧","vod_pic":"https://pic2.iqiyipic.com/image/20230203/20/f1/a_100517523_m_601_m5_579_772.jpg","vod_remarks":"更新至2023-5-7期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/84950/","vod_name":"声生不息·宝岛季卫视版","vod_pic":"https://img.liangzipic.com/upload/vod/20230326-1/570c3b1c6059915d1068a8cc579bcdcc.jpg","vod_remarks":"更新至2023-05-07期期"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/26993/","vod_name":"绝世战魂动态漫画","vod_pic":"https://pic2.iqiyipic.com/image/20211028/93/7f/a_100445493_m_601_m3_579_772.jpg","vod_remarks":"全剧集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107013/","vod_name":"青莲剑仙传","vod_pic":"http://img.test.com/upload/vod/20230423-1/e4a96f7369355b83e41a2a026b5efdb1.jpg","vod_remarks":"全剧集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/33639/","vod_name":"噬神纪","vod_pic":"https://m.ykimg.com/0527000063ABEBB52052EE09928EB7EA","vod_remarks":"更至29集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/120/","vod_name":"斗破苍穹年番","vod_pic":"https://puui.qpic.cn/vcover_vt_pic/0/mzc0020027yzd9e1656210118396/770","vod_remarks":"更至43集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/108/","vod_name":"武神主宰","vod_pic":"https://puui.qpic.cn/vcover_vt_pic/0/7q544xyrava3vxf1610952810187/770","vod_remarks":"更至330集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/96/","vod_name":"绝世武魂","vod_pic":"https://puui.qpic.cn/vcover_vt_pic/0/mzc00200no18bci1596439143337/770","vod_remarks":"更至268集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/33/","vod_name":"妖神记","vod_pic":"https://pic9.iqiyipic.com/image/20200916/6c/34/a_100051664_m_601_m6_579_772.jpg","vod_remarks":"更至310集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/78407/","vod_name":"仙武传","vod_pic":"https://img.liangzipic.com/upload/vod/20230319-1/278cafaa4be6bdccf986fdcbc11b8454.jpg","vod_remarks":"更新至9集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/33637/","vod_name":"最强主宰","vod_pic":"https://m.ykimg.com/0527000063A0069213E74209C3D7E047","vod_remarks":"更至07集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/33621/","vod_name":"剑域风云","vod_pic":"https://m.ykimg.com/0526000061A2E34613F7FF09852232C5","vod_remarks":"更新至74集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/33549/","vod_name":"星河至尊","vod_pic":"https://m.ykimg.com/05260000625516D72037DD092DB4F0D9","vod_remarks":"全剧集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/118/","vod_name":"假面骑士极狐","vod_pic":"https://pic2.iqiyipic.com/image/20230106/74/bc/a_100526365_m_601_m2_579_772.jpg","vod_remarks":"更新至18集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/43805/","vod_name":"我是不白吃","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/205c8d7027e989044ae7711879c2f66f14bfa206.jpg","vod_remarks":"更新至555集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/43837/","vod_name":"元气食堂","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/a1b5c728fd5cc0a608cecf5263e23966f69a2c8f.jpg","vod_remarks":"全剧集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/43800/","vod_name":"星座狗联盟","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/38d268945aee0a00675b10132008592a8b3f14e6.png","vod_remarks":"更新至242集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/43839/","vod_name":"阿衰第九季","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/1e4432377f9692c2891974c199e8670864c756cc.jpg","vod_remarks":"更新至29集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/47147/","vod_name":"邻家的天使同学","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/feb72632146135571b144a15618c5880a19f8214.png","vod_remarks":"更新至11集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/96353/","vod_name":"名侦探柯南：犯人犯泽先生","vod_pic":"http://i0.hdslb.com/bfs/bangumi/image/38e2a273f528fd01c34f1fc4df0f69c64487efad.png","vod_remarks":"更新至6集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/96352/","vod_name":"名侦探柯南：犯人犯泽先生（中配）","vod_pic":"http://i0.hdslb.com/bfs/bangumi/image/38e2a273f528fd01c34f1fc4df0f69c64487efad.png","vod_remarks":"更新至6集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/107081/","vod_name":"赘婿","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/9e31f665d2d1a93c157b7b1a2c9ae02d26642899.png","vod_remarks":"更新至6集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/108149/","vod_name":"超元绝战","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/a41ec03de05e444d984258c0fbb7e0792b99a80e.jpg","vod_remarks":"更新至5集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/85561/","vod_name":"假面骑士极狐（中配）","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/e5a6c85d04ddaaf5b65fac1520677a041058ea1b.png","vod_remarks":"更新至18集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/85560/","vod_name":"假面骑士极狐","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/e5a6c85d04ddaaf5b65fac1520677a041058ea1b.png","vod_remarks":"更新至18集"},{"no_use":{"type_id":1,"type_name":"首页推荐","vod_content":""},"vod_id":"https://www.5imv.cc/v/43817/","vod_name":"萌芽熊","vod_pic":"https://i0.hdslb.com/bfs/bangumi/image/d2b309d46aa759277a04650bd291f867e3084d6e.jpg","vod_remarks":"更新至93集"}],"no_use":{"code":1,"limit":6,"msg":"数据列表","now_count":66,"page":1,"pagecount":11,"total":66}})
 		const items = ref({
 			class:[],
 			list:[],
 		});
 
 		const sitems = ref({
-			list:[]
+			list:[],
 		});
 
-		// const hotsuggs = ref({"code":200,"count":50,"data":[{"title":"漫长的季节","url":""},{"title":"你给我的喜欢","url":""},{"title":"奔跑吧 第7季","url":""},{"title":"斗破苍穹年番","url":""},{"title":"完美世界","url":""},{"title":"平凡之路","url":""},{"title":"斗罗大陆","url":""},{"title":"画江湖之不良人 第6季","url":""},{"title":"云襄传","url":""},{"title":"满江红","url":""},{"title":"遮天","url":""},{"title":"只是结婚的关系","url":""},{"title":"哈哈哈哈哈 第3季","url":""},{"title":"星辰变 第5季","url":""},{"title":"吞噬星空","url":""},{"title":"极限挑战 第9季","url":""},{"title":"月升沧海","url":""},{"title":"听说你喜欢我","url":""},{"title":"雪中悍刀行","url":""},{"title":"无间","url":""},{"title":"小猪佩奇第9季","url":""},{"title":"流浪地球2","url":""},{"title":"迪迦奥特曼 普通话版","url":""},{"title":"宝贝赳赳 第五季","url":""},{"title":"天赐的声音 第4季","url":""},{"title":"银河护卫队","url":""},{"title":"一人之下 第5季","url":""},{"title":"我们的婚姻","url":""},{"title":"全职法师 第6季","url":""},{"title":"汪汪队立大功第八季","url":""},{"title":"青春环游记 第4季","url":""},{"title":"欢乐颂4","url":""},{"title":"新三国","url":""},{"title":"扫黑风暴","url":""},{"title":"黑豹2","url":""},{"title":"《人生路不熟》主创漫谈","url":""},{"title":"爱情而已","url":""},{"title":"长月烬明","url":""},{"title":"王牌对王牌 第8季","url":""},{"title":"你是我的荣耀","url":""},{"title":"大话西游之大圣娶亲·加长纪念版","url":""},{"title":"陈情令","url":""},{"title":"熊出没之冬日乐翻天","url":""},{"title":"新僵尸先生","url":""},{"title":"沸腾人生","url":""},{"title":"银河护卫队2","url":""},{"title":"那年花开月正圆","url":""},{"title":"名侦探柯南 普通话版","url":""},{"title":"云顶天宫","url":""},{"title":"欢乐颂","url":""}],"msg":"获取成功"});
 		const hotsuggs = ref({
 			data:[]
-		});
-
-		const now_pages = computed(() => {
-			// console.log('计算now_pages：',(Number(pg)+10));
-			let start = (Number(pg)-5)>0?(Number(pg)-5):1;
-			let end = (Number(pg)+5) > start+10?start+10:(Number(pg)+5);
-			let rangeArr = Array.from({ length: end - start + 1 }, (_, i) => start + i);
-			// console.log(rangeArr);
-			return rangeArr
 		});
 
 		const is_home = ref(false);
@@ -196,21 +169,18 @@ const app = createApp({
 		}catch (e) {}
 
 		return {
-			ctx:ctx,
-			items:items,
-			item:item,
-			hotsuggs:hotsuggs,
-			web_name:web_name,
-			sitems:sitems,
-			tid:tid,
-			tname:tname,
-			pg:pg,
-			now_pages:now_pages,
-			last_page:last_page,
-			next_page:next_page,
-			vod_id:vod_id,
-			vod_name:vod_name,
-			is_home:is_home,
+			ctx,
+			items,
+			item,
+			hotsuggs,
+			web_name,
+			sitems,
+			tid,
+			tname,
+			pg,
+			vod_id,
+			vod_name,
+			is_home,
 		}
 	},
 });
@@ -228,6 +198,7 @@ app.component('foot-button', footButtonComponent);
 app.component('note-popup',  notePopup);
 app.component('stu-header', stuHeaderComponent);
 app.component('stu-filter', stuFilterComponent);
+app.component('stu-pager', StuPagerComponent);
 app.mount('#app');
 eruda.init();
 
