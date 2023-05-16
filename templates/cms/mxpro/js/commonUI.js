@@ -248,11 +248,11 @@ const stuFilterComponent = {
        <!-- 筛选 -->
        <ul class="clearfix" v-for="filters in now_filters">
         <li>
-         <span>按{[filters.name]}：</span>
+         <span>按{[filters.name]}-{[filters.key]}：</span>
         </li>
 
-        <li v-for="obj in filters.value">
-         <a  :href="ctx.path+'?tid='+item.type_id+'&tname='+item.type_name+'&filter='+obj.v">{[obj.n]}</a>
+        <li v-for="obj in filters.value" :class="{ active: tellActive(obj,filters) }">
+         <a  :href="ctx.path+'?tid='+item.type_id+'&tname='+item.type_name+'&filter='+obj.v" @click.prevent="openFilterUrl(item,obj,filters)">{[obj.n]}</a>
         </li>
 
        </ul>
@@ -264,6 +264,7 @@ const stuFilterComponent = {
 		// console.log(props);
 		const items = props.items;
 		const tid = props.tid;
+		const ctx = props.ctx;
 		const now_filters = computed(() => {
 			// console.log('计算now_filters');
 			// items.value.class.find(it=>it.type_id===tid);
@@ -271,8 +272,40 @@ const stuFilterComponent = {
 			// console.log(now_filters);
 			return now_filters
 		});
+		let p = new URLSearchParams(location.href.split('?')[1]);
+		let dict = Object.fromEntries(p.entries());
+		let f = dict.f || '{}';
+		try {
+			f = JSON.parse(f);
+		}catch (e) {
+
+		}
+		const methods = {
+			openFilterUrl(item,obj,filters){
+				// let url = ctx.path+'?tid='+item.type_id+'&tname='+item.type_name+'&filter='+obj.v;
+				// let p = new URLSearchParams(location.href.split('?')[1]);
+				// let dict = Object.fromEntries(p.entries());
+				// let f = dict.f || '{}';
+				try {
+					// f = JSON.parse(f);
+					f[filters.key] = obj.v;
+					f = JSON.stringify(f);
+					dict.f = f;
+					let new_p = new URLSearchParams(dict);
+					let url = ctx.path+'?'+new_p;
+					// console.log(url);
+					location.href = url;
+				}catch (e) {
+					console.log(`筛选发生错误:${e.message}`);
+				}
+			},
+			tellActive(obj,filters){
+				return f[filters.key] === obj.v;
+			}
+		}
 		return {
-			now_filters:now_filters
+			...methods,
+			now_filters
 		}
 	},
 	props:{

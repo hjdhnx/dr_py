@@ -46,7 +46,7 @@
 						<div class="head clearfix">
 							<a href="javascript:;" class="open-screen pull-right">展开 <i class="iconfont icon-moreunfold"></i></a>
 							<span class="text">
-								已选择：最新-{{ctx.tname}}
+								已选择：{{ctx.tname}}
 							</span>
 							<span class="all">，共检索到“{[sitems.total]}”条结果</span>
 						</div>
@@ -106,7 +106,7 @@ const app = createApp({
 	setup(props, context) {
 		onMounted(()=> {
 			console.log('---onMounted---');
-			axios.get(`/vod?pwd=${pwd}&rule=${web_name}&t=${tid}&pg=${pg}&ac=videolist`).then((resp) => {
+			axios.get(`/vod?pwd=${pwd}&rule=${web_name}&t=${tid}&pg=${pg}&ac=videolist&f=${fl}`).then((resp) => {
             	console.log(resp.data);
             	sitems.value = resp.data;
 				// 存浏览器session里，然后其它页面好获取出来
@@ -141,6 +141,7 @@ const app = createApp({
 		const pg = '{{ctx.pg}}';
 		const vod_id = '{{ctx.vod_id}}';
 		const vod_name = '{{ctx.vod_name}}';
+		const fl = '{{ctx.fl}}';
 		// console.log(web_name);
 
 		const ctx_str = "ctxObj={{ctx|safe}}";

@@ -60,7 +60,7 @@
 							<div class="stui-vodlist__box">
 								<a class="stui-vodlist__thumb lazyload" :href="'{{ctx.path}}?vod_id='+item.vod_id+'&vod_name='+item.vod_name" :title="item.vod_name" :data-original="item.vod_pic">
 									<span class="play hidden-xs"></span>
-									<span class="pic-text1 text-right"><b>{[item.no_use.type_name]}</b></span>
+									<span class="pic-text1 text-right"><b>{[item.no_use?item.no_use.type_name:'']}</b></span>
 									<span class="pic-text text-right"><b>{[item.vod_remarks]}</b></span>
 								</a>
 								<div class="stui-vodlist__detail">

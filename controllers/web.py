@@ -6,7 +6,7 @@
 import functools
 import json
 import os
-from urllib.parse import urljoin, unquote
+from urllib.parse import urljoin, unquote,quote
 import requests
 from flask import Blueprint, abort, request, render_template, send_from_directory, render_template_string, jsonify, \
     make_response, redirect, \
@@ -62,6 +62,7 @@ def web_index(web_name, theme):
     tid = getParmas('tid')
     tname = getParmas('tname')
     url = getParmas('url')
+    fl = getParmas('f')
     player = getParmas('player') or 'mui'
     ctx['vod_id'] = vod_id
     ctx['vod_name'] = vod_name
@@ -70,7 +71,9 @@ def web_index(web_name, theme):
     ctx['tid'] = tid
     ctx['tname'] = tname
     ctx['url'] = url
-    print('tid:', tid)
+    ctx['fl'] = quote(fl)
+    print('tid:', tid,'fl:',fl)
+    # print('f:', fl)
 
     file_path = os.path.abspath(f'js/{web_name}.js')
     print(file_path)
