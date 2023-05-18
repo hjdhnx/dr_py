@@ -1,3 +1,4 @@
+// 进站前 向右滑动验证
 muban.mxpro.二级.desc = '.module-info-item:eq(4)&&Text;;;.module-info-item--span:eq(2)&&Text;.module-info-item--span:eq(1)&&Text';
 muban.mxpro.二级.tabs = '.module-tab-items-box .module-tab-item';
 var rule = {
