@@ -181,6 +181,16 @@ class CMS:
                     headers[k] = UC_UA
                 elif v == 'IOS_UA':
                     headers[k] = IOS_UA
+            elif str(k).lower() == 'cookie':
+                v = headers[k]
+                if v and str(v).startswith('http'):
+                    try:
+                        ck = requests.get(v, timeout=timeout, verify=False)
+                        headers[k] = ck
+                    except Exception as e:
+                        logger.info(f'从{v}获取cookie发生错误:{e}')
+                        pass
+
         lower_keys = list(map(lambda x:x.lower(),keys))
         if not 'user-agent' in lower_keys:
             headers['User-Agent'] = UA
