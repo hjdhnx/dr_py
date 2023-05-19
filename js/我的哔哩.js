@@ -6,10 +6,10 @@ DMBox下载:https://t.me/pipixiawerun
 
 /* Cookie设置
 Cookie改为预设获取蜂蜜大佬Github的
-https://github.com/FongMi/CatVodSpider/raw/main/txt/cookie.txt
+https://ghproxy.net/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/txt/cookie.txt
 
 Cookie获取方法
-https://github.com/UndCover/PyramidStore/blob/main/list.md#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9
+https://ghproxy.net/https://raw.githubusercontent.com/UndCover/PyramidStore/main/list.md
 
 Cookie设置方法1: DR-PY 后台管理界面
 CMS后台管理 > 设置中心 > 环境变量 > {"bili_cookie":"XXXXXXX","vmid":"XXXXXX"} > 保存
@@ -105,7 +105,8 @@ var rule = {
         "User-Agent":"PC_UA",
         "Referer": "https://www.bilibili.com",
         // "Cookie":"$bili_cookie"
-        "Cookie":"https://ghproxy.net/https://github.com/FongMi/CatVodSpider/raw/main/txt/cookie.txt"
+        // "Cookie":"https://ghproxy.net/https://github.com/FongMi/CatVodSpider/raw/main/txt/cookie.txt"
+        "Cookie":"https://ghproxy.net/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/txt/cookie.txt"
     },
     timeout:5000,
     limit:8,

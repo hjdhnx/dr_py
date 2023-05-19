@@ -5,7 +5,7 @@ DMBox下载:https://t.me/pipixiawerun
 */
 
 /* Cookie设置
-Cookie获取方法 https://github.com/UndCover/PyramidStore/blob/main/list.md#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9
+Cookie获取方法 https://ghproxy.net/https://raw.githubusercontent.com/UndCover/PyramidStore/main/list.md
 
 Cookie设置方法1: DR-PY 后台管理界面
 CMS后台管理 > 设置中心 > 环境变量 > {"bili_cookie":"XXXXXXX","vmid":"XXXXXX"} > 保存
@@ -22,8 +22,8 @@ var rule = {
     host:'https://api.live.bilibili.com',
     homeUrl:'/xlive/web-interface/v1/second/getUserRecommend?page=1&page_size=30&platform=web',//用于"分类获取"和"推荐获取"
     url:'/xlive/web-interface/v1/second/getList?platform=web&parent_area_id=fyclass&area_id=fyfilter&sort_type=online&page=fypage',
-    class_name:'娱乐&网游&手游&单机游戏&电台&虚拟主播&生活&知识&赛事&购物',
-    class_url:'10&2&3&6&1&5&9&11&13&300',
+    class_name:'娱乐&网游&手游&单机游戏&电台&虚拟主播&生活&知识&赛事',
+    class_url:'10&2&3&6&1&5&9&11&13',
     filterable: 1,
     filter_url: '{{fl.area}}',
     filter_def:{
@@ -35,8 +35,8 @@ var rule = {
         5:{area:'190'},
         9:{area:'371'},
         11:{area:'376'},
-        13:{area:'561'},
-        300:{area:'30000'}
+        13:{area:'561'}
+        // 300:{area:'30000'}
     },
     filter: {
         "2":[{"key":"area","name":"分区","value":[{"n":"英雄联盟","v":"86"},{"n":"DOTA2","v":"92"},{"n":"CS:GO","v":"89"},{"n":"APEX英雄","v":"240"},{"n":"永劫无间","v":"666"},{"n":"穿越火线","v":"88"},{"n":"守望先锋","v":"87"},{"n":"吃鸡行动","v":"80"},{"n":"逃离塔科夫","v":"252"},{"n":"传奇","v":"695"},{"n":"DNF","v":"78"},{"n":"生死狙击2","v":"575"},{"n":"洛奇英雄传","v":"599"},{"n":"最终幻想14","v":"102"},{"n":"星际战甲","v":"249"},{"n":"梦三国","v":"710"},{"n":"英魂之刃","v":"690"},{"n":"剑网3","v":"82"},{"n":"铁甲雄兵","v":"691"},{"n":"封印者","v":"300"},{"n":"新天龙八部","v":"653"},{"n":"赛尔号","v":"667"},{"n":"造梦西游","v":"668"},{"n":"洛克王国","v":"669"},{"n":"问道","v":"670"},{"n":"诛仙世界","v":"654"},{"n":"大话西游","v":"652"},{"n":"奇迹MU","v":"683"},{"n":"永恒之塔","v":"684"},{"n":"QQ三国","v":"685"},{"n":"人间地狱","v":"677"},{"n":"VALORANT","v":"329"},{"n":"彩虹岛","v":"686"},{"n":"洛奇","v":"663"},{"n":"跑跑卡丁车","v":"664"},{"n":"星际公民","v":"658"},{"n":"Squad战术小队","v":"659"},{"n":"反恐精英Online","v":"629"},{"n":"风暴奇侠","v":"648"},{"n":"装甲战争","v":"642"},{"n":"失落的方舟","v":"590"},{"n":"阿尔比恩","v":"639"},{"n":"猎杀对决","v":"600"},{"n":"CFHD ","v":"472"},{"n":"骑士精神2","v":"650"},{"n":"超击突破","v":"680"},{"n":"武装突袭","v":"634"},{"n":"300英雄","v":"84"},{"n":"炉石传说","v":"91"},{"n":"剑网3缘起","v":"499"},{"n":"街头篮球","v":"649"},{"n":"综合射击","v":"601"},{"n":"剑灵","v":"505"},{"n":"艾尔之光","v":"651"},{"n":"黑色沙漠","v":"632"},{"n":"天涯明月刀","v":"596"},{"n":"超激斗梦境","v":"519"},{"n":"冒险岛","v":"574"},{"n":"逆战","v":"487"},{"n":"魔兽争霸3","v":"181"},{"n":"QQ飞车","v":"610"},{"n":"魔兽世界","v":"83"},{"n":"FIFA ONLINE 4","v":"388"},{"n":"NBA2KOL2","v":"581"},{"n":"使命召唤:战区","v":"318"},{"n":"VRChat","v":"656"},{"n":"坦克世界","v":"115"},{"n":"战舰世界","v":"248"},{"n":"战争雷霆","v":"316"},{"n":"战意","v":"383"},{"n":"风暴英雄","v":"114"},{"n":"星际争霸2","v":"93"},{"n":"刀塔自走棋","v":"239"},{"n":"堡垒之夜","v":"164"},{"n":"枪神纪","v":"251"},{"n":"三国杀","v":"81"},{"n":"龙之谷","v":"112"},{"n":"古剑奇谭OL","v":"173"},{"n":"幻想全明星","v":"176"},{"n":"怀旧网游","v":"288"},{"n":"新游前瞻","v":"298"},{"n":"星战前夜：晨曦","v":"331"},{"n":"梦幻西游端游","v":"350"},{"n":"流放之路","v":"551"},{"n":"FPS沙盒","v":"633"},{"n":"永恒轮回","v":"459"},{"n":"激战2","v":"607"},{"n":"其他网游","v":"107"}] }],
@@ -47,8 +47,8 @@ var rule = {
         "9":[{"key":"area","name":"分区","value":[{"n":"虚拟主播","v":"371"},{"n":"3D虚拟主播","v":"697"}] }],
         "10":[{"key":"area","name":"分区","value":[{"n":"生活分享","v":"646"},{"n":"运动","v":"628"},{"n":"搞笑","v":"624"},{"n":"手工绘画","v":"627"},{"n":"萌宠","v":"369"},{"n":"美食","v":"367"},{"n":"时尚","v":"378"},{"n":"影音馆","v":"33"}] }],
         "11":[{"key":"area","name":"分区","value":[{"n":"社科法律心理","v":"376"},{"n":"人文历史","v":"702"},{"n":"校园学习","v":"372"},{"n":"职场·技能","v":"377"},{"n":" 科技","v":"375"},{"n":"科学科普","v":"701"},{"n":"时政","v":"715"}] }],
-        "13":[{"key":"area","name":"分区","value":[{"n":"游戏赛事","v":"561"},{"n":"体育赛事","v":"562"},{"n":"赛事综合","v":"563"}] }],
-        "300":[{"key":"area","name":"分区","value":[{"n":"购物","v":"300000"}] }]
+        "13":[{"key":"area","name":"分区","value":[{"n":"游戏赛事","v":"561"},{"n":"体育赛事","v":"562"},{"n":"赛事综合","v":"563"}] }]
+        // "300":[{"key":"area","name":"分区","value":[{"n":"购物","v":"300000"}] }]
     },
     detailUrl:'https://live.bilibili.com/fyid',//二级详情拼接链接(json格式用)
     // detailUrl:'https://api.live.bilibili.com/xlive/web-room/v1/playUrl/playUrl?cid=fyid&platform=h5&otype=json&quality=0',//二级详情拼接链接(json格式用)
@@ -59,7 +59,9 @@ var rule = {
     headers:{
         "User-Agent":"PC_UA",
         "Referer": "https://www.bilibili.com",
-        "Cookie":"$bili_cookie"
+        // "Cookie":"$bili_cookie"
+        "Cookie":"https://ghproxy.net/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/txt/cookie.txt"
+
     },
     timeout:5000,
     limit:8,
@@ -75,4 +77,5 @@ var rule = {
     二级:"js:let aid=input.match(/\\/(\\d+)/)[1];log(aid);let html=request('https://api.live.bilibili.com/room/v1/Room/get_info?room_id='+aid);let jo=JSON.parse(html).data;let title=jo['title'];let pic=jo['keyframe'];let desc=jo['description'];let dire=jo['uid'];let typeName=jo['area_name'];let remark='在线人数:'+jo['online'];let vod={vod_id:aid,vod_name:title,vod_pic:pic,type_name:typeName,vod_area:'bililivedanmu',vod_remarks:remark,vod_actor:'直播间id-'+aid,vod_director:dire,vod_content:desc};vod['vod_play_from']='B站';vod['vod_play_url']='flv线路原画$platform=web&quality=4_'+aid+'#flv线路高清$platform=web&quality=3_'+aid+'#h5线路原画$platform=h5&quality=4_'+aid+'#h5线路高清$platform=h5&quality=3_'+aid;VOD=vod;",
     // 搜索:'json:data.result.live_room;title;cover;uname;roomid',
     搜索:'js:let html=request(input);let msg=JSON.parse(html).message;if(msg!=="0"){VODS=[{vod_name:KEY+"➢"+msg,vod_id:"no_data",vod_remarks:"别点,缺少bili_cookie",vod_pic:"https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/404.jpg"}]}else{let videos=[];let vodList=JSON.parse(html).data.result.live_room;vodList.forEach(function(vod){let aid=vod["roomid"];let title="直播间："+vod["title"].replace(\'<em class="keyword">\',"").replace("</em>","");let img="https:"+vod["user_cover"];let remark=vod["watched_show"]["text_small"]+"  "+vod["uname"];videos.push({vod_id:aid,vod_name:title,vod_pic:img,vod_remarks:remark})});VODS=videos}',
+    预处理:'if(rule_fetch_params.headers.Cookie.startsWith("http")){rule_fetch_params.headers.Cookie=fetch(rule_fetch_params.headers.Cookie);setItem(RULE_CK,cookie)};log(rule_fetch_params.headers.Cookie)',
 }
