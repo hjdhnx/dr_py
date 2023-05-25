@@ -14,6 +14,6 @@ var rule={
     // class_url:'1&2&3&4',
     class_parse: '.myui-header__menu&&li.col-md-2;a&&Text;a&&href;/(\\d+)',
     searchUrl:'/vse**/page/fypage/',
-	lazy:'js:var url=jsp.pdfh(request(input),"iframe&&src");if(/.m3u8/.test(url)){input=url.match(/.*?=(.*?)&/)[1]}else if(/.mp4/.test(url)){input=url.split("url=")[1]}else{input}',
+    lazy:'js:var url=jsp.pdfh(request(input),"iframe&&src");if(/hulihuli/.test(url)){input=url.replace(".m3u8","")}else if(/.m3u8|.mp4/.test(url)){input=url.match(/.*?=(.*?)&next/)[1]}else{input=url}',
     推荐: 'ul.myui-vodlist.clearfix;li.col-lg-8;a&&title;a&&data-original;.pic-text&&Text;a&&href',
 }
