@@ -1,4 +1,3 @@
-// 进站前 向右滑动验证
 muban.mxpro.二级.desc = '.module-info-item:eq(4)&&Text;;;.module-info-item--span:eq(2)&&Text;.module-info-item--span:eq(1)&&Text';
 muban.mxpro.二级.tabs = '.module-tab-items-box .module-tab-item';
 var rule = {
@@ -17,4 +16,5 @@ var rule = {
     },
     searchUrl:'/index.php/vod/search/page/fypage/wd/**.html',
     class_parse: '.navbar-items li:gt(1):lt(6);a&&Text;a&&href;.*/(\\d+).html',
+	lazy:"js:var html=JSON.parse(request(input).match(/r player_.*?=(.*?)</)[1]);var url=html.url;if(html.encrypt=='1'){url=unescape(url)}else if(html.encrypt=='2'){url=unescape(base64Decode(url))}if(/m3u8|mp4/.test(url)){input=url}else{input}",
 }
