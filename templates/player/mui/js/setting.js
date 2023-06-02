@@ -13,16 +13,17 @@ function player(config){
         MPlayer(config.url,config.title,config.vkey,config.next);
     }else{
         $.ajaxSettings.timeout='30000';
-        $.post("api_config.php", {"url":config.url,"time":config.time,"key":config.key,"title":config.title},
-            function(data) {
-                if(data.code=="200"){
-                    MPlayer(data.url,config.title,config.vkey,config.next);
-                }else{
-                    TheError();
-                }
-            },'json').error(function (xhr, status, info) {
-            TheError();
-        });
+        // post php
+        // $.post("api_config.php", {"url":config.url,"time":config.time,"key":config.key,"title":config.title},
+        //     function(data) {
+        //         if(data.code=="200"){
+        //             MPlayer(data.url,config.title,config.vkey,config.next);
+        //         }else{
+        //             TheError();
+        //         }
+        //     },'json').error(function (xhr, status, info) {
+        //     TheError();
+        // });
     }
 }
 /*播放器初始化*/

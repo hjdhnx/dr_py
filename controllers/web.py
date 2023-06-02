@@ -46,6 +46,15 @@ def custom_static_player(filename):
     # print(filename)
     return send_from_directory('templates/player', filename)
 
+@web.route('/player1')
+def custom_player1():
+    ctx = getParmas()
+    return render_template('player/mui/index.html', ctx=ctx)
+
+@web.route('/player2')
+def custom_player2():
+    ctx = getParmas()
+    return render_template('player/p2p-media-loader/p2pm3u8.html', ctx=ctx)
 
 @web.route('/<web_name>/<theme>')
 def web_index(web_name, theme):
