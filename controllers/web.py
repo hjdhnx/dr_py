@@ -56,6 +56,11 @@ def custom_player2():
     ctx = getParmas()
     return render_template('player/p2p-media-loader/p2pm3u8.html', ctx=ctx)
 
+@web.route('/player3')
+def custom_player3():
+    ctx = getParmas()
+    return render_template('player/p2pplayer/index.htm', ctx=ctx)
+
 @web.route('/<web_name>/<theme>')
 def web_index(web_name, theme):
     ctx = {'web_name': web_name, 'key': '关键词', 'description': '描述'}
