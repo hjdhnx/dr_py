@@ -6,6 +6,7 @@ var rule={
     title:'8K影视',
     模板:'mxone5',
     host:'http://www.8kvod.com',
+    hostJs:'print(HOST);let html=request(HOST,{headers:{"User-Agent":PC_UA}});let src = jsp.pdfh(html,"ul&&li&&a&&href");print(src);HOST=src.replace("/index.php","")',
     // host:'http://www.xn--45q.top',
     homeUrl:'/index.php',
     url:'/t/fyclass-fypage/',
