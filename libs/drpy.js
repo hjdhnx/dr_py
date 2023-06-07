@@ -97,6 +97,7 @@ const OCR_API = 'http://drpy.nokia.press:8028/ocr/drpy/text';//ocr在线识别�
 if(typeof(MY_URL)==='undefined'){
     var MY_URL; // 全局注入变量,pd函数需要
 }
+var HOST;
 var RKEY; // 源的唯一标识
 var fetch;
 var print;
@@ -2145,6 +2146,15 @@ function playParse(playObj){
         rule.cate_exclude = rule_cate_excludes.join('|');
         rule.tab_exclude = rule_tab_excludes.join('|');
         rule.host = (rule.host||'').rstrip('/');
+        HOST = rule.host;
+        if(rule.hostJs){
+            try {
+                eval(rule.hostJs);
+                rule.host = HOST.rstrip('/');
+            }catch (e) {
+                console.log(`执行${rule.hostJs}获取host发生错误:`+e.message);
+            }
+        }
         rule.url = rule.url||'';
         rule.double = rule.double||false;
         rule.homeUrl = rule.homeUrl||'';
