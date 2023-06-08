@@ -63,7 +63,8 @@ cd utils && wget https://ghproxy.liuzhicong.com/https://raw.githubusercontent.co
 
 #### 参考地址
 [参考T4](https://github.com/sec-an/TV_Spider/blob/main/spider/sp360.py)   
-[golang最好的js引擎-otto](https://github.com/robertkrimen/otto)   
+[golang最好的js引擎-goja](https://github.com/dop251/goja)   
+[安卓最好的js引擎](https://github.com/HarlonWang/quickjs-wrapper)  
 [flutter最好的js引擎-dart_quickjs](https://pub.flutter-io.cn/packages/dart_quickjs)   
 [dockerfile教程](https://blog.csdn.net/qq_46158060/article/details/125718218)   
 [获取本地设备信息](https://blog.csdn.net/cui_yonghua/article/details/125508991)   
