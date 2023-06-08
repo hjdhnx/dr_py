@@ -10,7 +10,8 @@ from models.ruleclass import RuleClass
 from models.vipParse import VipParse
 from utils.cfg import cfg
 from base.database import db
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
+
 
 class storage_service(object):
 
@@ -21,8 +22,11 @@ class storage_service(object):
         return copy_utils.obj_to_list(res)
 
     def __init__(self):
-        conf_list = ['LIVE_URL', 'USE_PY', 'JS_MODE','JS0_DISABLE','JS0_PASSWORD','PLAY_URL', 'PLAY_DISABLE', 'LAZYPARSE_MODE', 'WALL_PAPER_ENABLE',
-                     'WALL_PAPER', 'UNAME', 'PWD', 'LIVE_MODE', 'CATE_EXCLUDE', 'TAB_EXCLUDE','SEARCH_TIMEOUT','SEARCH_LIMIT','MULTI_MODE','XR_MODE','JS_PROXY','UPDATE_PROXY','ENV','ALI_TOKEN','OCR_API']
+        conf_list = ['LIVE_URL', 'USE_PY', 'JS_MODE', 'JS0_DISABLE', 'JS0_PASSWORD', 'PLAY_URL', 'PLAY_DISABLE',
+                     'LAZYPARSE_MODE', 'WALL_PAPER_ENABLE',
+                     'WALL_PAPER', 'UNAME', 'PWD', 'LIVE_MODE', 'CATE_EXCLUDE', 'TAB_EXCLUDE', 'SEARCH_TIMEOUT',
+                     'SEARCH_LIMIT', 'MULTI_MODE', 'XR_MODE', 'JS_PROXY', 'UPDATE_PROXY', 'ENV', 'ALI_TOKEN', 'OCR_API',
+                     'SPECIAL']
         for conf in conf_list:
             if not self.hasItem(conf):
                 print(f'开始初始化{conf}')
@@ -31,10 +35,14 @@ class storage_service(object):
     @classmethod
     def getStoreConf(self):
         # MAX_CONTENT_LENGTH 最大上传和端口ip一样是顶级配置,无法外部修改的
-        conf_list = ['LIVE_URL', 'LIVE_MODE','PLAY_URL', 'PID_URL','USE_PY','JS_MODE', 'JS0_DISABLE','JS0_PASSWORD','PLAY_DISABLE', 'LAZYPARSE_MODE', 'WALL_PAPER_ENABLE',
-                     'WALL_PAPER', 'UNAME', 'PWD',  'CATE_EXCLUDE', 'TAB_EXCLUDE','SEARCH_TIMEOUT','SEARCH_LIMIT','MULTI_MODE','XR_MODE','JS_PROXY','UPDATE_PROXY','ENV','ALI_TOKEN','OCR_API']
-        conf_name_list = ['直播地址', '直播模式','远程地址', '进程管理链接','启用py源', 'js模式','禁用js0','js0密码','禁用免嗅', '免嗅模式', '启用壁纸', '壁纸链接', '管理账号',
-                          '管理密码',  '分类排除', '线路排除','聚搜超时','搜索条数','多源模式','仙人模式','源代理','升级代理','环境变量','阿里tk','OCR接口']
+        conf_list = ['LIVE_URL', 'LIVE_MODE', 'PLAY_URL', 'PID_URL', 'USE_PY', 'JS_MODE', 'JS0_DISABLE', 'JS0_PASSWORD',
+                     'PLAY_DISABLE', 'LAZYPARSE_MODE', 'WALL_PAPER_ENABLE',
+                     'WALL_PAPER', 'UNAME', 'PWD', 'CATE_EXCLUDE', 'TAB_EXCLUDE', 'SEARCH_TIMEOUT', 'SEARCH_LIMIT',
+                     'MULTI_MODE', 'XR_MODE', 'JS_PROXY', 'UPDATE_PROXY', 'ENV', 'SPECIAL', 'ALI_TOKEN', 'OCR_API']
+        conf_name_list = ['直播地址', '直播模式', '远程地址', '进程管理链接', '启用py源', 'js模式', '禁用js0',
+                          'js0密码', '禁用免嗅', '免嗅模式', '启用壁纸', '壁纸链接', '管理账号',
+                          '管理密码', '分类排除', '线路排除', '聚搜超时', '搜索条数', '多源模式', '仙人模式', '源代理',
+                          '升级代理', '环境变量', '优选源', '阿里tk', 'OCR接口']
         conf_lists = []
         for i in range(len(conf_list)):
             conf = conf_list[i]
@@ -55,7 +63,7 @@ class storage_service(object):
 
     @classmethod
     def getItem(self, key, value=''):
-        res = Storage.getItem(key,value)
+        res = Storage.getItem(key, value)
         if str(res) == '0' or str(res) == 'false' or str(res) == 'False':
             return 0
         return res
@@ -65,19 +73,20 @@ class storage_service(object):
         return Storage.hasItem(key)
 
     @classmethod
-    def setItem(self,key, value):
+    def setItem(self, key, value):
         return Storage.setItem(key, value)
 
     @classmethod
-    def clearItem(self,key):
+    def clearItem(self, key):
         return Storage.clearItem(key)
+
 
 class rules_service(object):
 
     @staticmethod
     def query_all():
         # 查询所有
-        res = RuleClass.query.order_by(RuleClass.order.asc(),RuleClass.write_date.desc()).all()
+        res = RuleClass.query.order_by(RuleClass.order.asc(), RuleClass.write_date.desc()).all()
         # print(res)
         # res = RuleClass.query.order_by(RuleClass.write_date.asc()).all()
         return copy_utils.obj_to_list(res)
@@ -86,7 +95,7 @@ class rules_service(object):
     def hasItem(self, key):
         return RuleClass.hasItem(key)
 
-    def getState(self,key):
+    def getState(self, key):
         res = RuleClass.query.filter(RuleClass.name == key).first()
         if not res:
             return 1
@@ -96,8 +105,7 @@ class rules_service(object):
             state = 1
         return state or 0
 
-
-    def setState(self,key,state=0):
+    def setState(self, key, state=0):
         res = RuleClass.query.filter(RuleClass.name == key).first()
         if res:
             res.state = state
@@ -113,7 +121,7 @@ class rules_service(object):
             print(f'发生了错误:{e}')
             return None
 
-    def setOrder(self,key,order=0):
+    def setOrder(self, key, order=0):
         res = RuleClass.query.filter(RuleClass.name == key).first()
         if res:
             res.order = order
@@ -138,12 +146,13 @@ class rules_service(object):
         res = RuleClass.query.filter(RuleClass.state == 0).all()
         return copy_utils.obj_to_list(res)
 
+
 class parse_service(object):
 
     @staticmethod
     def query_all():
         # 查询所有
-        res = VipParse.query.order_by(VipParse.order.asc(),VipParse.write_date.desc()).all()
+        res = VipParse.query.order_by(VipParse.order.asc(), VipParse.write_date.desc()).all()
         # print(res)
         # res = RuleClass.query.order_by(RuleClass.write_date.asc()).all()
         return copy_utils.obj_to_list(res)
@@ -152,7 +161,7 @@ class parse_service(object):
     def hasItem(self, key):
         return VipParse.hasItem(key)
 
-    def getState(self,key):
+    def getState(self, key):
         res = VipParse.query.filter(VipParse.url == key).first()
         if not res:
             return 1
@@ -162,8 +171,7 @@ class parse_service(object):
             state = 1
         return state or 0
 
-
-    def setState(self,key,state=0):
+    def setState(self, key, state=0):
         res = VipParse.query.filter(VipParse.url == key).first()
         if res:
             res.state = state
@@ -179,7 +187,7 @@ class parse_service(object):
             print(f'发生了错误:{e}')
             return None
 
-    def setOrder(self,key,order=0):
+    def setOrder(self, key, order=0):
         res = VipParse.query.filter(VipParse.url == key).first()
         if res:
             res.order = order
@@ -199,7 +207,7 @@ class parse_service(object):
             print(f'发生了错误:{e}')
             return None
 
-    def setEverything(self,key,name,state,typeno,order,ext,header):
+    def setEverything(self, key, name, state, typeno, order, ext, header):
         res = VipParse.query.filter(VipParse.url == key).first()
         if res:
             res.name = name
@@ -211,7 +219,7 @@ class parse_service(object):
             res.write_date = datetime.now()
             db.session.add(res)
         else:
-            res = VipParse(name=name,url=key,state=state,type=typeno,order=order,ext=ext,header=header)
+            res = VipParse(name=name, url=key, state=state, type=typeno, order=order, ext=ext, header=header)
             db.session.add(res)
             db.session.flush()  # 获取id
         try:
@@ -221,7 +229,7 @@ class parse_service(object):
             print(f'发生了错误:{e}')
             return None
 
-    def saveData(self,obj):
+    def saveData(self, obj):
         """
         db.session.add_all([]) 可以一次性保存多条数据,但是这里用不到,因为涉及修改和新增一起的
         :param obj:

@@ -1260,7 +1260,7 @@ function homeVodParse(homeVodObj){
     if(p.startsWith('js:')){
         const TYPE = 'home';
         var input = MY_URL;
-        const HOST = rule.host;
+        HOST = rule.host;
         eval(p.replace('js:',''));
         d = VODS;
     }else {
@@ -2148,6 +2148,7 @@ function playParse(playObj){
         rule.host = (rule.host||'').rstrip('/');
         HOST = rule.host;
         if(rule.hostJs){
+            console.log(`检测到hostJs,准备执行...`);
             try {
                 eval(rule.hostJs);
                 rule.host = HOST.rstrip('/');
