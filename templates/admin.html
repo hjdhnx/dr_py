@@ -20,7 +20,8 @@
         $(document).ready(function () {
             $(".view").click(function () {
                 let rule = this.innerText.trim();
-                location.href = '/admin/view/' + rule + '.js';
+                // location.href = '/admin/view/' + rule + '.js';
+                location.href = '/admin/edit/' + rule + '.js';
             });
 
             $(".view_home").click(function () {
@@ -110,8 +111,33 @@
                     data: form_data
                 }).success(function (ret) {
                     console.log(ret);
-                    alert(ret.msg);
-                    location.reload();
+                    if(ret.msg && ret.msg.includes('文件已存在')){
+                        if (confirm(ret.msg+'\n'+'是否覆盖写入?')) {
+                        console.log('覆盖写入');
+                        $.ajax({
+                            type: "POST",
+                            url: "/admin/upload?force=1",
+                            dataType: "json",
+                            processData: false,  // 注意：让jQuery不要处理数据
+                            contentType: false,  // 注意：让jQuery不要设置contentType
+                            data: form_data
+                        }).success((ret)=>{
+                            console.log(ret);
+                            alert(ret.msg);
+                            if(ret.msg && ret.msg.includes('文件上传成功')){
+                                location.reload();
+                            }
+                        }).fail((ret)=>{
+                            console.log(ret);
+                            alert(ret.msg);
+                        });
+                        }
+                    }else{
+                        alert(ret.msg);
+                    }
+                    if(ret.msg && ret.msg.includes('文件上传成功')){
+                        location.reload();
+                    }
                 }).fail(function (ret) {
                     console.log(ret);
                     alert(ret.msg);

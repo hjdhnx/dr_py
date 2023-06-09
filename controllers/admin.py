@@ -81,6 +81,12 @@ def admin_update_env():  # 更新环境变量中的某个值
     ENV = update_env(key,value)
     return R.success(f'修改成功,最新的完整ENV见data',data=ENV)
 
+@admin.route("/edit/<name>",methods=['GET'])
+def admin_edit_rule(name):
+    # print(name)
+    if not verfy_token():
+        return render_template('login.html')
+    return render_template('edit_rule.html', name=name)
 
 @admin.route("/view/<name>",methods=['GET'])
 def admin_view_rule(name):
@@ -317,17 +323,20 @@ def admin_change_use_py():
 #     state = 1 if use_py else 0
 #     return R.success(state)
 
-@admin.route('/upload', methods=['GET', 'POST'])
+@admin.route('/upload', methods=['POST'])
 def upload_file():
+    args = request.args
+    force = args.get('force')
     if not verfy_token():
         return render_template('login.html')
     if request.method == 'POST':
         try:
             file = request.files['file']
             filename = secure_filename(file.filename)
-            print(f'推荐安全文件命名:{filename}')
+            logger.info(f'推荐安全文件命名:{filename}')
             savePath = f'js/{file.filename}'
-            if os.path.exists(savePath):
+            # print(savePath)
+            if os.path.exists(savePath) and not force:
                 return R.failed(f'上传失败,文件已存在,请先查看删除再试')
             with open('js/模板.js', encoding='utf-8') as f2:
                 before = f2.read().split('export')[0]
@@ -341,7 +350,7 @@ def upload_file():
                     return R.failed('文件上传失败,检测到上传的文件不是drpy框架支持的源代码')
             except:
                 return R.failed('文件上传失败,检测到上传的文件不是drpy框架支持的源代码')
-            print(savePath)
+            # print(savePath)
             file.seek(0) # 读取后变成空文件,重新赋能
             file.save(savePath)
             return R.success('文件上传成功')
