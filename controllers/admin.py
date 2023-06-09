@@ -94,6 +94,12 @@ def admin_edit_rule(name):
         return render_template('login.html')
     return render_template('edit_rule.html', name=name)
 
+@admin.route("/edit2/<name>", methods=['GET'])
+def admin_edit2_rule(name):
+    # print(name)
+    if not verfy_token():
+        return render_template('login.html')
+    return render_template('edit_rule_mobile.html', name=name)
 
 @admin.route("/save_edit/<name>", methods=['POST'])
 def admin_save_edit_rule(name):
