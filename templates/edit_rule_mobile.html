@@ -123,25 +123,34 @@
         });
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            let txt = $('#script_code').val();
-            // console.log(txt);
-            let postData = {
-                name:'{{name}}',
-                code:txt,
-                // code:txt.replaceAll("+","&").replaceAll("console.log","console.Log")
-            }
-            // console.log(postData);
-            $.ajax({
-                type:'post',
-                url:api_save_url,
-                data:postData,
-                dataType:'json',
-                async:false,
-                success:function (ret) {
-                    console.log(ret);
-                    layer.msg(ret.msg);
+            layer.confirm('确认保存？', {
+                title: "操作提示",
+                icon: 0,
+                btn: ['确定']
+            } ,function(index){
+                let txt = $('#script_code').val();
+                // console.log(txt);
+                let postData = {
+                    name: '{{name}}',
+                    code: txt,
+                    // code:txt.replaceAll("+","&").replaceAll("console.log","console.Log")
                 }
+                // console.log(postData);
+                $.ajax({
+                    type: 'post',
+                    url: api_save_url,
+                    data: postData,
+                    dataType: 'json',
+                    async: false,
+                    success: function (ret) {
+                        console.log(ret);
+                        layer.msg(ret.msg);
+                    }
+                });
+
+                layer.close(index);
             });
+
             return false;
         });
 
