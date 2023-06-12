@@ -60,6 +60,10 @@ cd utils && wget https://ghproxy.liuzhicong.com/https://raw.githubusercontent.co
 ```
 执行后重启9001或者docker即可正常检测升级
 
+### 谷歌浏览器跨域支持嗅探
+```text
+"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-site-isolation-trials --disable-web-security --disable-features=SameSiteByDefaultCookies,CookiesWithoutSameSiteMustBeSecure --user-data-dir=C:\Program Files\Google\Chrome\Application
+```
 
 #### 参考地址
 [参考T4](https://github.com/sec-an/TV_Spider/blob/main/spider/sp360.py)   
