@@ -1,5 +1,5 @@
 var rule = {
-	title: '咕噜', // csp_AppYsV2
+	title: '咕噜[V2]', // csp_AppYsV2
 	host: 'https://w.996w.top',
 	homeUrl:'/api.php/app/index_video',
 	// url: '/api.php/app/video?tid=fyclass&class=&area=&lang=&year=&limit=20&pg=fypage',
