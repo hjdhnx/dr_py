@@ -1,7 +1,8 @@
 /*
-# 地址发布页 https://fabu.bulei.cc
+地址发布页 https://fabu.bulei.cc/
+一级筛选页面 数字验证
 
-# TVBOX RULES
+TVBOX RULES
 "rules":[
     {"host":"*", "rule":["/ftn_handler"]},
     {"host":"*", "rule":["cn-beijing-data.aliyundrive.net", "security-token="]},
@@ -9,7 +10,7 @@
     {"host":"*", "rule":["/JM/api", "vkey="]}
 ],
 
-# 影视TV RULES
+影视TV RULES
 "rules":[
     {"name":"布雷蓝光1布蕾4K1","hosts":["*"],"regex":["ftn_handler"]},
     {"name":"布蕾4K2","hosts":["cn-beijing-data.aliyundrive.net"],"regex":["security-token="]},
@@ -18,13 +19,11 @@
 ],
 */
 
-muban.首图2.二级.title = 'h1--span&&Text;.data--span:eq(0)&&Text';
-muban.首图2.二级.desc = '.score&&Text;;;.data--span:eq(1)&&Text;.data--span:eq(2)&&Text';
-muban.首图2.二级.content = 'p.col-pd&&Text';
-muban.首图2.二级.tabs = '.nav-tabs&&li';
-var rule = {  
+muban.mxpro.二级.tabs = '#y-playList .module-tab-item';
+muban.mxpro.二级.desc = '.module-info-item-content:eq(3)&&Text;;;.module-info-item-content:eq(2)&&Text;.module-info-item-content:eq(0)&&Text';
+var rule={     
     title:'布雷蓝光',
-    模板:'首图2',
+    模板:'mxpro',
     host:'https://fabu.bulei.cc',
     hostJs:'print(HOST);let html=request(HOST,{headers:{"User-Agent":PC_UA}});let src=jsp.pdfh(html,"li:eq(0)&&a&&href");print(src);HOST=src',
     // url:'/index.php/vod/type/id/fyclass.html',
@@ -41,6 +40,6 @@ var rule = {
         "22":[{"key":"class","name":"剧情","value":[{"n":"全部","v":""},{"n":"爱情","v":"/class/爱情"},{"n":"剧情","v":"/class/剧情"},{"n":"喜剧","v":"/class/喜剧"},{"n":"家庭","v":"/class/家庭"},{"n":"伦理","v":"/class/伦理"},{"n":"文艺","v":"/class/文艺"},{"n":"音乐","v":"/class/音乐"},{"n":"歌舞","v":"/class/歌舞"},{"n":"动漫","v":"/class/动漫"},{"n":"西部","v":"/class/西部"},{"n":"武侠","v":"/class/武侠"},{"n":"古装","v":"/class/古装"},{"n":"动作","v":"/class/动作"},{"n":"恐怖","v":"/class/恐怖"},{"n":"惊悚","v":"/class/惊悚"},{"n":"冒险","v":"/class/冒险"},{"n":"犯罪","v":"/class/犯罪"},{"n":"悬疑","v":"/class/悬疑"},{"n":"记录","v":"/class/记录"},{"n":"战争","v":"/class/战争"},{"n":"历史","v":"/class/历史"},{"n":"传记","v":"/class/传记"},{"n":"体育","v":"/class/体育"},{"n":"科幻","v":"/class/科幻"},{"n":"魔幻","v":"/class/魔幻"},{"n":"奇幻片","v":"/class/奇幻片"}]},{"key":"area","name":"地区","value":[{"n":"全部","v":""},{"n":"香港","v":"/area/香港"},{"n":"台湾","v":"/area/台湾"}]},{"key":"year","name":"年份","value":[{"n":"全部","v":""},{"n":"2023","v":"/year/2023"},{"n":"2022","v":"/year/2022"},{"n":"2021","v":"/year/2021"},{"n":"2020","v":"/year/2020"},{"n":"2019","v":"/year/2019"},{"n":"2018","v":"/year/2018"},{"n":"2017","v":"/year/2017"},{"n":"2016","v":"/year/2016"},{"n":"2015","v":"/year/2015"},{"n":"2014","v":"/year/2014"},{"n":"2013","v":"/year/2013"},{"n":"2012","v":"/year/2012"},{"n":"2011","v":"/year/2011"},{"n":"2010","v":"/year/2010"},{"n":"2009","v":"/year/2009"},{"n":"2008","v":"/year/2008"},{"n":"2007","v":"/year/2007"},{"n":"2006","v":"/year/2006"},{"n":"2005","v":"/year/2005"},{"n":"2004","v":"/year/2004"},{"n":"2003","v":"/year/2003"},{"n":"2002","v":"/year/2002"},{"n":"2001","v":"/year/2001"},{"n":"2000","v":"/year/2000"},{"n":"1999","v":"/year/1999"},{"n":"1998","v":"/year/1998"},{"n":"1997","v":"/year/1997"},{"n":"1996","v":"/year/1996"},{"n":"1995","v":"/year/1995"},{"n":"1994","v":"/year/1994"},{"n":"1993","v":"/year/1993"},{"n":"1992","v":"/year/1992"},{"n":"1991","v":"/year/1991"},{"n":"1990","v":"/year/1990"}]},{"key":"by","name":"排序","value":[{"n":"时间","v":"/by/time"},{"n":"人气","v":"/by/hits"},{"n":"评分","v":"/by/score"}]}]
     },
     searchUrl:'/index.php/vod/search/page/fypage/wd/**.html',
-    class_parse: '.stui-header__menu&&li:gt(0):lt(8);a&&Text;a&&href;.*/(.*?).html',
+    class_parse: '.navbar-items li:gt(1):lt(10);a&&Text;a&&href;/(\\d+).html',
     lazy:"js:var html=JSON.parse(request(input).match(/r player_.*?=(.*?)</)[1]);var url=html.url;if(html.encrypt=='1'){url=unescape(url)}else if(html.encrypt=='2'){url=unescape(base64Decode(url))}if(/m3u8|mp4/.test(url)){input=url}else{input}",
 }
