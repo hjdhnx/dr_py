@@ -2,6 +2,7 @@
  * live2cms.js
  * 配置设置 {"key":"Live2CMS","name":"直播转点播V2","type":3,"api":"{{host}}/libs/live2cms.js","searchable":2,"quickSearch":0,"filterable":0,"ext":"{{host}}/txt/json/live2mv_data.json"}
  * live2mv_data.json
+ * 支持m3u类直播，支持线路归并。支持筛选切换显示模式
 [
 {"name": "甜蜜",     "url": "http://zdir.kebedd69.repl.co/public/live.txt"},
 {"name": "俊于",     "url": "http://home.jundie.top:81/Cat/tv/live.txt"},
@@ -19,11 +20,43 @@ String.prototype.rstrip = function (chars) {
 	return this.replace(regex, "");
 };
 const request_timeout = 5000;
-const VERSION = 'live2cms 20230616';
+const RKEY = 'live2cms'; // 源的唯一标识
+const VERSION = 'live2cms 20230619';
 const UA = 'Mozilla/5.0'; //默认请求ua
 const __ext = {data_dict:{}};
 const tips = `\n道长直播转点播js-当前版本${VERSION}`;
 const def_pic = 'https://avatars.githubusercontent.com/u/97389433?s=120&v=4';
+
+/**
+ * 存在数据库配置表里, key字段对应值value,没有就新增,有就更新,调用此方法会清除key对应的内存缓存
+ * @param k 键
+ * @param v 值
+ */
+function setItem(k,v){
+    local.set(RKEY,k,v);
+    console.log(`规则${RKEY}设置${k} => ${v}`)
+}
+
+/**
+ *  获取数据库配置表对应的key字段的value，没有这个key就返回value默认传参.需要有缓存,第一次获取后会存在内存里
+ * @param k 键
+ * @param v 值
+ * @returns {*}
+ */
+function getItem(k,v){
+    return local.get(RKEY,k) || v;
+}
+
+/**
+ *  删除数据库key对应的一条数据,并清除此key对应的内存缓存
+ * @param k
+ */
+function clearItem(k){
+    local.delete(RKEY,k);
+}
+
+var showMode = getItem('showMode','groups'); // groups按组分类显示 all全部一条线路展示
+
 /**
  * 打印日志
  * @param any 任意变量
@@ -219,8 +252,15 @@ function home(filter) {
 		type_name: it.name,
 	}));
 	print("----home----");
+	let filter_dict = {};
+	let filters = [
+		{'key': 'show', 'name': '播放展示', 'value': [{'n': '多线路分组', 'v': 'groups'},{'n': '单线路', 'v': 'all'}]}
+	];
+	classes.forEach(it=>{
+		filter_dict[it.type_id] = filters;
+	});
 	print(classes);
-	return JSON.stringify({ 'class': classes});
+	return JSON.stringify({ 'class': classes,'filters': filter_dict});
 }
 
 function homeVod(params) {
@@ -253,6 +293,11 @@ function homeVod(params) {
 }
 
 function category(tid, pg, filter, extend) {
+	let fl = filter?extend:{};
+	if(fl.show){
+		showMode = fl.show;
+		setItem('showMode',showMode);
+	}
 	if(parseInt(pg)>1){
 		return JSON.stringify({
 		'list': [],
@@ -341,28 +386,31 @@ function detail(tid) { // ⛵  港•澳•台
     });
 
     let vod_name = __ext.data.find(x=>x.url===_get_url).name;
-    // let vod_play_url = _list.join('#');
+	let vod_play_url;
+	let vod_play_from;
 
-	let groups = splitArray(_list,x=>x.split('$')[0]);
-	let tabs = [];
-	for(let i=0;i<groups.length;i++){
-		if(i===0){
-			tabs.push(vod_name+'1')
-		}else{
-			tabs.push(` ${i+1} `)
+	if(showMode==='groups'){
+		let groups = splitArray(_list,x=>x.split('$')[0]);
+		let tabs = [];
+		for(let i=0;i<groups.length;i++){
+			if(i===0){
+				tabs.push(vod_name+'1')
+			}else{
+				tabs.push(` ${i+1} `)
+			}
 		}
+		vod_play_url = groups.map(it=>it.join('#')).join('$$$');
+		vod_play_from = tabs.join('$$$');
+	}else{
+		vod_play_url = _list.join('#');
+		vod_play_from = vod_name;
 	}
-	let vod_play_from = tabs.join('$$$');
-	// let vod_play_url = _list.join('#');
-	let vod_play_url = groups.map(it=>it.join('#')).join('$$$');
-
     let vod = {
         vod_id: tid,
         vod_name: vod_name+'|'+_tab,
         type_name: "直播列表",
         vod_pic: def_pic,
         vod_content: tid,
-        // vod_play_from: vod_name,
         vod_play_from: vod_play_from,
         vod_play_url: vod_play_url,
         vod_director: tips,
