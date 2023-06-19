@@ -275,15 +275,18 @@ function homeVod(params) {
 		}
         __ext.data_dict[_get_url] = html;
     }
-    let arr = html.match(/.*?,#[\s\S].*?#/g);
+    // let arr = html.match(/.*?,#[\s\S].*?#/g);
+	let arr = html.match(/.*?[,，]#[\s\S].*?#/g); // 可能存在中文逗号
 	let _list = [];
 	try {
 		arr.forEach(it=>{
+			let vname = it.split(/[,，]/)[0];
+			let vtab = it.match(/#(.*?)#/)[0];
 			_list.push({
-				vod_name:it.split(',')[0],
-				vod_id:_get_url+'$'+it.split(',')[0],
+				vod_name:vname,
+				vod_id:_get_url+'$'+vname,
 				vod_pic:def_pic,
-				vod_remarks:it.split(',')[1],
+				vod_remarks:vtab,
 			});
 		});
 	}catch (e) {
@@ -314,15 +317,19 @@ function category(tid, pg, filter, extend) {
 		}
         __ext.data_dict[_get_url] = html;
     }
-    let arr = html.match(/.*?,#[\s\S].*?#/g);
+    // let arr = html.match(/.*?[,，]#[\s\S].*?#/g);
+    let arr = html.match(/.*?[,，]#[\s\S].*?#/g); // 可能存在中文逗号
     let _list = [];
 	try {
 		arr.forEach(it=>{
+			let vname = it.split(/[,，]/)[0];
+			let vtab = it.match(/#(.*?)#/)[0];
 			_list.push({
-				vod_name:it.split(',')[0],
-				vod_id:_get_url+'$'+it.split(',')[0],
+				// vod_name:it.split(',')[0],
+				vod_name:vname,
+				vod_id:_get_url+'$'+vname,
 				vod_pic:def_pic,
-				vod_remarks:it.split(',')[1],
+				vod_remarks:vtab,
 			});
 		});
 	}catch (e) {
@@ -368,11 +375,12 @@ function detail(tid) { // ⛵  港•澳•台
 		}
         __ext.data_dict[_get_url] = html;
     }
-    let a = new RegExp(`.*?${_tab},#[\\s\\S].*?#`);
+    // let a = new RegExp(`.*?${_tab},#[\\s\\S].*?#`);
+    let a = new RegExp(`.*?${_tab.replace('(','\\(').replace(')','\\)')}[,，]#[\\s\\S].*?#`);
     let b = html.match(a)[0];
     let c = html.split(b)[1];
-    if(c.match(/.*?,#[\s\S].*?#/)){
-        let d = c.match(/.*?,#[\s\S].*?#/)[0];
+    if(c.match(/.*?[,，]#[\s\S].*?#/)){
+        let d = c.match(/.*?[,，]#[\s\S].*?#/)[0];
         c = c.split(d)[0];
     }
     let arr = c.trim().split('\n');
