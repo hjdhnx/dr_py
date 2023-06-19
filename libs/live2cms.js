@@ -97,6 +97,61 @@ function convertM3uToNormal(m3u) {
 	}
 }
 
+/**
+ * 线路归类
+ * @param arr
+ * @returns {*[][]}
+ */
+function merge(arr) {
+    var parse = arguments[1] ? arguments[1] : '';
+    var p = [];
+    if (parse !== '' && typeof(parse)=="function") {
+        p = arr.map(parse);
+    }
+    const createEmptyArrays = (length) => Array.from({
+        length
+    }, () => []);
+    let lists = createEmptyArrays(arr.length);
+    let sl = createEmptyArrays(arr.length);
+    (p.length ? p : arr).forEach((k, index) => {
+        var i = 0;
+        while (sl[i].includes(k)) {
+            i = i + 1
+        }
+        sl[i].push(k);
+        lists[i].push(arr[index]);
+    })
+    lists=lists.filter(x=>x.some(k=>k.length));
+    return lists
+}
+
+/**
+ * 线路归类/小棉袄算法
+ * @param arr 数组
+ * @param parse 解析式
+ * @returns {[[*]]}
+ */
+function splitArray(arr,parse) {
+  parse = parse&&typeof(parse)=='function'?parse:'';
+  let result = [[arr[0]]];
+  for (let i = 1; i < arr.length; i++) {
+    let index = -1;
+    for (let j = 0; j < result.length; j++) {
+        if (parse&&result[j].map(parse).includes(parse(arr[i]))) {
+        	index = j;
+      	}else if((!parse) && result[j].includes(arr[i])){
+			index = j;
+		}
+    }
+    if (index >= result.length - 1) {
+      result.push([]);
+      result[result.length - 1].push(arr[i]);
+    } else {
+      result[index + 1].push(arr[i]);
+    }
+  }
+  return result;
+}
 
 const http = function (url, options = {}) {
 	if(options.method ==='POST' && options.data){
@@ -284,12 +339,22 @@ function detail(tid) { // ⛵  港•澳•台
             _list.push(t+'$'+u);
         }
     });
-	// let groups = [[],[],[],[],[],[]];
-	// _list.forEach((it)=>{
-	//
-	// });
+
     let vod_name = __ext.data.find(x=>x.url===_get_url).name;
-    let vod_play_url = _list.join('#');
+    // let vod_play_url = _list.join('#');
+
+	let groups = splitArray(_list,x=>x.split('$')[0]);
+	let tabs = [];
+	for(let i=0;i<groups.length;i++){
+		if(i===0){
+			tabs.push(vod_name+'1')
+		}else{
+			tabs.push(` ${i+1} `)
+		}
+	}
+	let vod_play_from = tabs.join('$$$');
+	// let vod_play_url = _list.join('#');
+	let vod_play_url = groups.map(it=>it.join('#')).join('$$$');
 
     let vod = {
         vod_id: tid,
@@ -297,7 +362,8 @@ function detail(tid) { // ⛵  港•澳•台
         type_name: "直播列表",
         vod_pic: def_pic,
         vod_content: tid,
-        vod_play_from: vod_name,
+        // vod_play_from: vod_name,
+        vod_play_from: vod_play_from,
         vod_play_url: vod_play_url,
         vod_director: tips,
         vod_remarks: `道长直播转点播js-当前版本${VERSION}`,
