@@ -4,7 +4,7 @@
 "mode": {{ mode }},
 "spider": "{{ host }}/liveslib",
 {% if alists|length > 0 %}"drives": {{alists_str}},{% endif %}
-"homepage":"https://gitcode.net/qq_32394351/dr_py",
+"homepage":"https://github.com/hjdhnx/dr_py",
 "sites": [{% for rule in rules.list %}{% if js_mode != 1 %}
 {
     "key":"dr_{{ rule.name }}",

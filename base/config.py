@@ -57,3 +57,4 @@ ALI_TOKEN = ''  # 适用于初始配置的阿里云token
 ENV = '{"bili_cookie":""}'  # 自定义环境变量
 UPDATE_PROXY = 'https://ghproxy.net/'  # 检测升级代理
 Thread = True  # 开启windows多线程调用
+SPECIAL = '腾云驾雾:腾讯&奇珍异兽:爱奇艺&百忙无果:芒果&优酷&哔哩影视&Alist'  # 特殊优选

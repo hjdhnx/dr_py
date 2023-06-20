@@ -235,6 +235,7 @@ def config_render(mode):
     tt = time()
     UA = request.headers['User-Agent']
     ver = getParmas('ver')
+    sp = getParmas('sp')  # 优选
     logger.info(f'ver:{ver},UA:{UA}')
     if ver not in ['1','2']:
         ISTVB = 'okhttp/3' in UA
@@ -279,8 +280,12 @@ def config_render(mode):
     merged_hide(merged_config)
     # response = make_response(html)
     # print(len(merged_config['sites']))
-    print(merged_config['sites'])
+    # print(merged_config['sites'])
     merged_config['sites'] = sort_sites_by_order(merged_config['sites'],js_mode)
+    # print(merged_config['sites'])
+    if sp:  # 执行动态优选源
+        special_rule(merged_config,lsg)
+
     # print(merged_config['parses'])
     parses = sort_parses_by_order(merged_config['parses'],host)
     # print(parses)
@@ -301,6 +306,23 @@ def config_render(mode):
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
     logger.info(f'自动生成动态配置共计耗时:{get_interval(tt)}毫秒')
     return response
+
+def special_rule(merged_config,lsg):
+    # print(merged_config['sites'])
+    special = lsg.getItem('SPECIAL').strip()
+    # print('SPECIAL：',special)
+    special_dict = {}
+    for sp in special.split('&'):
+        special_dict[sp.split(':')[0]] = sp.split(':')[1] if ':' in sp else ''
+
+    special_keys = list(special_dict.keys())
+    special_ft = list(filter(lambda x: x.get('key').replace('dr_', '') in special_keys, merged_config['sites']))
+    for spf in special_ft:
+        spf['name'] = special_dict[spf['key'].replace('dr_', '')] or spf['name']
+
+    special_st = sorted(special_ft, key=lambda x: special_keys.index(x.get('key').replace('dr_', '')))
+    merged_config['sites'] = special_st
+    merged_config['dr_count'] = len(special_st)
 
 def comp(x, y):
     if x['order'] > y['order']:

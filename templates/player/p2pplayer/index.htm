@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+  <title>M3U8-P2P云播</title>
+  <link rel="stylesheet" href="/web/player/p2pplayer/DPlayer.min.css">
+        <style type="text/css">
+body,html{width:100%;height:100%;background:#000;padding:0;margin:0;overflow-x:hidden;overflow-y:hidden}
+*{margin:0;border:0;padding:0;text-decoration:none}
+#video{position:inherit}
+.dplayer{padding:0;margin:0;width:100%;height:100%;background-color:#000}a{text-decoration:none}
+.total {position: absolute;top: 7px;left: 10px;color: #fff;font-size: 14px;}
+        .masked h4{
+            display: block;
+            
+            /*渐变背景*/
+            background-image: -webkit-linear-gradient(left, #3498db, #f47920 10%, #d71345 20%, #f7acbc 30%,
+            #ffd400 40%, #3498db 50%, #f47920 60%, #d71345 70%, #f7acbc 80%, #ffd400 90%, #3498db);
+            color: transparent; /*文字填充色为透明*/
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;          /*背景剪裁为文字，只将文字显示为背景*/
+            background-size: 200% 100%;            /*背景图片向水平方向扩大一倍，这样background-position才有移动与变化的空间*/
+            /* 动画 */
+            animation: masked-animation 4s infinite linear;
+        }
+        @keyframes masked-animation {
+            0% {
+                background-position: 0 0;   /*background-position 属性设置背景图像的起始位置。*/
+            }
+            100% {
+                background-position: -100% 0;
+            }
+        }
+        </style>
+
+</head>
+<body>
+
+<div id="dplayer"></div>
+<div class="total">
+	<div class="masked">
+		<h4><div id="stats"></div></h4>
+	</div>
+</div>	
+</body>
+<script src="/web/player/p2pplayer/DPlayer.min.js"></script>
+<script src="/web/player/p2pplayer/p2p.min.js"></script>
+<script type="text/javascript">
+	var m3u8url = document.location.href.split("url=")[1];
+
+    P2PEngine.dplayer(
+      'dplayer', // 容器 id
+       m3u8url, //m3u8地址
+      "https://p2ptrakcer.bapy.top",  // tracker服务器地址
+      'wss://cd.swarmcloud.net' // 信令服务器地址
+    )
+
+</script>
+</html>

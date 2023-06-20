@@ -52,7 +52,7 @@
 							<button v-show="iframeShow" @click="openTestVideo">测试直链</button>
 							<iframe id="iframe-player" :src="iframeSrc" v-show="iframeShow"
 							allowfullscreen="true" allowtransparency="true" webkitallowfullscreen="true" mozallowfullscreen="true"
-							allow-same-origin="true"
+							allow-same-origin="true" autoplay=1
 							name="iframe-player" scrolling="no" frameborder="0" ref="iframeRef"
 							></iframe>
 						</a>
@@ -278,12 +278,17 @@ const app = createApp({
 					if(res.redirect){ // 重定向的直接设置播放器的值
 						if(isVideo(res.url)){ // 判断重定向的为直链
 							methods.setPlayUrl(res.url);
+							return
 						}else{
 							console.log('重定向待嗅探页面,但是由于跨域问题,只好内嵌播放页播放');
 							iframeSrc.value = res.url;
 						}
-						return
-						// throw new Error('重定向网页直接播放,尝试嗅探(存在跨域无法嗅探问题,暂时考虑直接内嵌人家的播放页)');
+						console.log(location.href);
+						if(location.href.includes('debug=1')){
+							throw new Error('重定向网页直接播放,尝试嗅探(存在跨域无法嗅探问题,暂时考虑直接内嵌人家的播放页)');
+						}else{
+							return
+						}
 					}
 
 					// const res = await axios.get(url,{maxRedirects: 0});
@@ -374,6 +379,9 @@ const app = createApp({
 				// iframeSrc.value = ctx.value.path+'?url='+'https://sf9-dycdn-tos.pstatp.com/obj/tos-cn-i-8gu37r9deh/7c399215485c40cb9f1d1da640354a12?filename=1.mp4';
 			},
 			setPlayUrl(url){
+				if(url.includes('url=')){
+					url = url.split('url=')[1];
+				}
 				iframeSrc.value = ctx.value.path+'?url='+url;
 			}
 		}
