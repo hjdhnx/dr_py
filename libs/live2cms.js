@@ -1,15 +1,13 @@
 /**
  * live2cms.js
- * 配置设置 {"key":"Live2Mv","name":"直播转点播","type":3,"api":"http://drpy.nokia.press/libs/live2mv.js","searchable":2,"quickSearch":0,"filterable":0,"ext":"http://drpy.nokia.press/txt/json/live2mv_data.json"}
- * alist.json
+ * 配置设置 {"key":"Live2CMS","name":"直播转点播V2","type":3,"api":"{{host}}/libs/live2cms.js","searchable":2,"quickSearch":0,"filterable":0,"ext":"{{host}}/txt/json/live2mv_data.json"}
+ * live2mv_data.json
+ * 支持m3u类直播，支持线路归并。支持筛选切换显示模式
 [
 {"name": "甜蜜",     "url": "http://zdir.kebedd69.repl.co/public/live.txt"},
-{"name": "巧计",     "url": "https://ghproxy.net/https://raw.githubusercontent.com/dxawi/1/main/tvlive.txt"},
-{"name": "星辰",     "url": "http://tvmvip.com/xclive.txt"},
 {"name": "俊于",     "url": "http://home.jundie.top:81/Cat/tv/live.txt"},
-{"name": "多多",     "url": "https://yydsys.top/duo/txt/v.txt"},
 {"name": "菜妮丝",     "url": "http://xn--ihqu10cn4c.xn--z7x900a.love:63/TV/tvzb.txt"},
-{"name": "乱世",     "url": "http://www.dmtv.ml/mao/live/m3u.txt"},
+{"name": "布里m3u",     "url": "http://jiexi.bulisite.top/m3u.php"},
 {"name": "吾爱",     "url": "http://52bsj.vip:81/api/v3/file/get/763/live.txt?sign=87BTGT1_6AOry7FPwy_uuxFTv2Wcb9aDMj46rDdRTD8%3D%3A0"},
 {"name": "饭太硬",     "url": "http://ftyyy.tk/live.txt"}
 ]
@@ -22,9 +20,43 @@ String.prototype.rstrip = function (chars) {
 	return this.replace(regex, "");
 };
 const request_timeout = 5000;
-const VERSION = 'live2cms 20230616';
+const RKEY = 'live2cms'; // 源的唯一标识
+const VERSION = 'live2cms 20230619';
 const UA = 'Mozilla/5.0'; //默认请求ua
 const __ext = {data_dict:{}};
+const tips = `\n道长直播转点播js-当前版本${VERSION}`;
+const def_pic = 'https://avatars.githubusercontent.com/u/97389433?s=120&v=4';
+
+/**
+ * 存在数据库配置表里, key字段对应值value,没有就新增,有就更新,调用此方法会清除key对应的内存缓存
+ * @param k 键
+ * @param v 值
+ */
+function setItem(k,v){
+    local.set(RKEY,k,v);
+    console.log(`规则${RKEY}设置${k} => ${v}`)
+}
+
+/**
+ *  获取数据库配置表对应的key字段的value，没有这个key就返回value默认传参.需要有缓存,第一次获取后会存在内存里
+ * @param k 键
+ * @param v 值
+ * @returns {*}
+ */
+function getItem(k,v){
+    return local.get(RKEY,k) || v;
+}
+
+/**
+ *  删除数据库key对应的一条数据,并清除此key对应的内存缓存
+ * @param k
+ */
+function clearItem(k){
+    local.delete(RKEY,k);
+}
+
+var showMode = getItem('showMode','groups'); // groups按组分类显示 all全部一条线路展示
+
 /**
  * 打印日志
  * @param any 任意变量
@@ -63,6 +95,95 @@ function getHome(url){
 		url = decodeURIComponent(url);
 	}catch (e) {}
 	return url
+}
+
+/**
+ * m3u直播格式转一般直播格式
+ * @param m3u
+ * @returns {string}
+ */
+function convertM3uToNormal(m3u) {
+	try {
+	  const lines = m3u.split('\n');
+	  let result = '';
+	  let TV='';
+	  // let flag='#genre#';
+	  let flag='#m3u#';
+	  let currentGroupTitle = '';
+	  lines.forEach((line) => {
+		if (line.startsWith('#EXTINF:')) {
+		  const groupTitle = line.split('"')[1].trim();
+		  TV= line.split('"')[2].substring(1);
+		  if (currentGroupTitle !== groupTitle) {
+			currentGroupTitle = groupTitle;
+			result += `\n${currentGroupTitle},${flag}\n`;
+		  }
+		} else if (line.startsWith('http')) {
+		  const splitLine = line.split(',');
+		  result += `${TV}\,${splitLine[0]}\n`;
+		}
+	  });
+	  return result.trim();
+  }catch (e) {
+	print(`m3u直播转普通直播发生错误:${e.message}`);
+	return m3u
+	}
+}
+
+/**
+ * 线路归类
+ * @param arr
+ * @returns {*[][]}
+ */
+function merge(arr) {
+    var parse = arguments[1] ? arguments[1] : '';
+    var p = [];
+    if (parse !== '' && typeof(parse)=="function") {
+        p = arr.map(parse);
+    }
+    const createEmptyArrays = (length) => Array.from({
+        length
+    }, () => []);
+    let lists = createEmptyArrays(arr.length);
+    let sl = createEmptyArrays(arr.length);
+    (p.length ? p : arr).forEach((k, index) => {
+        var i = 0;
+        while (sl[i].includes(k)) {
+            i = i + 1
+        }
+        sl[i].push(k);
+        lists[i].push(arr[index]);
+    })
+    lists=lists.filter(x=>x.some(k=>k.length));
+    return lists
+}
+
+/**
+ * 线路归类/小棉袄算法
+ * @param arr 数组
+ * @param parse 解析式
+ * @returns {[[*]]}
+ */
+function splitArray(arr,parse) {
+  parse = parse&&typeof(parse)=='function'?parse:'';
+  let result = [[arr[0]]];
+  for (let i = 1; i < arr.length; i++) {
+    let index = -1;
+    for (let j = 0; j < result.length; j++) {
+        if (parse&&result[j].map(parse).includes(parse(arr[i]))) {
+        	index = j;
+      	}else if((!parse) && result[j].includes(arr[i])){
+			index = j;
+		}
+    }
+    if (index >= result.length - 1) {
+      result.push([]);
+      result[result.length - 1].push(arr[i]);
+    } else {
+      result[index + 1].push(arr[i]);
+    }
+  }
+  return result;
 }
 
 const http = function (url, options = {}) {
@@ -118,8 +239,6 @@ function init(ext) {
 			let data_url = ext_paramas[0];
 			print(data_url);
 			data = http.get(data_url).json();
-			print('live ext:json string');
-			data = JSON.parse(ext);
 		}
 	}
     print(data);
@@ -133,52 +252,88 @@ function home(filter) {
 		type_name: it.name,
 	}));
 	print("----home----");
+	let filter_dict = {};
+	let filters = [
+		{'key': 'show', 'name': '播放展示', 'value': [{'n': '多线路分组', 'v': 'groups'},{'n': '单线路', 'v': 'all'}]}
+	];
+	classes.forEach(it=>{
+		filter_dict[it.type_id] = filters;
+	});
 	print(classes);
-	return JSON.stringify({ 'class': classes});
+	return JSON.stringify({ 'class': classes,'filters': filter_dict});
 }
 
 function homeVod(params) {
 	let _get_url = __ext.data[0].url;
-	let html = http.get(_get_url).text();
-    let arr = html.match(/.*?,#[\s\S].*?#/g);
+	let html;
+    if(__ext.data_dict[_get_url]){
+        html = __ext.data_dict[_get_url];
+    }else{
+        html = http.get(_get_url).text();
+		if(/#EXTM3U/.test(html)){
+			html = convertM3uToNormal(html);
+		}
+        __ext.data_dict[_get_url] = html;
+    }
+    // let arr = html.match(/.*?,#[\s\S].*?#/g);
+	let arr = html.match(/.*?[,，]#[\s\S].*?#/g); // 可能存在中文逗号
 	let _list = [];
 	try {
 		arr.forEach(it=>{
+			let vname = it.split(/[,，]/)[0];
+			let vtab = it.match(/#(.*?)#/)[0];
 			_list.push({
-				vod_name:it.split(',')[0],
-				vod_id:_get_url+'$'+it.split(',')[0],
-				// vod_pic:'https://avatars.githubusercontent.com/u/97389433?s=120&v=4',
-				vod_remarks:it.split(',')[1],
+				vod_name:vname,
+				vod_id:_get_url+'$'+vname,
+				vod_pic:def_pic,
+				vod_remarks:vtab,
 			});
 		});
 	}catch (e) {
-		print('Live2mv获取首页推荐发送错误:'+e.message);
+		print('Live2cms获取首页推荐发送错误:'+e.message);
 	}
 	return JSON.stringify({ 'list': _list });
 }
 
 function category(tid, pg, filter, extend) {
+	let fl = filter?extend:{};
+	if(fl.show){
+		showMode = fl.show;
+		setItem('showMode',showMode);
+	}
+	if(parseInt(pg)>1){
+		return JSON.stringify({
+		'list': [],
+	});
+	}
     let _get_url = tid;
     let html;
     if(__ext.data_dict[_get_url]){
         html = __ext.data_dict[_get_url];
     }else{
         html = http.get(_get_url).text();
+		if(/#EXTM3U/.test(html)){
+			html = convertM3uToNormal(html);
+		}
         __ext.data_dict[_get_url] = html;
     }
-    let arr = html.match(/.*?,#[\s\S].*?#/g);
+    // let arr = html.match(/.*?[,，]#[\s\S].*?#/g);
+    let arr = html.match(/.*?[,，]#[\s\S].*?#/g); // 可能存在中文逗号
     let _list = [];
 	try {
 		arr.forEach(it=>{
+			let vname = it.split(/[,，]/)[0];
+			let vtab = it.match(/#(.*?)#/)[0];
 			_list.push({
-				vod_name:it.split(',')[0],
-				vod_id:_get_url+'$'+it.split(',')[0],
-				// vod_pic:'https://avatars.githubusercontent.com/u/97389433?s=120&v=4',
-				vod_remarks:it.split(',')[1],
+				// vod_name:it.split(',')[0],
+				vod_name:vname,
+				vod_id:_get_url+'$'+vname,
+				vod_pic:def_pic,
+				vod_remarks:vtab,
 			});
 		});
 	}catch (e) {
-		print('Live2mv获取首页推荐发送错误:'+e.message);
+		print('Live2cms获取一级分类页发生错误:'+e.message);
 	}
 
 	return JSON.stringify({
@@ -193,18 +348,39 @@ function category(tid, pg, filter, extend) {
 function detail(tid) { // ⛵  港•澳•台
     let _get_url = tid.split('$')[0];
     let _tab = tid.split('$')[1];
+	if(tid.includes('#search#')){
+		let vod_play_url = _tab.replace('#search#','')+'$'+_get_url;
+		print(vod_play_url);
+		return JSON.stringify({
+			list: [{
+				vod_id: tid,
+        		vod_name: '搜索:'+_tab.replace('#search#',''),
+        		type_name: "直播列表",
+        		vod_pic: def_pic,
+        		vod_content: tid,
+        		vod_play_from: '来自搜索',
+        		vod_play_url: vod_play_url,
+        		vod_director: tips,
+        		vod_remarks: `道长直播转点播js-当前版本${VERSION}`,
+			}]
+		});
+	}
     let html;
     if(__ext.data_dict[_get_url]){
         html = __ext.data_dict[_get_url];
     }else{
         html = http.get(_get_url).text();
+		if(/#EXTM3U/.test(html)){
+			html = convertM3uToNormal(html);
+		}
         __ext.data_dict[_get_url] = html;
     }
-    let a = new RegExp(`.*?${_tab},#[\\s\\S].*?#`);
+    // let a = new RegExp(`.*?${_tab},#[\\s\\S].*?#`);
+    let a = new RegExp(`.*?${_tab.replace('(','\\(').replace(')','\\)')}[,，]#[\\s\\S].*?#`);
     let b = html.match(a)[0];
     let c = html.split(b)[1];
-    if(c.match(/.*?,#[\s\S].*?#/)){
-        let d = c.match(/.*?,#[\s\S].*?#/)[0];
+    if(c.match(/.*?[,，]#[\s\S].*?#/)){
+        let d = c.match(/.*?[,，]#[\s\S].*?#/)[0];
         c = c.split(d)[0];
     }
     let arr = c.trim().split('\n');
@@ -216,16 +392,36 @@ function detail(tid) { // ⛵  港•澳•台
             _list.push(t+'$'+u);
         }
     });
+
     let vod_name = __ext.data.find(x=>x.url===_get_url).name;
-    let vod_play_url = _list.join('#');
+	let vod_play_url;
+	let vod_play_from;
+
+	if(showMode==='groups'){
+		let groups = splitArray(_list,x=>x.split('$')[0]);
+		let tabs = [];
+		for(let i=0;i<groups.length;i++){
+			if(i===0){
+				tabs.push(vod_name+'1')
+			}else{
+				tabs.push(` ${i+1} `)
+			}
+		}
+		vod_play_url = groups.map(it=>it.join('#')).join('$$$');
+		vod_play_from = tabs.join('$$$');
+	}else{
+		vod_play_url = _list.join('#');
+		vod_play_from = vod_name;
+	}
     let vod = {
         vod_id: tid,
-        vod_name: _tab,
+        vod_name: vod_name+'|'+_tab,
         type_name: "直播列表",
-        vod_pic: "https://avatars.githubusercontent.com/u/97389433?s=120&v=4",
+        vod_pic: def_pic,
         vod_content: tid,
-        vod_play_from: vod_name,
+        vod_play_from: vod_play_from,
         vod_play_url: vod_play_url,
+        vod_director: tips,
         vod_remarks: `道长直播转点播js-当前版本${VERSION}`,
     };
 
@@ -245,8 +441,39 @@ function play(flag, id, flags) {
 }
 
 function search(wd, quick) {
+	let _get_url = __ext.data[0].url;
+	let html;
+    if(__ext.data_dict[_get_url]){
+        html = __ext.data_dict[_get_url];
+    }else{
+        html = http.get(_get_url).text();
+		if(/#EXTM3U/.test(html)){
+			html = convertM3uToNormal(html);
+		}
+        __ext.data_dict[_get_url] = html;
+    }
+	let str='';
+	Object.keys(__ext.data_dict).forEach(()=>{
+		str+=__ext.data_dict[_get_url];
+	});
+	let links = str.split('\n').filter(it=>it.trim() && it.includes(','));
+	links = links.map(it=>it.trim());
+	let plays = Array.from(new Set(links));
+	print('搜索关键词:'+wd);
+	print('过滤前:'+plays.length);
+	plays = plays.filter(it=>it.includes(wd));
+	print('过滤后:'+plays.length);
+	print(plays);
+	let _list = [];
+	plays.forEach((it)=>{
+		_list.push({
+			'vod_name':it.split(',')[0],
+			'vod_id':it.split(',')[1].trim()+'$'+it.split(',')[0].trim()+'#search#',
+			'vod_pic':def_pic,
+		})
+	});
 	return JSON.stringify({
-			'list': []
+			'list': _list
     });
 }
 
