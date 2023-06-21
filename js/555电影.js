@@ -1,5 +1,5 @@
 var rule = {
-	title: '555影视[V2]'， // csp_AppYsV2
+	title: '555电影'， // csp_AppYsV2
 	host: 'https://555dy7.com'，
 	//host: 'https://555dy1.vip'，
 	//host: 'https://555dy2.vip'，
