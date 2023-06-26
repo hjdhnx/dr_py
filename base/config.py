@@ -56,5 +56,6 @@ JS_PROXY = 'http://localhost:5705/admin/view/=>https://ghproxy.net/https://raw.g
 ALI_TOKEN = ''  # 适用于初始配置的阿里云token
 ENV = '{"bili_cookie":""}'  # 自定义环境变量
 UPDATE_PROXY = 'https://ghproxy.net/'  # 检测升级代理
-Thread = True  # 开启windows多线程调用
+THREAD = True  # 开启windows多线程调用
+GEVENT = False  # windows开启此参数就不走gevent,方便调试
 SPECIAL = '腾云驾雾:腾讯&奇珍异兽:爱奇艺&百忙无果:芒果&优酷&哔哩影视&Alist'  # 特殊优选
