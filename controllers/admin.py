@@ -21,6 +21,7 @@ from utils.parser import runJScode
 from werkzeug.utils import secure_filename
 from utils.web import md5
 from utils.common_api import js_render
+from utils.files import get_jar_list
 
 admin = Blueprint("admin", __name__)
 
@@ -59,7 +60,10 @@ def admin_settings():  # 管理员界面
     # conf_list = 'LIVE_URL|USE_PY|PLAY_URL|PLAY_DISABLE|LAZYPARSE_MODE|WALL_PAPER_ENABLE|WALL_PAPER|UNAME|PWD|LIVE_MODE|LIVE_URL|CATE_EXCLUDE|TAB_EXCLUDE'.split('|')
     conf_lists = lsg.getStoreConf()
     # print(conf_lists)
-    return render_template('settings.html', conf_lists=conf_lists, ver=getLocalVer())
+    jar_lists = get_jar_list()
+    SPIDER_JAR = lsg.getItem('SPIDER_JAR', 'custom_spider.jar')
+    return render_template('settings.html', conf_lists=conf_lists, jar_lists=jar_lists, jar_now=SPIDER_JAR,
+                           ver=getLocalVer())
 
 
 @admin.route('/save_conf', methods=['POST'])
@@ -94,12 +98,14 @@ def admin_edit_rule(name):
         return render_template('login.html')
     return render_template('edit_rule.html', name=name)
 
+
 @admin.route("/edit2/<name>", methods=['GET'])
 def admin_edit2_rule(name):
     # print(name)
     if not verfy_token():
         return render_template('login.html')
     return render_template('edit_rule_mobile.html', name=name)
+
 
 @admin.route("/save_edit/<name>", methods=['POST'])
 def admin_save_edit_rule(name):

@@ -30,6 +30,21 @@ input.conf {
     padding-left: 10px;
   
 }
+
+select.conf {
+    margin-bottom: 10px;
+    width: 120px;
+    border-radius: 25px;
+    height: 20px;
+    border: 1px solid #60afca;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 10px;
+
+}
+
 .edit_conf{
     border: 1px solid #000000;
     color: #000000;

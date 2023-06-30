@@ -26,7 +26,7 @@ class storage_service(object):
                      'LAZYPARSE_MODE', 'WALL_PAPER_ENABLE',
                      'WALL_PAPER', 'UNAME', 'PWD', 'LIVE_MODE', 'CATE_EXCLUDE', 'TAB_EXCLUDE', 'SEARCH_TIMEOUT',
                      'SEARCH_LIMIT', 'MULTI_MODE', 'XR_MODE', 'JS_PROXY', 'UPDATE_PROXY', 'ENV', 'ALI_TOKEN', 'OCR_API',
-                     'SPECIAL']
+                     'SPECIAL','SPIDER_JAR']
         for conf in conf_list:
             if not self.hasItem(conf):
                 print(f'开始初始化{conf}')
@@ -38,11 +38,11 @@ class storage_service(object):
         conf_list = ['LIVE_URL', 'LIVE_MODE', 'PLAY_URL', 'PID_URL', 'USE_PY', 'JS_MODE', 'JS0_DISABLE', 'JS0_PASSWORD',
                      'PLAY_DISABLE', 'LAZYPARSE_MODE', 'WALL_PAPER_ENABLE',
                      'WALL_PAPER', 'UNAME', 'PWD', 'CATE_EXCLUDE', 'TAB_EXCLUDE', 'SEARCH_TIMEOUT', 'SEARCH_LIMIT',
-                     'MULTI_MODE', 'XR_MODE', 'JS_PROXY', 'UPDATE_PROXY', 'ENV', 'SPECIAL', 'ALI_TOKEN', 'OCR_API']
+                     'MULTI_MODE', 'XR_MODE', 'JS_PROXY', 'UPDATE_PROXY', 'ENV', 'SPECIAL', 'SPIDER_JAR', 'ALI_TOKEN', 'OCR_API']
         conf_name_list = ['直播地址', '直播模式', '远程地址', '进程管理链接', '启用py源', 'js模式', '禁用js0',
                           'js0密码', '禁用免嗅', '免嗅模式', '启用壁纸', '壁纸链接', '管理账号',
                           '管理密码', '分类排除', '线路排除', '聚搜超时', '搜索条数', '多源模式', '仙人模式', '源代理',
-                          '升级代理', '环境变量', '优选源', '阿里tk', 'OCR接口']
+                          '升级代理', '环境变量', '优选源', '挂载JAR', '阿里tk', 'OCR接口']
         conf_lists = []
         for i in range(len(conf_list)):
             conf = conf_list[i]

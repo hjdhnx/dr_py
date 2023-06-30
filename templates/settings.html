@@ -37,7 +37,7 @@
                        // alert(data.msg);
                        layer.msg(data.msg,{time:1000});
                        console.log('保存'+key+'成功了...');
-                       $(`input.conf[name="${key}"]`).val(value);
+                       $(`*.conf[name="${key}"]`).val(value);
                        if(/UNAME|PWD/.test(params.key)){
                          location.reload();
                          }
@@ -68,14 +68,14 @@
     $(document).ready(function() {
       $(".save_conf").click(function () {
         let key = $(this).attr('value');
-        let value = $(`input.conf[name="${key}"]`).val();
+        let value = $(`*.conf[name="${key}"]`).val();
         if(checkValue(key,value)){
             saveConf(key,value);
         }
       });
       $('.edit_conf').click(function (){
         let key = $(this).attr('value');
-        let value = $(`input.conf[name="${key}"]`).val();
+        let value = $(`*.conf[name="${key}"]`).val();
         layer.prompt({
           formType: 2,
           value: value,
@@ -139,7 +139,20 @@
   <span class="label{{conf.name|length}}">
     {{ conf.name }}:
   </span>
+    {% if conf.key!="SPIDER_JAR" %}
   <input class="conf" type="text" name="{{ conf.key }}"  placeholder="请输入{{ conf.key }}..." value="{{ conf.value }}"/>
+    {% else %}
+    <select class="conf" name="{{ conf.key }}">
+<!--    <option>-请选择-</option>-->
+    {% for jar in jar_lists %}
+        {% if jar==jar_now %}
+        <option selected>{{jar}}</option>
+        {% else %}
+        <option>{{jar}}</option>
+        {% endif %}
+    {% endfor %}
+    </select>
+    {% endif %}
   <a class="edit_conf btn_option" href="javascript:void(0);" value="{{ conf.key }}">编辑</a>
   <a class="save_conf btn_option" href="javascript:void(0);" value="{{ conf.key }}">保存</a>
 {% if loop.last==False %}</br>{% endif %}{% endfor %}

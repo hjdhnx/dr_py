@@ -191,7 +191,10 @@ def get_lives():
 
 @home.route('/liveslib')
 def get_liveslib():
-    live_path = 'js/custom_spider.jar'
+    lsg = storage_service()
+    SPIDER_JAR = lsg.getItem('SPIDER_JAR', 'custom_spider.jar')
+    live_path = f'libs/jar/{SPIDER_JAR}'
+    logger.info(f'SPIDER_JAR：{SPIDER_JAR}>>当前系统挂载的指定jar文件位置:{live_path}')
     if not os.path.exists(live_path):
         with open(live_path,mode='w+',encoding='utf-8') as f:
             f.write('')

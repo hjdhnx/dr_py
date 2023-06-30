@@ -65,6 +65,19 @@ def getAlist():
         print(f'获取alist列表失败:{e}')
         return []
 
+def get_jar_list():
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
+    jar_path = os.path.join(base_path, 'libs/jar')
+    if not os.path.exists(jar_path):
+        os.makedirs(jar_path, exist_ok=True)
+        logger.info(f'初始化{jar_path}目录')
+
+    jars = os.listdir(jar_path)
+    jars = list(filter(lambda x: str(x).endswith('.jar') and str(x).find('base') < 0, jars))
+    # print(jars)
+    # jar_list = [file.replace('.jar', '') for file in jars]
+    return jars
+
 def custom_merge(original:dict,custom:dict):
     """
     合并用户配置
