@@ -25,6 +25,13 @@ using NSoup;
 using NSoup.Select;
 using Document = NSoup.Nodes.Document;
 using RestSharp;
+using System.Web;
+using System.Net.Mime;
+using Newtonsoft.Json;
+using NSoup.Helper;
+using System.Text.Encodings.Web;
+using System.Buffers.Text;
+using System.Text.Json.Nodes;
 
 namespace Peach.DataAccess
 {
@@ -44,8 +51,8 @@ namespace Peach.DataAccess
                 UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
             };
             client = new RestClient(options);
-            client.AddDefaultHeader("Content-Type", "application/json");
-            client.AddDefaultHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
+            //client.AddDefaultHeader("Content-Type", "application/json");
+            //client.AddDefaultHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
         }
 
         /// <summary>
@@ -54,7 +61,7 @@ namespace Peach.DataAccess
         /// <param name="url"></param>
         /// <param name="opt"></param>
         /// <returns></returns>
-        public object request(string url, JsValue arguments)
+        public object Request(string url, JsValue arguments)
         {
             Uri uri = new Uri(url);
             string Host = uri.Host;
@@ -63,8 +70,55 @@ namespace Peach.DataAccess
             var Referer = _headers["Referer"]?.ToString();
             var UserAgent = _headers["User-Agent"]?.ToString();
             var Cookie = _headers["Cookie"]?.ToString();
+            var ContentType = _headers["Content-Type"]?.ToString();
+
+            var Data = arguments.AsObject()["data"]?.ToString();
+            var Body = arguments.AsObject()["body"]?.ToString();
+
+            var Buffer = arguments.AsObject()["buffer"]?.ToString();
+
+            
+
+            String charset = "utf-8";
+            if (ContentType != null && ContentType.Split("charset=").Length > 1)
+            {
+                charset = ContentType.Split("charset=")[1];
+            }
 
             var request = new RestRequest(url);
+
+            if (!string.IsNullOrEmpty(Data) && !Data.Equals("undefined"))
+            {
+                // 序列化JSON数据
+                string post_data = JsonConvert.SerializeObject(Data);
+                // 将JSON参数添加至请求中
+                request.AddParameter("application/json", post_data, ParameterType.RequestBody);
+
+            }
+
+            if (!string.IsNullOrEmpty(Body) && !Body.Equals("undefined"))
+            {
+                String[] queryS = Body.Split("&");
+                foreach (String query in queryS)
+                {
+                    //String query = queryS[i];
+                    int tmp = query.IndexOf("=");
+                    String key;
+                    String value;
+                    if (tmp != -1)
+                    {
+                        key = query.Substring(0, tmp);
+                        value = query[(tmp + 1)..];
+                    }
+                    else
+                    {
+                        key = query;
+                        value = "";
+                    }
+                    request.AddParameter(key, value);
+                }
+            }
+
             if (string.IsNullOrEmpty(UserAgent))
                 UserAgent = "Mozilla/5.0 (Linux; Android 11; M2007J3SC Build/RKQ1.200826.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045714 Mobile Safari/537.36";
             request.AddHeader("User-Agent", UserAgent);
@@ -73,38 +127,61 @@ namespace Peach.DataAccess
 
             if (!string.IsNullOrEmpty(Cookie) && !Cookie.Equals("undefined"))
             {
-                string[] cooks = Cookie.Split(';');
-                foreach (var item in cooks)
-                {
-                    string[] cook = item.Split('=');
-                    if (cook.Length == 2)
-                        client.AddDefaultHeader("Cookie", Cookie);
-                        //client.AddCookie(cook[0].Trim(), cook[1].Trim(), "/", Host);
-                }
+                client.AddDefaultHeader("Cookie", Cookie);
             }
             string rContent = "";
+            JsObject header = new (_headers.Engine);
+
             try
             {
+                var client = new RestClient(url);
+
                 RestResponse? response;
                 if (method?.ToLower() == "post")
                     response = client.Post(request);
                 else
                     response = client.Get(request);
-                var trw = response.Cookies;
-                rContent = response.Content;
+
+                //rContent = response.Content;
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                rContent = HttpUtility.UrlDecode(response.RawBytes == null ? Array.Empty<byte>() : response.RawBytes,
+                                                 Encoding.GetEncoding(charset));
+                
+                if (response.Headers != null)
+                {
+                    foreach (var item in response.Headers)
+                    {
+                        header.Set(item.Name, item.Value == null ? "" : item.Value.ToString());
+                    }
+                }
+            
+                if (Buffer == "1")
+                {
+                    return new { headers = header, content = response.RawBytes };
+                } 
+                else if (Buffer == "2") 
+                {
+                    return new { headers = header, content = Convert.ToBase64String(Encoding.UTF8.GetBytes(rContent)) };
+                } 
+                else 
+                {
+                    return new { headers = header, content = rContent };
+                }
             }
             catch (Exception)
             { }
-            var jsValue = new { headers = _headers, content = rContent };
-            return jsValue;
+            return new { headers = header, content = "" };
         }
 
-        private static Regex p = new Regex("url\\((.*?)\\)", RegexOptions.Multiline | RegexOptions.Singleline);
-        private static Regex NOAdd_INDEX = new Regex(":eq|:lt|:gt|:first|:last|^body$|^#");
-        private static Regex URLJOIN_ATTR = new Regex("(url|src|href|-original|-src|-play|-url)$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+        private static readonly Regex p = new ("url\\((.*?)\\)", RegexOptions.Multiline | RegexOptions.Singleline);
+        private static readonly Regex NOAdd_INDEX = new (":eq|:lt|:gt|:first|:last|^body$|^#");
+        private static readonly Regex URLJOIN_ATTR = new ("(url|src|href|-original|-src|-play|-url)$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+        private static String pdfh_html = "";
+        private static String pdfa_html = "";
+        private static Document? pdfh_doc = null;
+        private static Document? pdfa_doc = null;
 
-
-        public string joinUrl(string parent, string child)
+        public static string JoinUrl(string parent, string child)
         {
             if (string.IsNullOrWhiteSpace(parent))
             {
@@ -118,7 +195,7 @@ namespace Peach.DataAccess
                 url = new Uri(new Uri(parent), child);
                 q = url.ToString();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //e.printStackTrace();
             }
@@ -130,12 +207,12 @@ namespace Peach.DataAccess
 
         public class Painfo
         {
-            public string nparse_rule;
+            public string? nparse_rule;
             public int nparse_index;
-            public List<string> excludes;
+            public List<string>? excludes;
         }
 
-        private Painfo getParseInfo(string nparse)
+        private static Painfo GetParseInfo(string nparse)
         {
             /*
              根据传入的单规则获取 parse规则，索引位置,排除列表  -- 可以用于剔除元素,支持多个，按标签剔除，按id剔除等操作
@@ -169,7 +246,7 @@ namespace Peach.DataAccess
                 {
                     painfo.nparse_index = int.Parse(nparse_pos.Replace("eq(", "").Replace(")", ""));
                 }
-                catch (Exception e1)
+                catch (Exception)
                 {
                     painfo.nparse_index = 0;
                 }
@@ -187,17 +264,23 @@ namespace Peach.DataAccess
             return painfo;
         }
 
-        //pd
-        public string parseDom(string html, string rule)
+        //pdfh
+        public string ParseDomForUrl(string html, string rule)
         {
-            return parseDomForUrl(html, rule, "");
+            return ParseDom(html, rule, "");
 
         }
-        //pdfh
-        public string parseDomForUrl(string html, string rule, string Add_url)
+        //pd
+        public string ParseDom(string html, string rule, string Add_url)
         {
-            if (string.IsNullOrEmpty(html)) return "";
-            Document doc = NSoupClient.Parse(html);
+            if (string.IsNullOrWhiteSpace(html)) return "";
+            if (!pdfh_html.Equals(html))
+            {
+                pdfh_html = html;
+                pdfh_doc = NSoupClient.Parse(html);
+            }
+            Document? doc = pdfh_doc;
+            //Document doc = NSoupClient.Parse(html);
             if (rule.Equals("body&&Text") || rule.Equals("Text"))
                 return doc.Text();
             else if (rule.Equals("body&&Html") || rule.Equals("Html"))
@@ -213,8 +296,8 @@ namespace Peach.DataAccess
                 rule = string.Join("&&", excludes);// TextUtils.join("&&", excludes);
             }
             rule = parseHikerToJq(rule, true);
-            string[] parses = rule.Split(" ");
-            Elements ret = new Elements();
+            string[]? parses = rule.Split(" ");
+            Elements ret = new ();
             foreach (string nparse in parses)
             {
                 ret = parseOneRule(doc, nparse, ret);
@@ -228,7 +311,7 @@ namespace Peach.DataAccess
                 return ret.Html();
             else //(JSUtils.isNotEmpty(option))
             {
-                string result = ret.Attr(option);
+                string? result = ret.Attr(option);
                 if (option.ToLower().Contains("style") && result.Contains("url("))
                 {
                     Match m = p.Match(result);
@@ -243,9 +326,9 @@ namespace Peach.DataAccess
                     if (m.Success)
                     {
                         if (result.Contains("http"))
-                            result = result.Substring(result.IndexOf("http"));
+                            result = result[result.IndexOf("http")..];
                         else
-                            result = joinUrl(Add_url, result);
+                            result = JoinUrl(Add_url, result);
                     }
                 }
                 return result;
@@ -253,14 +336,20 @@ namespace Peach.DataAccess
 
         }
         //pdfa
-        public String[] parseDomForArray(string html, string rule)
+        public String[] ParseDomForArray(string html, string rule)
         {
-            List<string> eleHtml = new();
-            Document doc = NSoupClient.Parse(html);
+            if (!pdfa_html.Equals(html))
+            {
+                pdfa_html = html;
+                pdfa_doc = NSoupClient.Parse(html);
+            }
+            Document? doc = pdfa_doc;
+            List<string>? eleHtml = new();
+            //Document doc = NSoupClient.Parse(html);
 
             rule = parseHikerToJq(rule, false);
-            string[] parses = rule.Split(" ");
-            Elements ret = new Elements();
+            string[]? parses = rule.Split(" ");
+            Elements ret = new ();
             foreach (var pars in parses)
             {
                 ret = parseOneRule(doc, pars, ret);
@@ -274,14 +363,20 @@ namespace Peach.DataAccess
             return eleHtml.ToArray();
         }
         //pdfl
-        public String[] parseDomForList(string html, string rule, string list_text, string list_url, string urlKey)
+        public String[] ParseDomForList(string html, string rule, string list_text, string list_url, string urlKey)
         {
-            Document doc = NSoupClient.Parse(html);
-            List<string> new_vod_list = new();
-            //String[] new_vod_list = new string[0];
+            if (!pdfa_html.Equals(html))
+            {
+                pdfa_html = html;
+                pdfa_doc = NSoupClient.Parse(html);
+            }
+            Document? doc = pdfa_doc;
+            //Document doc = NSoupClient.Parse(html);
+            List<string>? new_vod_list = new();
+
             rule = parseHikerToJq(rule, false);
-            string[] parses = rule.Split(" ");
-            Elements ret = new Elements();
+            string[]? parses = rule.Split(" ");
+            Elements ret = new ();
 
             foreach (string pars in parses)
             {
@@ -291,7 +386,7 @@ namespace Peach.DataAccess
             
             foreach (Element it in ret)
             {
-                new_vod_list.Add(parseDomForUrl(it.OuterHtml(), list_text, "").Trim() + '$' + parseDomForUrl(it.OuterHtml(), list_url, urlKey));
+                new_vod_list.Add(ParseDom(it.OuterHtml(), list_text, "").Trim() + '$' + ParseDom(it.OuterHtml(), list_url, urlKey));
             }
 
             return new_vod_list.ToArray();
@@ -310,13 +405,13 @@ namespace Peach.DataAccess
             // 不自动加eq下标索引
             if (parse.Contains("&&"))
             {
-                string[] parses = parse.Split("&&");  //带&&的重新拼接
-                List<string> new_parses = new();  //构造新的解析表达式列表
+                string[]? parses = parse.Split("&&");  //带&&的重新拼接
+                List<string>? new_parses = new();  //构造新的解析表达式列表
                 for (int i = 0; i < parses.Length; i++)
                 {
-                    string[] pss = parses[i].Split(" ");
-                    string ps = pss[pss.Length - 1];  //如果分割&&后带空格就取最后一个元素
-                    Match m = NOAdd_INDEX.Match(ps);  // Matcher m = NOAdd_INDEX.matcher(ps);
+                    string[]? pss = parses[i].Split(" ");
+                    string? ps = pss[pss.Length - 1];  //如果分割&&后带空格就取最后一个元素
+                    Match? m = NOAdd_INDEX.Match(ps);  // Matcher m = NOAdd_INDEX.matcher(ps);
                     //if (!isIndex(ps)) {
                     if (!m.Success)
                     {
@@ -338,14 +433,14 @@ namespace Peach.DataAccess
             }
             else
             {
-                string[] pss = parse.Split(" ");
-                string ps = pss[pss.Length - 1];  //如果分割&&后带空格就取最后一个元素
+                string[]? pss = parse.Split(" ");
+                string? ps = pss[pss.Length - 1];  //如果分割&&后带空格就取最后一个元素
                 //Matcher m = NOAdd_INDEX.matcher(ps); 
-                Match m = NOAdd_INDEX.Match(ps);
+                Match? m = NOAdd_INDEX.Match(ps);
                 //if (!isIndex(ps) && first) {
                 if (!m.Success && first)
                 {
-                    parse = parse + ":eq(0)";
+                    parse += ":eq(0)";
                 }
             }
             return parse;
@@ -353,7 +448,7 @@ namespace Peach.DataAccess
 
         private Elements parseOneRule(Document doc, string parse, Elements ret)
         {
-            Painfo info = getParseInfo(parse);
+            Painfo? info = GetParseInfo(parse);
             if (ret.IsEmpty)
             {
                 ret = doc.Select(info.nparse_rule);
