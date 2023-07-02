@@ -4,9 +4,10 @@ muban.首图2.二级.content = '.desc.hidden-xs--a&&Text';
 muban.首图2.二级.tabs = '.stui-pannel__head.bottom-line';
 muban.首图2.二级.tab_text = 'h3&&Text';
 var rule={
-    title:'被窝电影',
+    title:'私人影院(被窝电影)',
     模板:'首图2',
-    host:'https://www.bei5dy.com',
+    // host:'https://www.bei5dy.com',
+    host:'https://www.bei5dy.net',
     url:'/show/fyfilter/',
     filterable:1,//是否启用分类筛选,
     filter_url:'{{fl.cateId}}-{{fl.area}}-{{fl.by}}-{{fl.class}}-{{fl.lang}}-{{fl.letter}}---fypage---{{fl.year}}',
