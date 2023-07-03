@@ -156,13 +156,25 @@ def copy_to_update():
         # print(f'升级失败,找不到目录{dr_path}')
         logger.info(f'升级失败,找不到目录{dr_path}')
         return False
+
+    js_path = os.path.join(base_path, 'js')
+    files = os.listdir(js_path)
+    jsd_list = list(filter(lambda x: str(x).endswith('.jsd'), files))
+    try:
+        for jsd in jsd_list:
+            os.remove(jsd)
+        logger.info(f'升级过程中共计清理jsd文件数:{len(jsd_list)}')
+    except Exception as e:
+        logger.info(f'升级过程中清理jsd文件发生错误:{e}')
+
     # 千万不能覆盖super，base
     paths = ['js','models','controllers','libs','static','templates','utils','txt','jiexi','py','whl','doc']
     exclude_files = ['txt/pycms0.json','txt/pycms1.json','txt/pycms2.json','base/rules.db']
     for path in paths:
-        force_copy_files(os.path.join(dr_path, path),os.path.join(base_path, path),exclude_files)
+        force_copy_files(os.path.join(dr_path, path), os.path.join(base_path, path),exclude_files)
     try:
         shutil.copy(os.path.join(dr_path, 'app.py'), os.path.join(base_path, 'app.py'))  # 复制文件
+        shutil.copy(os.path.join(dr_path, 'requirements.txt'), os.path.join(base_path, 'requirements.txt'))  # 复制文件
     except Exception as e:
         logger.info(f'更新app.py发生错误:{e}')
     logger.info(f'升级程序执行完毕,全部文件已拷贝覆盖')

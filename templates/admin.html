@@ -234,7 +234,7 @@
             });
 
             $('#clear_drop').click(function () {
-                if(confirm('若js目录存在同名的jsd文件则视为该源为废弃源。执行此功能将清理与jsd文件同名的js文件。执行此功能前请确保项目的jsd文件跟仓库一致，防止误删。推荐进容器 rm -rf js/*.jsd 后强制升级一次再使用此功能。立即执行则确认否则取消执行')){
+                if(confirm('若js目录存在同名的jsd文件则视为该源为废弃源。执行此功能将清理与jsd文件同名的js文件。执行此功能前请确保项目的jsd文件跟仓库一致，防止误删。推荐进容器 rm -rf js/*.jsd 后强制升级一次再使用此功能,后续升级时会自动清空旧版jsd文件。立即执行则确认否则取消执行')){
                     $.get("/admin/clear_drop", function (data, status) {
                         console.log(data);
                         if (data.code === 200) {
