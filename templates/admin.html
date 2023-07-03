@@ -233,6 +233,22 @@
                 location.href = '/admin/logtail';
             });
 
+            $('#clear_drop').click(function () {
+                if(confirm('若js目录存在同名的jsd文件则视为该源为废弃源。执行此功能将清理与jsd文件同名的js文件。执行此功能前请确保项目的jsd文件跟仓库一致，防止误删。推荐进容器 rm -rf js/*.jsd 后强制升级一次再使用此功能。立即执行则确认否则取消执行')){
+                    $.get("/admin/clear_drop", function (data, status) {
+                        console.log(data);
+                        if (data.code === 200) {
+                            alert(data.msg);
+                            location.reload();
+                        } else {
+                            alert(data.msg);
+                            console.log('清理失败了...');
+                            return false
+                        }
+                    });
+                }
+            });
+
             $('#lives').click(function () {
                 location.href = '/admin/lives'
             });
@@ -275,6 +291,7 @@
                         <li><a href="/layui/index">未来功能</a></li>
                         <li><a href="javascript:void(0);" class="funcbtn" id="logtail">在线日志</a></li>
                         <li><a href="/vods" class="funcbtn" target="_blank">搜索看板</a></li>
+                        <li><a href="javascript:void(0);" class="funcbtn" id="clear_drop">废弃源清理</a></li>
                     </ul>
                 </li>
 

@@ -78,6 +78,23 @@ def get_jar_list():
     # jar_list = [file.replace('.jar', '') for file in jars]
     return jars
 
+def get_drop_js(jsd_list):
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
+    js_path = os.path.join(base_path, 'js')
+    js_list = [os.path.join(js_path, jsd.replace('jsd','js')) for jsd in jsd_list]
+    return js_list
+
+def get_jsd_list():
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
+    js_path = os.path.join(base_path, 'js')
+    if not os.path.exists(js_path):
+        os.makedirs(js_path, exist_ok=True)
+        logger.info(f'初始化{js_path}目录')
+
+    jsds = os.listdir(js_path)
+    jsds = list(filter(lambda x: str(x).endswith('.jsd'), jsds))
+    return jsds
+
 def custom_merge(original:dict,custom:dict):
     """
     合并用户配置

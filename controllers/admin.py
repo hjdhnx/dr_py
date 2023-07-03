@@ -21,7 +21,7 @@ from utils.parser import runJScode
 from werkzeug.utils import secure_filename
 from utils.web import md5
 from utils.common_api import js_render
-from utils.files import get_jar_list
+from utils.files import get_jar_list, get_jsd_list, get_drop_js
 
 admin = Blueprint("admin", __name__)
 
@@ -364,6 +364,25 @@ def admin_change_use_py():
     msg = f'已修改的配置记录id为:{id},结果为{state}'
     return R.success(msg)
 
+@admin.route('/clear_drop')
+def admin_clear_drop():
+    if not verfy_token():
+        return R.failed('请登录后再试')
+
+    jsd_list = get_jsd_list()
+    logger.info(f'jsd文件列表:{jsd_list}')
+    js_list = get_drop_js(jsd_list)
+    rm_list = []
+    for i in range(len(js_list)):
+        js_file = js_list[i]
+        # shutil.rmtree(js_file, ignore_errors=False, onerror=None)
+        if os.path.exists(js_file):
+            os.remove(js_file)
+            rm_list.append(jsd_list[i][:-1])
+    logger.info(f'待删除js文件列表:{rm_list}')
+    rm_str = ','.join(rm_list)
+    msg = f'清理完毕,本次共计清理{len(rm_list)}个\n {rm_str}'
+    return R.success(msg)
 
 # @admin.route('/get_use_py')
 # def admin_get_use_py():
