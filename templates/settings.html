@@ -79,6 +79,7 @@
         layer.prompt({
           formType: 2,
           value: value,
+            maxlength:20480,//最大输入长度20kb
           title: '请输入 '+key,
           area: ['320px', '100px'] //自定义文本域宽高
 	    }, function(value, index, elem){

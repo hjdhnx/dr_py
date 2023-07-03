@@ -277,6 +277,16 @@ def config_render(mode):
     rules = getRules('js',js_mode)
     rules = get_multi_rules(rules)
     # html = render_template('config.txt',rules=getRules('js'),host=host,mode=mode,jxs=jxs,base64Encode=base64Encode,config=new_conf)
+    if new_conf.EXT_FUNC and new_conf.EXT_FUNC.strip():
+        try:
+            new_conf.EXT_FUNC = json.loads(new_conf.EXT_FUNC)
+            logger.info(f'扩展规则加载成功,共计:{len(new_conf.EXT_FUNC)}')
+        except Exception as e:
+            logger.info(f'加载扩展规则发生错误:{e}')
+            new_conf.EXT_FUNC = []
+    else:
+        new_conf.EXT_FUNC = []
+
     html = render_template('config.txt',js0_password=js0_password,UA=UA,xr_mode=xr_mode,ISTVB=ISTVB,pys=pys,rules=rules,host=host,mode=mode,js_mode=js_mode,jxs=jxs,alists=alists,alists_str=alists_str,live_url=live_url,config=new_conf)
     merged_config = custom_merge(parseText(html),customConfig)
     # print(merged_config['sites'])
@@ -427,6 +437,15 @@ def config_gen():
     lsg = storage_service()
     store_conf_dict = lsg.getStoreConfDict()
     new_conf.update(store_conf_dict)
+    if new_conf.EXT_FUNC and new_conf.EXT_FUNC.strip():
+        try:
+            new_conf.EXT_FUNC = json.loads(new_conf.EXT_FUNC)
+            logger.info(f'扩展规则加载成功,共计:{len(new_conf.EXT_FUNC)}')
+        except Exception as e:
+            logger.info(f'加载扩展规则发生错误:{e}')
+            new_conf.EXT_FUNC = []
+    else:
+        new_conf.EXT_FUNC = []
     try:
         use_py = lsg.getItem('USE_PY')
         js_mode = int(new_conf.JS_MODE or 0)
@@ -438,15 +457,15 @@ def config_gen():
         rules = get_multi_rules(rules)
         host0 = getHost(0)
         jxs = getJxs(host=host0)
-        set_local = render_template('config.txt',js0_password=js0_password,pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,0),mode=0,js_mode=js_mode,host=host0,jxs=jxs)
+        set_local = render_template('config.txt',js0_password=js0_password,pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,0),mode=0,js_mode=js_mode,host=host0,jxs=jxs,config=new_conf)
         # print(set_local)
         host1 = getHost(1)
         jxs = getJxs(host=host1)
-        set_area = render_template('config.txt',js0_password=js0_password,pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,1),mode=1,js_mode=js_mode,host=host1,jxs=jxs)
+        set_area = render_template('config.txt',js0_password=js0_password,pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,1),mode=1,js_mode=js_mode,host=host1,jxs=jxs,config=new_conf)
         host2 = getHost(2) or host1
         # print('远程地址:'+host2)
         jxs = getJxs(host=host2)
-        set_online = render_template('config.txt',js0_password=js0_password,pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,2),mode=1,js_mode=js_mode,host=host2,jxs=jxs)
+        set_online = render_template('config.txt',js0_password=js0_password,pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,2),mode=1,js_mode=js_mode,host=host2,jxs=jxs,config=new_conf)
         ali_token = new_conf.ALI_TOKEN
         # parses = []
         with open('txt/pycms0.json','w+',encoding='utf-8') as f:
