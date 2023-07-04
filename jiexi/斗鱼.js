@@ -15,7 +15,7 @@ function getSign(script, rid, did, tt){
     func_sign = func_sign.replace('CryptoJS.MD5(cb).toString()', '"' + rb + '"');
     eval(func_sign);
 
-    let params = sign(rid, did, tt) + "&ver=219032101&rid={}&rate=-1&rid="+rid;
+    let params = sign(rid, did, tt) + "&ver=219032101&rate=-1&rid="+rid;
     return params
 }
 // log(env);
