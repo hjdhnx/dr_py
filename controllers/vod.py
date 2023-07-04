@@ -372,7 +372,8 @@ def vod_home():
         # print(jscode)
         ctx.eval(jscode)
         js_ret = ctx.get('rule')
-        ruleDict = ujson.loads(js_ret.json())
+        rule_json = js_ret.json()  # 规则的json字符串
+        ruleDict = ujson.loads(rule_json)
     except Exception as e:
         logger.info(f'{e}')
         return R.failed('爬虫规则加载失败')
@@ -455,5 +456,6 @@ def vod_home():
             # print(data)
             return jsonify(data)
     # return jsonify({'rule':rule,'js_code':js_code})
+    logger.info(rule_json)
     home_data = cms.homeContent(pg)
     return jsonify(home_data)
