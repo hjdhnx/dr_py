@@ -41,7 +41,7 @@ if (/https/.test(paurl)) {
     input = {
         jx: 0,
         url: request(purl).match(/var .* = \\'(.*?)\\'/)[1],
-        parse: 1
+        parse: 0
     }
 }`,
 	searchUrl:'/index.php/ajax/suggest?mid=1&wd=**',
