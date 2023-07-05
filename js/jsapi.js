@@ -32,6 +32,13 @@ var rule = {
 	log('typeof(jsapi.test1)====>'+typeof(t2));
 	log('typeof(jsapi.test.add)===>'+typeof(jsapi.test.add));
 	log('typeof(jsapi.test1.add1)====>'+typeof(jsapi.test1.add1));
+	
+	log('typeof(jsapi.htmlParser)====>'+typeof(jsapi.htmlParser));
+	log('typeof(jsapi.htmlParser.pdfa)====>'+typeof(jsapi.htmlParser.pdfa));
+	log('typeof(jsapi.htmlParser.pdfh)====>'+typeof(jsapi.htmlParser.pdfh));
+	let html = '<a href="http://www.baidu.com">123<a>';
+	log('jsapi.htmlParser.pdfh("'+html+'","a&&Text")====>'+jsapi.htmlParser.pdfh(html,"a&&Text"));
+	
 	log('typeof(jsapi.add)====>'+typeof(jsapi.add));
 	log('typeof(jsapi.add1)====>'+typeof(jsapi.add1));
 	
@@ -40,6 +47,8 @@ var rule = {
 	log('jsapi.test1.add(1,2)='+jsapi.test1.add(1,2));
 	log('jsapi.add(1,2)='+jsapi.add(1,2));
 	log('jsapi.add1(1,2)='+jsapi.add1(1,2));
+	
+	
 	let d=[];
 	setResult(d);
 		`,
