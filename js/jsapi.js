@@ -35,6 +35,11 @@ var rule = {
 	log('typeof(jsapi.add)====>'+typeof(jsapi.add));
 	log('typeof(jsapi.add1)====>'+typeof(jsapi.add1));
 	
+	log('jsapi.test.add(1,2)='+jsapi.test.add(1,2));
+	log('jsapi.test1.add1(1,2)='+jsapi.test1.add1(1,2));
+	log('jsapi.test1.add(1,2)='+jsapi.test1.add(1,2));
+	log('jsapi.add(1,2)='+jsapi.add(1,2));
+	log('jsapi.add1(1,2)='+jsapi.add1(1,2));
 	let d=[];
 	setResult(d);
 		`,
