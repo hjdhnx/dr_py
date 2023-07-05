@@ -64,7 +64,7 @@ var rule = {
     },
     filter_def:{
 		movie:{tag:'热门'},
-		tv:{tag:'最新'},
+		tv:{tag:'国产剧'},
 	},
     filter获取方法:`
     let value = [];
