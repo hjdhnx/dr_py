@@ -24,14 +24,16 @@ var rule = {
 		一级:'',
 		一级:`js:
 	log(input);
-	let t1 = jsapi.test;
-	log(typeof(t1));
+	log('Object.keys(jsapi)=======>');
 	log(Object.keys(jsapi));
-	
-	log(typeof(jsapi.add));
-	log(typeof(jsapi.add1));
-	
-	log(jsapi.add(1,2));
+	let t1 = jsapi.test;
+	log('typeof(jsapi.test)====>'+typeof(t1));
+	let t2 = jsapi.test1;
+	log('typeof(jsapi.test1)====>'+typeof(t2));
+	log('typeof(jsapi.test.add)===>'+typeof(jsapi.test.add));
+	log('typeof(jsapi.test1.add1)====>'+typeof(jsapi.test1.add1));
+	log('typeof(jsapi.add)====>'+typeof(jsapi.add));
+	log('typeof(jsapi.add1)====>'+typeof(jsapi.add1));
 	
 	let d=[];
 	setResult(d);
