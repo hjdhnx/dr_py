@@ -136,6 +136,7 @@ def getCustonDict(host,ali_token='',js0_password=''):
         with open(customFile,'r',encoding='utf-8') as f:
             text = f.read()
             customConfig = parseText(render_template_string(text,host=host,ali_token=ali_token,js0_password=js0_password))
+            print(customConfig)
     except Exception as e:
         logger.info(f'用户自定义配置加载失败:{e}')
     return customConfig
