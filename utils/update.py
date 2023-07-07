@@ -106,6 +106,11 @@ def del_file(filepath):
         file_path = os.path.join(filepath, f)
         if os.path.isfile(file_path):
             os.remove(file_path)
+        else:
+            try:
+                shutil.rmtree(file_path)
+            except Exception as e:
+                logger.info(f'删除{file_path}发生错误:{e}')
 
 def copytree(src, dst, ignore=None):
     if ignore is None:
@@ -194,7 +199,6 @@ def download_new_version(update_proxy='https://ghproxy.liuzhicong.com/'):
     # for tp in tmp_files:
     #     print(f'清除缓存文件:{tp}')
     #     os.remove(os.path.join(tmp_path, tp))
-    del_file(tmp_path)
     msg = ''
     try:
         # print(f'开始下载:{url}')
@@ -202,6 +206,8 @@ def download_new_version(update_proxy='https://ghproxy.liuzhicong.com/'):
         r = requests.get(url,headers=headers,timeout=(20,20),verify=False)
         rb = r.content
         download_path = os.path.join(tmp_path, 'dr_py.zip')
+        # 保存文件前清空目录
+        del_file(tmp_path)
         with open(download_path,mode='wb+') as f:
             f.write(rb)
         # print(f'开始解压文件:{download_path}')
