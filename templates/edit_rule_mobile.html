@@ -64,26 +64,28 @@
     <div class="layui-btn-container footer layer-footer">
         <button class="layui-btn layui-btn-normal " lay-submit lay-filter="reBtn"><i class="layui-icon layui-icon-refresh"></i>刷新</button>
         <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn"><i class="layui-icon layui-icon-ok"></i>保存</button>
-        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="openRawBtn"><i class="layui-icon layui-icon-file-b"></i>查看原始文件</button>
+        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="openRawBtn"><i class="layui-icon layui-icon-file-b"></i>原始</button>
+        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="openFileBtn"><i class="layui-icon layui-icon-file-b"></i>渲染后</button>
     </div>
 
 </div>
 
 <script>
+    const raw_url = '/raw/js/{{name}}';
     const api_url = '/admin/view/{{name}}';
     const api_save_url = '/admin/save_edit/{{name}}';
     // 初始化 脚本编辑页面
     function init_scripts(form) {
         $.ajax({
             type:'get',
-            url: api_url,
+            url: raw_url,
             timeout : 2000,
             async:false,
              // data:'',
              // dataType:'json',
             success: function(data) {
                 // console.log(data);
-                console.log(`访问${api_url} success`);
+                console.log(`访问${raw_url} success`);
                 $('#script_code').val(data);
                 form.render();
             },error: function(XMLHttpRequest,textStatus,errorThrown) {
@@ -94,7 +96,7 @@
                 } else if (XMLHttpRequest.status == 500) {
                   layer.msg('Internel Server Error.',{icon: 2},function () {});
                 } else {
-                    console.log(`访问${api_url} error`);
+                    console.log(`访问${raw_url} error`);
                    let code = XMLHttpRequest.responseText;
                    $('#script_code').val(code);
                    form.render();
@@ -115,7 +117,9 @@
             $ = layui.$;
         init_scripts(form);
         form.on('submit(openRawBtn)',function (data) {
-            // console.log(api_url);
+            open(raw_url);
+        });
+        form.on('submit(openFileBtn)',function (data) {
             open(api_url);
         });
         form.on('submit(reBtn)', function (data) {

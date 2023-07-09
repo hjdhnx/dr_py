@@ -140,19 +140,21 @@ function f(){
     <div class="layui-btn-container footer">
         <button class="layui-btn layui-btn-normal " lay-submit lay-filter="reBtn"><i class="layui-icon layui-icon-refresh"></i>刷新</button>
         <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn"><i class="layui-icon layui-icon-ok"></i>保存</button>
-        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="openRawBtn"><i class="layui-icon layui-icon-file-b"></i>查看原始文件</button>
+        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="openRawBtn"><i class="layui-icon layui-icon-file-b"></i>原始</button>
+        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="openFileBtn"><i class="layui-icon layui-icon-file-b"></i>渲染</button>
     </div>
 
 </div>
 
 <script>
+    const raw_url = '/raw/js/{{name}}';
     const api_url = '/admin/view/{{name}}';
     const api_save_url = '/admin/save_edit/{{name}}';
     // 初始化 脚本编辑页面
     function init_scripts(form) {
         $.ajax({
             type:'get',
-            url: api_url,
+            url: raw_url,
             timeout : 2000,
             async:false,
              // data:'',
@@ -205,7 +207,9 @@ function f(){
             $ = layui.$;
         init_scripts(form);
         form.on('submit(openRawBtn)',function (data) {
-            // console.log(api_url);
+            open(raw_url);
+        });
+        form.on('submit(openFileBtn)',function (data) {
             open(api_url);
         });
         form.on('submit(reBtn)', function (data) {

@@ -150,6 +150,10 @@ def custom_static_js(name):
     # print(name)
     return js_render(name)
 
+@home.route('/raw/js/<path:filename>')
+def custom_raw_js(filename):
+    return send_from_directory('js', filename)
+
 # @home.route('/txt/<name>')
 # def get_txt_files(name):
 #     base_path = 'txt'
