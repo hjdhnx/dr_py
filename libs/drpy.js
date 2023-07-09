@@ -437,8 +437,8 @@ function getCryptoJS(){
  * @returns {string|*}
  */
 function getProxyUrl(){
-    if(typeof(getProxy)==='function'){
-        return getProxy()
+    if(typeof(getProxy)==='function'){//判断壳子里有getProxy函数就执行取返回结果。否则取默认的本地
+        return getProxy(true)
     }else{
         return 'http://127.0.0.1:9978/proxy?do=js'
     }
@@ -2126,7 +2126,7 @@ function proxyParse(proxyObj){
     if(proxyObj.proxy_rule){
         try {
             eval(proxyObj.proxy_rule);
-            if(input && input!== proxyObj.params && Array.isArray(input)){
+            if(input && input!== proxyObj.params && Array.isArray(input) &&input.length===3){
                 return input
             }else{
                 return [404,'text/plain','Not Found']
