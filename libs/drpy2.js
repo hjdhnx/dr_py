@@ -41,7 +41,7 @@ function pre(){
 
 let rule = {};
 let vercode = typeof(pdfl) ==='function'?'drpy2.1':'drpy2';
-const VERSION = vercode+' 3.9.43beta1 20230607';
+const VERSION = vercode+' 3.9.46beta12 20230709';
 /** 已知问题记录
  * 1.影魔的jinjia2引擎不支持 {{fl}}对象直接渲染 (有能力解决的话尽量解决下，支持对象直接渲染字符串转义,如果加了|safe就不转义)[影魔牛逼，最新的文件发现这问题已经解决了]
  * Array.prototype.append = Array.prototype.push; 这种js执行后有毛病,for in 循环列表会把属性给打印出来 (这个大毛病需要重点排除一下)
@@ -419,6 +419,18 @@ function decodeStr(input,encoding){
 function getCryptoJS(){
     // return request('https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/libs/crypto-hiker.js');
     return 'console.log("CryptoJS已装载");'
+}
+
+/**
+ * 获取壳子返回的代理地址
+ * @returns {string|*}
+ */
+function getProxyUrl(){
+    if(typeof(getProxy)==='function'){
+        return getProxy()
+    }else{
+        return 'http://127.0.0.1:9978/proxy?do=js'
+    }
 }
 
 /**
@@ -1970,6 +1982,29 @@ function playParse(playObj){
 }
 
 /**
+ * 本地代理解析规则
+ * @param params
+ */
+function proxyParse(proxyObj){
+    var input = proxyObj.params;
+    if(proxyObj.proxy_rule){
+        try {
+            eval(proxyObj.proxy_rule);
+            if(input && input!== proxyObj.params && Array.isArray(input)){
+                return input
+            }else{
+                return [404,'text/plain','Not Found']
+            }
+        }catch (e) {
+            return [500,'text/plain','代理规则错误:'+e.message]
+        }
+
+    }else{
+        return [404,'text/plain','Not Found']
+    }
+}
+
+/**
  * js源预处理特定返回对象中的函数
  * @param ext
  */
@@ -2046,6 +2081,7 @@ function init(ext) {
         rule.图片来源 = rule.图片来源||'';
         rule.play_json = rule.hasOwnProperty('play_json')?rule.play_json:[];
         rule.pagecount = rule.hasOwnProperty('pagecount')?rule.pagecount:{};
+        rule.proxy_rule = rule.hasOwnProperty('proxy_rule')?rule.proxy_rule:'';
         if(rule.headers && typeof(rule.headers) === 'object'){
             try {
                 let header_keys = Object.keys(rule.headers);
@@ -2222,6 +2258,25 @@ function search(wd, quick) {
     return searchParse(searchObj)
 }
 
+/**
+ * js源本地代理返回的数据列表特定返回对象中的函数
+ * @param params 代理链接参数比如 /proxy?do=js&url=https://wwww.baidu.com => params就是 {do:'js','url':'https://wwww.baidu.com'}
+ * @returns {*}
+ */
+function proxy(params){
+    if(rule.proxy_rule&&rule.proxy_rule.trim()){
+        rule.proxy_rule = rule.proxy_rule.trim();
+    }
+    if(rule.proxy_rule.startsWith(':js')){
+        rule.proxy_rule = rule.proxy_rule.replace(':js','');
+    }
+    let proxyObj = {
+        params:params,
+        proxy_rule:rule.proxy_rule
+    };
+    return proxyParse(proxyObj)
+}
+
 function DRPY(){//导出函数
     return {
         init: init,
@@ -2231,6 +2286,7 @@ function DRPY(){//导出函数
         detail: detail,
         play: play,
         search: search,
+        proxy:proxy
     }
 }
 
@@ -2243,5 +2299,6 @@ export default {
     detail: detail,
     play: play,
     search: search,
+    proxy:proxy,
     DRPY:DRPY
 }
