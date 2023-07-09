@@ -2124,6 +2124,7 @@ function playParse(playObj){
 function proxyParse(proxyObj){
     var input = proxyObj.params;
     if(proxyObj.proxy_rule){
+        log('准备执行本地代理规则:\n'+proxyObj.proxy_rule);
         try {
             eval(proxyObj.proxy_rule);
             if(input && input!== proxyObj.params && Array.isArray(input) &&input.length===3){
