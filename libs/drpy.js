@@ -110,7 +110,7 @@ var _pdfh;
 var _pdfa;
 var _pd;
 // const DOM_CHECK_ATTR = ['url', 'src', 'href', 'data-original', 'data-src'];
-const DOM_CHECK_ATTR = /(url|src|href|-original|-src|-play|-url)$/;
+const DOM_CHECK_ATTR = /(url|src|href|-original|-src|-play|-url|style)$/;
 const SELECT_REGEX = /:eq|:lt|:gt|#/g;
 const SELECT_REGEX_A = /:eq|:lt|:gt/g;
 
