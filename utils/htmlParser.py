@@ -13,7 +13,7 @@ from jsonpath import jsonpath
 
 PARSE_CACHE = True  # 解析缓存
 NOADD_INDEX = ':eq|:lt|:gt|:first|:last|^body$|^#'  # 不自动加eq下标索引
-URLJOIN_ATTR = '(url|src|href|-original|-src|-play|-url)$'  # 需要自动urljoin的属性
+URLJOIN_ATTR = '(url|src|href|-original|-src|-play|-url|style)$'  # 需要自动urljoin的属性
 
 
 class jsoup:
@@ -195,7 +195,6 @@ class jsoup:
                         ret = re.search('url\((.*?)\)', ret, re.M | re.S).groups()[0]
                     except:
                         pass
-
                 if ret and base_url:
                     # need_add = re.search(URLJOIN_ATTR, option, re.M | re.I)
                     need_add = self.test(URLJOIN_ATTR, option)
