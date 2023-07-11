@@ -41,7 +41,7 @@ function pre(){
 
 let rule = {};
 let vercode = typeof(pdfl) ==='function'?'drpy2.1':'drpy2';
-const VERSION = vercode+' 3.9.46beta12 20230709';
+const VERSION = vercode+' 3.9.46beta18 20230711';
 /** 已知问题记录
  * 1.影魔的jinjia2引擎不支持 {{fl}}对象直接渲染 (有能力解决的话尽量解决下，支持对象直接渲染字符串转义,如果加了|safe就不转义)[影魔牛逼，最新的文件发现这问题已经解决了]
  * Array.prototype.append = Array.prototype.push; 这种js执行后有毛病,for in 循环列表会把属性给打印出来 (这个大毛病需要重点排除一下)
@@ -2006,6 +2006,32 @@ function proxyParse(proxyObj){
 }
 
 /**
+ * 辅助嗅探解析规则
+ * @param isVideoObj
+ * @returns {boolean}
+ */
+function isVideoParse(isVideoObj){
+    var input = isVideoObj.url;
+    if(!isVideoObj.t){ // t为假代表默认传的正则字符串
+        let re_matcher =  new RegExp(isVideoObj.isVideo,'i');  // /g匹配多个,/i不区分大小写,/m匹配多行
+        return re_matcher.test(input);
+    }else{
+        // 执行js
+        try {
+            eval(isVideoObj.isVideo);
+            if(typeof(input)==='boolean'){
+                return input
+            }else{
+                return false
+            }
+        }catch (e) {
+            log('执行嗅探规则发生错误:'+e.message);
+            return false
+        }
+    }
+}
+
+/**
  * js源预处理特定返回对象中的函数
  * @param ext
  */
@@ -2083,6 +2109,10 @@ function init(ext) {
         rule.play_json = rule.hasOwnProperty('play_json')?rule.play_json:[];
         rule.pagecount = rule.hasOwnProperty('pagecount')?rule.pagecount:{};
         rule.proxy_rule = rule.hasOwnProperty('proxy_rule')?rule.proxy_rule:'';
+        rule.sniffer = rule.hasOwnProperty('sniffer')?rule.sniffer:'';
+        rule.sniffer = !!(rule.sniffer && rule.sniffer!=='0' && rule.sniffer!=='false');
+
+        rule.isVideo = rule.hasOwnProperty('isVideo')?rule.isVideo:'';
         if(rule.headers && typeof(rule.headers) === 'object'){
             try {
                 let header_keys = Object.keys(rule.headers);
@@ -2278,6 +2308,40 @@ function proxy(params){
     return proxyParse(proxyObj)
 }
 
+
+/**
+ * 是否启用辅助嗅探功能,启用后可以根据isVideo函数进行手动识别为视频的链接地址。默认为false
+ * @returns {*|boolean|boolean}
+ */
+function sniffer(){
+    let enable_sniffer =  rule.sniffer || false;
+    if(enable_sniffer){
+        log('准备执行辅助嗅探代理规则:\n'+rule.isVideo);
+    }
+    return enable_sniffer
+}
+
+/**
+ * 启用辅助嗅探功能后根据次函数返回的值识别地址是否为视频，返回true/false
+ * @param url
+ */
+function isVideo(url){
+    let t = 0;
+    if(rule.isVideo &&rule.isVideo.trim()){
+        rule.isVideo = rule.isVideo.trim();
+    }
+    if(rule.isVideo.startsWith(':js')){
+        rule.isVideo = rule.isVideo.replace(':js','');
+        t = 1;
+    }
+    let isVideoObj = {
+        url:url,
+        isVideo:rule.isVideo,
+        t:t,
+    };
+    return isVideoParse(isVideoObj)
+}
+
 function DRPY(){//导出函数
     return {
         init: init,
@@ -2287,19 +2351,33 @@ function DRPY(){//导出函数
         detail: detail,
         play: play,
         search: search,
-        proxy:proxy
+        proxy:proxy,
+        sniffer:sniffer,
+        isVideo:isVideo
     }
 }
 
+/**
+ * 导出函数无法简写成下面的形式:
+
+ export default {
+  ...DRPY,
+  DRPY
+ }
+
+ */
+
 // 导出函数对象
 export default {
-    init: init,
-    home: home,
-    homeVod: homeVod,
-    category: category,
-    detail: detail,
-    play: play,
-    search: search,
-    proxy:proxy,
-    DRPY:DRPY
+    init,
+    home,
+    homeVod,
+    category,
+    detail,
+    play,
+    search,
+    proxy,
+    sniffer,
+    isVideo,
+    DRPY,
 }
