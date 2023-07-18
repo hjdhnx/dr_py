@@ -26,7 +26,7 @@ var rule = {
 		29:{cateId:'29'},
 		35:{cateId:'35'}
 	},
-	class_parse:'.navbar-items&&li;a&&title;a&&href;.*/(.*?).html',
+	class_parse:'.navbar-items&&li;a&&title;a&&href;/(\\d+).html',
 	cate_exclude:'新片快递',
 	lazy:`js:
 		var html = JSON.parse(request(input).match(/r player_.*?=(.*?)</)[1]);
