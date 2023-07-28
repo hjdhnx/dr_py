@@ -176,6 +176,7 @@ namespace Peach.DataAccess
         private static readonly Regex p = new ("url\\((.*?)\\)", RegexOptions.Multiline | RegexOptions.Singleline);
         private static readonly Regex NOAdd_INDEX = new (":eq|:lt|:gt|:first|:last|^body$|^#");
         private static readonly Regex URLJOIN_ATTR = new ("(url|src|href|-original|-src|-play|-url|style)$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+        private static readonly Regex SPECIAL_URL = new ("^(ftp|magnet|thunder|ws):", RegexOptions.Multiline | RegexOptions.IgnoreCase);
         private static String pdfh_html = "";
         private static String pdfa_html = "";
         private static Document? pdfh_doc = null;
@@ -317,13 +318,15 @@ namespace Peach.DataAccess
                     Match m = p.Match(result);
                     if (m.Success)
                         result = m.Groups[1]?.Value;
+                    result = Regex.Replace(result, "^['|\"](.*)['|\"]$", "$1");
                 }
                 if (!string.IsNullOrWhiteSpace(result) && !string.IsNullOrWhiteSpace(Add_url))// (JSUtils.isNotEmpty(result) && JSUtils.isNotEmpty(Add_url))
                 {
                     // 需要自动urljoin的属性
                     Match m = URLJOIN_ATTR.Match(option);
+                    Match n = SPECIAL_URL.Match(result);
                     //if (isUrl(option)) {
-                    if (m.Success)
+                    if (m.Success && !n.Success)
                     {
                         if (result.Contains("http"))
                             result = result[result.IndexOf("http")..];
