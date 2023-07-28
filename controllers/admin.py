@@ -22,6 +22,7 @@ from werkzeug.utils import secure_filename
 from utils.web import md5
 from utils.common_api import js_render
 from utils.files import get_jar_list, get_jsd_list, get_drop_js
+from quickjs import Function, Context
 
 admin = Blueprint("admin", __name__)
 
@@ -410,16 +411,31 @@ def upload_file():
                 return R.failed(f'上传失败,文件已存在,请先查看删除再试')
             with open('js/模板.js', encoding='utf-8') as f2:
                 before = f2.read().split('export')[0]
+            end_code = """\nif (rule.模板 && muban.hasOwnProperty(rule.模板)) {rule = Object.assign(muban[rule.模板], rule);}"""
             upcode = file.stream.read().decode('utf-8')
-            check_to_run = before + upcode
+            check_to_run = before + upcode + end_code
             # print(check_to_run)
+            # try:
+            #     loader, _ = runJScode(check_to_run)
+            #     rule = loader.eval('rule')
+            #     if not rule:
+            #         return R.failed('文件上传失败,检测到上传的文件不是drpy框架支持的源代码')
+            # except Exception as e:
+            #     logger.info(f'上传文件发生了错误:{e}')
+            #     return R.failed('文件上传失败,检测到上传的文件不是drpy框架支持的源代码')
+
             try:
-                loader, _ = runJScode(check_to_run)
-                rule = loader.eval('rule')
-                if not rule:
+                ctx = Context()
+                ctx.eval(check_to_run)
+                js_ret = ctx.get('rule')
+                rule_json = js_ret.json()  # 规则的json字符串
+                ruleDict = ujson.loads(rule_json)
+                if not ruleDict:
                     return R.failed('文件上传失败,检测到上传的文件不是drpy框架支持的源代码')
-            except:
+            except Exception as e:
+                logger.info(f'上传文件发生了错误:{e}')
                 return R.failed('文件上传失败,检测到上传的文件不是drpy框架支持的源代码')
+
             # print(savePath)
             file.seek(0)  # 读取后变成空文件,重新赋能
             file.save(savePath)
