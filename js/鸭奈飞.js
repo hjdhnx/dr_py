@@ -1,9 +1,14 @@
-muban.mxpro.二级.desc = '.module-info-item:eq(4)&&Text;;;.module-info-item-content:eq(1)&&Text;.module-info-item-content:eq(0)&&Text'
+// https://go.tvso.me
+
+muban.mxpro.二级.desc = '.module-info-item:eq(4)&&Text;;;.module-info-item-content:eq(2)&&Text;.module-info-item-content:eq(0)&&Text'
 muban.mxpro.二级.tabs = '#y-playList&&.module-tab-item'
 var rule = {
     title:'鸭奈飞',
     模板:'mxpro',
-    host:'https://yanaifei.com',
+	// host:'https://yanetflix.me',
+	// host:'https://www.netfly.tv',
+    host:'https://go.tvso.me',
+    hostJs:'print(HOST);let html=request(HOST,{headers:{"User-Agent":PC_UA}});let src = jsp.pdfh(html,"a.r-1471scf:eq(0)&&href");print(src);HOST=src',//网页域名根动态抓取js代码。通过HOST=赋值
     // url:'/vod/show/fyclass--------fypage---.html',
     url:'/vod/show/fyfilter.html',
     filterable:1,//是否启用分类筛选,
@@ -24,6 +29,19 @@ var rule = {
     },
     searchUrl: '/vod/search/**----------fypage---.html',
     class_parse:'.navbar-items li:gt(1):lt(7);a&&title;a&&href;/(\\d+).html',
-    lazy:"js:var html=JSON.parse(request(input).match(/r player_.*?=(.*?)</)[1]);var url=html.url;if(html.encrypt=='1'){url=unescape(url)}else if(html.encrypt=='2'){url=unescape(base64Decode(url))}if(/m3u8|mp4/.test(url)){input=url}else{input}",
+    lazy:`js:
+        var html = JSON.parse(request(input).match(/r player_.*?=(.*?)</)[1]);
+        var url = html.url;
+        if (html.encrypt == '1') {
+            url = unescape(url)
+        } else if (html.encrypt == '2') {
+            url = unescape(base64Decode(url))
+        }
+        if (/m3u8|mp4/.test(url)) {
+            input = url
+        } else {
+            input
+        }
+    `,
     // 推荐: '.module-poster-items-small;a.module-poster-item.module-item;a&&title;.lazyload&&data-original;.module-item-note&&Text;a&&href',
 }
