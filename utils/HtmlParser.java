@@ -208,7 +208,7 @@ public class HtmlParser {
                     Matcher m = URLJOIN_ATTR.matcher(option);
                     Matcher n = SPECIAL_URL.matcher(result);
                     //if (isUrl(option)) {
-                    if (m.find() && !n.find() {
+                    if (m.find() && !n.find()){
                         if (result.contains("http")) {
                             result = result.substring(result.indexOf("http"));
                         } else {

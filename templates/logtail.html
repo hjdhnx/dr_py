@@ -78,8 +78,9 @@
         <input type="text" class="input">
         <button id="sendMsg" class="btn">发送</button>
     </div>
-    <div id="log-container">
+    <div id="log-container" contenteditable="true">
 		<div id="msg">
+
 		</div>
 	</div>
     <div class="support"></div>
@@ -278,7 +279,7 @@
                             text: '确认',
                             btnClass: 'btn-primary',
                             action: function() {
-                                $("#log-container div").text('');
+                                $("#log-container div").html('');
                             }
                         },
                         cancel: {
