@@ -2,7 +2,7 @@
 var rule={
     title:'粤爱看',
     模板:'首图2',
-    host:'https://www.yakgj.com',
+    host:'https://www.gjyak.com',
     url:'/vod-list-id-fyfilter.html',
     filterable:1,//是否启用分类筛选,
     filter_url:'{{fl.cateId}}-pg-fypage-order-desc-by-{{fl.by}}-class-{{fl.class}}-year-{{fl.year}}-letter-{{fl.letter}}-area-{{fl.area}}-lang-{{fl.lang}}',
@@ -22,6 +22,7 @@ var rule={
     },
     searchUrl:'/vod-search-pg-fypage-wd-**.html',
     class_parse: '.stui-header__menu li:lt(5);a&&Text;a&&href;.*/vod-type-id-(\\d+)',
+    图片来源:'@Referer='+HOST,
     二级: {
         "title": ".stui-content__detail h3&&Text;.data--span:eq(0)&&Text",
         "img": ".img-responsive&&data-original",
@@ -30,4 +31,5 @@ var rule={
         "tabs": ".stui-pannel__head span",
         "lists": ".stui-content__playlist:eq(#id) li"
     },
+    搜索:'js:let cookie="";let submit_url="";let html="";for(var i=0; i<2; i++){let yzm=HOST+"/inc/common/code.php?a=search&s=";let html=request(yzm,{withHeaders:true,toBase64:true}, true);print(html);let json=JSON.parse(html);if(!cookie){let setCk=Object.keys(json).find(it=>it.toLowerCase()==="set-cookie");cookie=setCk ? json[setCk].split(";")[0]: "";}console.log("cookie:"+cookie);let img=json.body;fetch_params.body="img="+encodeURIComponent(img); fetch_params.headers["Referer"]=OCR_API;fetch_params.headers["User-Agent"]=MOBILE_UA;html=post(OCR_API, fetch_params);submit_url=HOST+"/inc/ajax.php?ac=code_check&type=search&code="+html;fetch_params.headers["Cookie"]=cookie;fetch_params.body=""; html=post(submit_url, fetch_params);html=JSON.parse(html);if(html.msg==="ok"){break;}}submit_url=HOST+"/index.php?m=vod-search";fetch_params.headers["Content-Type"]="application/x-www-form-urlencoded";fetch_params.headers["Referer"]=HOST;fetch_params.body="wd="+KEY+"&submit=";html=post(submit_url, fetch_params);let list=pdfa(html,"ul.stui-vodlist li");list.forEach(it=>{d.push({title:pdfh(it,"a&&title"),desc:pdfh(it,".pic-text&&Text"),pic_url:pdfh(it,"a&&data-original"),url:HOST+pdfh(it,"a&&href")})});setResult(d);' ,
 }
