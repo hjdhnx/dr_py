@@ -2331,16 +2331,17 @@ function sniffer(){
  */
 function isVideo(url){
     let t = 0;
+    let is_video;
     if(rule.isVideo &&rule.isVideo.trim()){
-        rule.isVideo = rule.isVideo.trim();
+        is_video = rule.isVideo.trim();
     }
-    if(rule.isVideo.startsWith('js:')){
-        rule.isVideo = rule.isVideo.replace('js:','');
+    if(is_video.startsWith('js:')){
+        is_video = is_video.replace('js:','');
         t = 1;
     }
     let isVideoObj = {
         url:url,
-        isVideo:rule.isVideo,
+        isVideo:is_video,
         t:t,
     };
     return isVideoParse(isVideoObj)
