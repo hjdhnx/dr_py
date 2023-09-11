@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>规则编辑</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="icon" href="/static/img/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="/static/plugin/layui/css/layui.css">
+    <script src="/static/plugin/layui/layui.js"></script>
+    <script src="/static/js/jquery.min.js"></script>
+
+    <link href="/static/plugin/codemirror/lib/codemirror.css" rel="stylesheet" >
+    <script src="/static/plugin/codemirror/lib/codemirror.js"></script>
+    <link href="/static/plugin/codemirror/theme/monokai.css" rel="stylesheet">
+    <link href="/static/plugin/codemirror/theme/idea.css" rel="stylesheet">
+    <link href="/static/plugin/codemirror/theme/eclipse.css" rel="stylesheet">
+    <link href="/static/plugin/codemirror/theme/rubyblue.css" rel="stylesheet">
+    <link href="/static/plugin/codemirror/theme/ambiance-mobile.css" rel="stylesheet">
+    <link href="/static/plugin/codemirror/theme/3024-day.css" rel="stylesheet">
+    <link href="/static/plugin/codemirror/theme/3024-night.css" rel="stylesheet">
+    <link href="/static/plugin/codemirror/theme/erlang-dark.css" rel="stylesheet">
+    <script src="/static/plugin/codemirror/mode/javascript/javascript.js"></script>
+    <script src="/static/plugin/codemirror/mode/python/python.js"></script>
+    <script src="/static/plugin/codemirror/mode/shell/shell.js"></script>
+    <script src="/static/plugin/codemirror/mode/php/php.js"></script>
+    <script src="/static/plugin/codemirror/mode/go/go.js"></script>
+
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+        .footer {
+            padding-top: 5px;
+            padding-left: 10px;
+            text-align: left;
+            position: fixed;
+            bottom: 0px;
+            background-color:#ddd;
+            width:100%;
+
+        }
+        .footer > button{
+            border-radius: 25px;
+        }
+        .center{
+            margin-bottom: 60px;
+        }
+
+    /** {*/
+    /*  padding: 2px;*/
+    /*  margin: 2px;*/
+    /*}*/
+
+    /*.container {*/
+    /*  height: 100vh;*/
+    /*  width: 100%;*/
+    /*  display: flex;*/
+    /*  flex-direction: column;*/
+    /*  justify-content: space-between;*/
+    /*}*/
+    /*.container .header {*/
+    /*  display: flex;*/
+    /*  align-items: flex-start;*/
+    /*}*/
+    /*.container .center {*/
+    /*  flex: 1;*/
+    /*  overflow: hidden;*/
+    /*  display: flex;*/
+    /*}*/
+    /*.container .footer {*/
+    /*  height: 50px;*/
+    /*  display: flex;*/
+    /*  align-items: flex-start;*/
+    /*}*/
+    </style>
+</head>
+<body>
+
+
+<div class="layui-form layuimini-form layuimini-container layui-form-pane container"  lay-filter="scripts">
+<!--<div class="layui-form layui-form-pane"  lay-filter="scripts">-->
+
+    <div class="header">
+    <div class="layui-form-item" pane="">
+        <label class="layui-form-label required">脚本类型</label>
+        <div class="layui-input-block">
+            <input type="radio"  name="script_code" id="script_code_php" lay-filter="ck-code" value="python" title="php">
+            <input type="radio"  name="script_code" id="script_code_py" lay-filter="ck-code" value="python" title="python">
+            <input type="radio"  name="script_code" id="script_code_js" lay-filter="ck-code" value="javascript" title="js" checked>
+
+            <input type="radio"  name="script_code" id="script_code_jinja2" lay-filter="ck-code" value="jinja2" title="jinja2">
+            <input type="radio"  name="script_code" id="script_code_sh" lay-filter="ck-code" value="shell" title="shell">
+            <input type="radio"  name="script_code" id="script_code_go" lay-filter="ck-code" value="python" title="go">
+        </div>
+    </div>
+
+    <div class="layui-form-item" pane="">
+        <label class="layui-form-label">主题类型</label>
+        <div class="layui-input-block">
+            <select name="interest" lay-filter="select_theme" id="select_theme">
+                <option value=""></option>
+                <option value="default">default</option>
+                <option value="idea">idea</option>
+                <option value="eclipse">eclipse</option>
+                <option value="rubyblue">rubyblue</option>
+                <option value="ambiance-mobile">ambiance-mobile</option>
+                <option value="3024-day">3024-day</option>
+                <option value="3024-night">3024-night</option>
+                <option value="erlang-dark">erlang-dark</option>
+                <option value="monokai" selected>monokai</option>
+            </select>
+        </div>
+    </div>
+    </div>
+
+    <div class="center">
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label required">脚本区域</label>
+        <div class="layui-input-block">
+            <!--textarea-->
+            <textarea id="script_shell" class="hide" style="display: none">#!/bin/sh
+</textarea>
+            <textarea id="script_python" class="hide" style="display: none">
+#!/usr/bin/env python
+# -*- coding: utf8 -*-
+</textarea>
+            <textarea id="script_js" class="hide" style="display: none">
+// javascript
+function f(){
+
+}</textarea>
+            <textarea id="script_code" name='scripts_code' class="hide" style="display: none">
+            </textarea>
+        </div>
+    </div>
+    </div>
+
+    <div class="layui-btn-container footer">
+        <button class="layui-btn layui-btn-normal " lay-submit lay-filter="reBtn"><i class="layui-icon layui-icon-refresh"></i>刷新</button>
+        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn"><i class="layui-icon layui-icon-ok"></i>保存</button>
+        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="openRawBtn"><i class="layui-icon layui-icon-file-b"></i>原始</button>
+        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="openFileBtn"><i class="layui-icon layui-icon-file-b"></i>渲染</button>
+    </div>
+
+</div>
+
+<script>
+    const raw_url = '/raw/js/{{name}}';
+    const api_url = '/admin/view/{{name}}';
+    const api_save_url = '/admin/save_edit/{{name}}';
+    // 初始化 脚本编辑页面
+    function init_scripts(form) {
+        $.ajax({
+            type:'get',
+            url: raw_url,
+            timeout : 2000,
+            async:false,
+             // data:'',
+             // dataType:'json',
+            success: function(data) {
+                // console.log(data);
+                editor.setValue(data);
+                form.render();
+            },error: function(XMLHttpRequest,textStatus,errorThrown) {
+                if (XMLHttpRequest.status == 0) {
+                  layer.msg('Check Your Network.',{icon: 2},function () {});
+                } else if (XMLHttpRequest.status == 404) {
+                  layer.msg('Requested URL not found.',{icon: 2},function () {});
+                } else if (XMLHttpRequest.status == 500) {
+                  layer.msg('Internel Server Error.',{icon: 2},function () {});
+                } else {
+                   let code = XMLHttpRequest.responseText;
+                   editor.setValue(code);
+                   form.render();
+                }
+         }
+        });
+    }
+</script>
+<script>
+    var editor = CodeMirror.fromTextArea(document.getElementById("script_code"), { //为你的textarea的ID号 $("#script_code")[0]
+        lineNumbers: true,//是否显示行号
+        mode: "javascript", //默认语言
+        lineWrapping:true, //是否强制换行
+        theme: 'monokai', // 使用monokai模版
+        // height: 800,
+        // //readOnly:true,
+        // theme: "seti",//主题
+        matchBrackets: true, //括号匹配
+        indentUnit: 4,
+        indentWithTabs: true,
+        extraKeys: {"Ctrl-Space": "autocomplete"}//ctrl-space唤起智能提示
+    });
+    editor.setSize('auto','600px'); //设置宽度,高度
+    // editor.setSize('auto','auto'); //设置宽度,高度
+
+    //选择脚本类型JS
+    var script_sh=$("#script_shell").val();
+    var script_py=$("#script_python").val();
+    var script_js=$("#script_js").val();
+
+    layui.use(['form'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+        init_scripts(form);
+        form.on('submit(openRawBtn)',function (data) {
+            open(raw_url);
+        });
+        form.on('submit(openFileBtn)',function (data) {
+            open(api_url);
+        });
+        form.on('submit(reBtn)', function (data) {
+            init_scripts(form);
+        });
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            layer.confirm('确认保存？', {
+                title: "操作提示",
+                icon: 0,
+                btn: ['确定']
+            } ,function(index){
+                let txt = editor.getValue();
+                // console.log(txt);
+                let postData = {
+                    name:'{{name}}',
+                    code:txt,
+                    // code:txt.replaceAll("+","&").replaceAll("console.log","console.Log")
+                }
+                // console.log(postData);
+                $.ajax({
+                    type:'post',
+                    url:api_save_url,
+                    data:postData,
+                    dataType:'json',
+                    async:false,
+                    success:function (ret) {
+                        console.log(ret);
+                        layer.msg(ret.msg);
+                    }
+                });
+
+                layer.close(index);
+            });
+            return false;
+        });
+
+
+        form.on('select(select_theme)', function () {
+            var theme = $('#select_theme').val();
+            editor.setOption("theme", theme); //editor.setOption()为codeMirror提供的设置风格的方法
+            // form.render();//注意如果是动态添加的select ,就必须加这行代码
+        });
+        form.on('radio(ck-code)', function(data){
+            var txt=editor.getValue(); //editor.getValue()获取textarea中的值
+            var lang=$(this).prop("id");
+            // console.log(txt,lang);
+            console.log(data.value);
+            editor.setOption("mode",data.value);
+            switch (data.value) {
+                case 'shell':
+                    editor.setValue(script_sh);
+                    break;
+                case 'python':
+                    editor.setValue(script_py);
+                    break;
+                default:
+                    editor.setValue(script_js);
+            }
+        });
+    });
+    // layui.use('code', function(){ //加载code模块
+    //     layui.code({
+    //         title: 'JavaScript',
+    //         encode: true //是否转义html标签。默认不开启
+    //         ,skin: 'notepad' //如果要默认风格，不用设定该key。
+    //     });
+    // });
+</script>
+</body>
+</html>

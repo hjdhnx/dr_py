@@ -1,0 +1,30 @@
+a.links{
+	margin-right: 5px;
+}
+
+.stui-content__thumb .pic iframe{
+max-width: 100%;
+border-radius: 2px;height:155px;
+overflow: hidden;
+/*pointer-events: none;*/
+}
+
+.showPhoto {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.showPhoto .img {
+  display: block;
+  margin: auto 0;
+  max-width: 100%;
+  text-align: center;
+}

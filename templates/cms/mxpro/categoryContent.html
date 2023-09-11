@@ -1,10 +1,252 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<title>{{ctx.tname}} - {{ctx.web_name}}</title>
+<meta name="referrer" content="no-referrer" />
+<meta name="keywords" content="电影,电影大全,电影天堂,最新电影,好看的电影,电影排行榜" />
+<meta name="description" content="为您提供更新电影、好看的电影排行榜及电影迅雷下载，免费在线观看伦理电影、动作片、喜剧片、爱情片、搞笑片等全新电影。" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" />
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<link rel="shortcut icon" href="/static/img/favicon.svg" type="image/x-icon" />
+<link rel="stylesheet" href="/web/cms/mxpro/css/iconfont.css" type="text/css" />
+<link rel="stylesheet" href="/web/cms/mxpro/css/stui_default.css" type="text/css" />
+
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.min.js "></script>
+<script type="text/javascript" src="/static/js/jquery.lazyload.min.js "></script>
+<script type="text/javascript" src="/web/cms/mxpro/js/index.js"></script>
+<script type="text/javascript" src="/web/cms/mxpro/js/home.js"></script>
+
+<script src="/static/js/vue3.js"></script>
+<script src="/static/js/axios.min.js"></script>
+<script src="/static/js/eruda.js"></script>
+
+<script src="/web/cms/mxpro/js/commonUI.js"></script>
+<link rel="stylesheet" href="/web/cms/mxpro/css/commonUI.css" type="text/css"/>
+<script>var maccms={"path":"","mid":"1","url":"5imv.cc","wapurl":"www.5imv.cc","mob_status":"2"};</script>
+<!--[if lt IE 9]>
+<script src="/web/cms/mxpro/js/html5shiv.min.js"></script>
+<script src="/web/cms/mxpro/js/respond.min.js"></script>
+<![endif]-->
 </head>
 <body>
+<div id="app">
+	<div class="container">
+        <div class="row">
+        	<div class="stui-pannel">
+        		<div class="stui-pannel__hd">
+        			<!--vue组件-头部导航-->
+					<stu-header :ctx="ctx" :items="items" :hotsuggs="hotsuggs" :tid="tid" :is_home="is_home"></stu-header>
+        		</div>
 
+        		<div class="stui-pannel__bd clearfix">
+        			<div class="stui-screen">
+						<div class="head clearfix">
+							<a href="javascript:;" class="open-screen pull-right">展开 <i class="iconfont icon-moreunfold"></i></a>
+							<span class="text">
+								已选择：{{ctx.tname}}
+							</span>
+							<span class="all">，共检索到“{[sitems.total]}”条结果</span>
+						</div>
+
+						<stu-filter :items="items" :tid="tid" :ctx="ctx" :item="item"></stu-filter>
+
+					</div>
+
+        			<ul class="stui-vodlist clearfix">
+						<li v-for="item in sitems.list">
+							<div class="stui-vodlist__box">
+								<a class="stui-vodlist__thumb lazyload" :href="'{{ctx.path}}?vod_id='+item.vod_id+'&vod_name='+item.vod_name+'&tid='+tid" :title="item.vod_name" :data-original="item.vod_pic">
+									<span class="play hidden-xs"></span>
+									<span class="pic-text1 text-right"><b>{[item.type_name]}</b></span>
+									<span class="pic-text text-right"><b>{[item.vod_remarks]}</b></span>
+								</a>
+								<div class="stui-vodlist__detail">
+									<h4 class="title text-overflow"><a :href="'{{ctx.path}}?vod_id='+item.vod_id+'&vod_name='+item.vod_name+'&tid='+tid" :title="item.vod_name">{[item.vod_name]}</a></h4>
+									<p class="text text-overflow text-muted hidden-xs">{[item.vod_content]}</p>
+								</div>
+							</div>
+						</li>
+					</ul>
+        		</div>
+
+				<!--vue组件-底部分页-->
+				<stu-pager :ctx="ctx" :pg="pg" :pagecount="sitems.pagecount"></stu-pager>
+
+        	</div>
+
+        </div>
+    </div>
+
+<!--    <div class="stui-page__all">-->
+<!--	<a class="left" href="https://www.5imv.cc/vodtype/film-1/"><i class="iconfont icon-back"></i></a>-->
+<!--	<a class="right" href="https://www.5imv.cc/vodtype/film-2/"><i class="iconfont icon-more"></i></a>-->
+<!--	</div>-->
+
+		<!--组件调用一定要右闭合,否则后面的代码无法正常运行-->
+<!--vue组件-版权信息-->
+	<copy-right path="{{ctx.path}}" web_name="{{ctx.web_name}}" ></copy-right>
+
+<!--vue组件-底部按钮-->
+	<foot-button></foot-button>
+
+	<!--vue组件-弹窗信息-->
+	<note-popup path="{{ctx.path}}" url="{{ctx.url}}"></note-popup>
+
+ </div>
+<!--vue结束-->
+
+<script>
+const { createApp,reactive, toRefs, ref,getCurrentInstance,onBeforeMount, onMounted,onBeforeUpdate,onUpdated,onBeforeUnmount, onUnmounted, watch,computed } = Vue;
+const app = createApp({
+	delimiters: ['{[', ']}'],//delimiters：改变默认的插值符号
+	props: {},
+	setup(props, context) {
+		onMounted(()=> {
+			console.log('---onMounted---');
+			axios.get(`/vod?pwd=${pwd}&rule=${web_name}&t=${tid}&pg=${pg}&ac=videolist&f=${fl}`).then((resp) => {
+            	console.log(resp.data);
+            	sitems.value = resp.data;
+				// 存浏览器session里，然后其它页面好获取出来
+				// sessionStorage.setItem('details',JSON.stringify(resp.data));
+				// console.log(typeof(stui.images.lazyload));
+				setTimeout(function (){
+					stui.images.lazyload();
+					stui.images.carousel();
+				},300);
+        	});
+		});
+		onBeforeUnmount(()=>{
+        //销毁页面组件前， 即关闭
+        console.log("*******onBeforeUnmount******")
+    	});
+		onUnmounted(()=>{
+			//销毁后
+			console.log("*******onUnmounted******")
+		});
+
+		console.log('---setup---');
+		//获取当前实例
+		// const {self, proxy} = getCurrentInstance();
+		const web_name = '{{ctx.web_name}}';
+		const pwd = '{{ctx.pwd}}';
+		const tid = '{{ctx.tid}}';
+		const tname = '{{ctx.tname}}';
+		const item = ref({
+			type_id:tid,
+			type_name:tname,
+		});
+		const pg = '{{ctx.pg}}';
+		const vod_id = '{{ctx.vod_id}}';
+		const vod_name = '{{ctx.vod_name}}';
+		const fl = '{{ctx.fl}}';
+		// console.log(web_name);
+
+		const ctx_str = "ctxObj={{ctx|safe}}";
+		eval(ctx_str);
+		// console.log(ctxObj)
+		const ctx = ref(ctxObj);
+		// 图片不加载问题???
+		const items = ref({
+			class:[],
+			list:[],
+		});
+
+		const sitems = ref({
+			list:[],
+		});
+
+		const hotsuggs = ref({
+			data:[]
+		});
+
+		const is_home = ref(false);
+
+		try {
+		items.value = JSON.parse(sessionStorage.getItem('items'))||items.value;
+		hotsuggs.value = JSON.parse(sessionStorage.getItem('hotsuggs'))||hotsuggs.value;
+		}catch (e) {}
+
+		return {
+			ctx,
+			items,
+			item,
+			hotsuggs,
+			web_name,
+			sitems,
+			tid,
+			tname,
+			pg,
+			vod_id,
+			vod_name,
+			is_home,
+		}
+	},
+});
+// 默认请求的基础url（如果axios请求的地址不带域名，自动添加baseURL）（默认请求域名，/当前域名）
+axios.defaults.baseURL = "/";
+// 设置post请求头的content-Type值
+// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+// 请求超时5000毫秒
+axios.defaults.timeout = 5000;
+app.config.globalProperties.$http = axios;
+console.log('---这里最先执行---');
+app.component('copy-right',  copyRightComponent);
+app.component('foot-button', footButtonComponent);
+app.component('note-popup',  notePopup);
+app.component('stu-header', stuHeaderComponent);
+app.component('stu-filter', stuFilterComponent);
+app.component('stu-pager', StuPagerComponent);
+app.mount('#app');
+eruda.init();
+
+</script>
+
+<!--<script src='https://pc.stgowan.com/pc/rich-tf.js' id="richid" data='s=7214'></script>-->
+<!--<script charset="UTF-8" id="LA_COLLECT" src="https://sdk.51.la/js-sdk-pro.min.js"></script>-->
+<!--<script>LA.init({id:"JYQUFCtAOBTUMsNQ",ck:"JYQUFCtAOBTUMsNQ"})</script>-->
+
+<script type="text/javascript" src="/web/cms/mxpro/js/stui_default.js "></script>
+<!--弹窗样式和自动弹窗方法-->
+<link rel="stylesheet" href="/web/cms/mxpro/css/notice.css" type="text/css">
+<script type="text/javascript" src="/web/cms/mxpro/js/mxhtml.js"></script>
+
+<script type="text/javascript">
+$(".open-screen").click(function(){
+    		var display = $('#screenbox').css('display');
+	  		if(display == 'block'){
+	  			$("#screenbox").slideUp("slow");
+	  			$(this).html('展开 <i class="iconfont icon-moreunfold"></i>')
+			}else{
+				$("#screenbox").slideDown("slow");
+				$(this).html('收起 <i class="iconfont icon-less"></i>')
+			}
+});
+$(".stui_header__user li a").click(function(){
+		$(this).parent().find(".dropdown").toggle();
+	});
+	function notnull() {
+	if (window.document.search.wd.value=="") {
+	alert("您未输入任何信息！");
+	return false;
+	}else {
+	return true;
+	}
+}
+$(function(){
+	$(window).scroll(function() {
+		if($(window).scrollTop() >= 100){
+			$('.ant-back-top').fadeIn(300);
+		}else{
+			$('.ant-back-top').fadeOut(300);
+		}
+	});
+	$('.ant-back-top').click(function(){
+	$('html,body').animate({scrollTop: '0px'}, 800);});
+});
+</script>
 </body>
 </html>

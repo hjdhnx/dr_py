@@ -1,0 +1,174 @@
+<meta charset="UTF-8">
+<style type="text/css">
+body,html{width:100%;height:100%;background:#000;padding:0;margin:0;overflow-x:hidden;overflow-y:hidden}
+*{margin:0;border:0;padding:0;text-decoration:none}
+
+        #video {
+            position:inherit;
+        }
+		
+        .total {position: absolute;top: 1px;left: 10px;color: #fff;font-size: 13px;}
+				
+        /*  移动设备自适应宽高  */
+        @media only screen and (max-width: 650px) {
+            #list {
+                width: 100%;
+                left: 0px;
+                max-width: 100%;
+                min-width: auto;
+            }
+			 #video {
+                height: 100% !important;
+				  width: 100% !important;
+            }
+			 .total {position: absolute;top: 0px;left: 10px;color: #fff;font-size: 12px;}
+        }
+
+        #time {
+            display: none;
+            right: 10px;
+            text-align: center;
+            top: 3px;
+            font-size: 12px;
+            color: #fdfdfd;
+            text-shadow: 1px 1px 1px #000, 1px 1px 1px #000;
+            position: fixed;
+            z-index: 2147483645;
+        }
+        .masked h4{
+            display: block;
+            /*渐变背景*/
+            background-image: -webkit-linear-gradient(left, #3498db, #f47920 10%, #d71345 20%, #f7acbc 30%,
+            #ffd400 40%, #3498db 50%, #f47920 60%, #d71345 70%, #f7acbc 80%, #ffd400 90%, #3498db);
+            color: transparent; /*文字填充色为透明*/
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;          /*背景剪裁为文字，只将文字显示为背景*/
+            background-size: 200% 100%;            /*背景图片向水平方向扩大一倍，这样background-position才有移动与变化的空间*/
+            /* 动画 */
+            animation: masked-animation 4s infinite linear;
+        }
+        @keyframes masked-animation {
+            0% {
+                background-position: 0 0;   /*background-position 属性设置背景图像的起始位置。*/
+            }
+            100% {
+                background-position: -100% 0;
+            }
+        }
+</style>
+<div id="video"></div>
+<div class="total">
+	<div class="masked">
+		<h4><div id="stats"></div></h4>
+	</div>
+</div>	
+<script src="/web/player/p2phls/hls.min.js"></script>
+<script src="/web/player/p2phls/cbplayer2.js"></script>
+<script src="/web/player/p2phls/jquery.min.js"></script>
+<script>
+    var _peerId = '', _peerNum = 0, _totalP2PDownloaded = 0, _totalP2PUploaded = 0;
+	var m3u8url = document.location.href.split("url=")[1];
+    var player = new CBPlayer({
+        container: document.getElementById('video'),
+        autoplay: true,	//视频自动播放  
+        live: false,	//开启直播模式
+		lang: 'zh-cn',	//语言
+        hotkey: true,	//开启热键，支持快进、快退、音量控制、播放暂停 
+		airplay: true,	//在 Safari 中开启 AirPlay 
+		screenshot: false,	//开启截图，如果开启，视频和视频封面需要允许跨域 
+		preload: 'auto',	//视频预加载，可选值: 'none', 'metadata', 'auto'
+		danmaku: true,
+
+        video: {
+			pic: "/web/player/p2phls/loading_pc.jpg",
+            url: m3u8url||'https://vip.ffzyread1.com/20230601/13234_55ed2d56/index.m3u8',
+        },
+        pluginOptions: {
+            hls: {
+                //maxBufferSize: 0,
+                //maxBufferLength: 10,
+                //liveSyncDurationCount: 15,
+
+                p2pConfig: {
+                    // logLevel: true,
+                    live: false,
+					geoIpPreflight: false,	//向在线IP数据库请求ASN等信息，从而获得更准确的调度，会延迟P2P启动时间。
+					useHttpRange: false,	//用于补足p2p下载超时的剩余部分数据
+					sharePlaylist: true,	//是否允许m3u8文件的P2P传输。
+					diskCacheLimit: {"pc": 2500 * 1024 * 1024, "mobile": 1500 * 1024 * 1024},	//磁盘缓存的最大数据量，分为PC和mobile。
+					memoryCacheLimit: {"pc": 600 * 1024 * 1024, "mobile": 300 * 1024 * 1024},	//内存缓存的最大数据量，分为PC和mobile。
+					announce: "https://p2ptrakcer.bapy.top",
+					wsSignalerAddr: 'wss://cd.swarmcloud.net',
+                },
+				webRTCConfig: {
+					iceServers: [{
+						urls: "stun:stun.l.google.com:19302"
+					}, {
+						urls: "stun:global.stun.twilio.com:3478?transport=udp"
+					}, {
+						urls: "stun:stun.cdnbye.com"
+					}]
+				}
+            }
+        },
+
+        danmaku: {
+            id: m3u8url||'https://vip.ffzyread1.com/20230601/13234_55ed2d56/index.m3u8',
+            api: 'https://danmu.aip520.cn/v3/?id='
+        }
+    });
+
+    player.on('stats', function (stats) {
+        _totalP2PDownloaded = stats.totalP2PDownloaded;
+        _totalP2PUploaded = stats.totalP2PUploaded;
+        updateStats();
+    })
+    player.on('peerId', function (peerId) {
+        _peerId = peerId;
+    })
+    player.on('peers', function (peers) {
+        _peerNum = peers.length;
+        updateStats();
+    });
+	//全屏
+    player.on("fullscreen", function() {
+        $("#time").show();
+    });
+    //退出全屏
+    player.on("fullscreen_cancel", function() {
+        $("#time").hide();
+    });
+
+    //移动浏览器video兼容
+    $('body').find('video')
+        .attr('playsinline', '')
+        .attr('x5-playsinline', '')
+        .attr('webkit-playsinline', '')
+        .attr('x-webkit-airplay', 'allow')
+			
+    function updateStats() {
+        var text = 'P2P开启 加速' + (_totalP2PDownloaded/1024).toFixed(2)
+            + 'MB 分享' + (_totalP2PUploaded/1024).toFixed(2) + 'MB' + ' 连接节点' + _peerNum + '个';
+        document.getElementById('stats').innerText = text
+    }
+    //时间更新
+    function timeUpdate() {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var hour = "00" + date.getHours();
+        hour = hour.substr(hour.length - 2);
+        var minute = "00" + date.getMinutes();
+        minute = minute.substr(minute.length - 2);
+        var second = "00" + date.getSeconds();
+        second = second.substr(second.length - 2);
+        $("#time").html(hour + ":" + minute + ":" + second);
+        setTimeout("timeUpdate()", 1000); 
+    }
+    //信息控件
+    if (!$('#time').length) {$("#video").append("<div id='time'></div>");}
+
+    //显示时间    
+    timeUpdate();	
+</script>

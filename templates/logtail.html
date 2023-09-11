@@ -35,6 +35,12 @@
             /*word-wrap: break-word;*/
             /*word-break: normal;*/
         }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: large;
+            margin-top: 0px;
+        }
         #log-container{
             overflow-y: scroll;
             background: #333;
@@ -78,10 +84,14 @@
         <input type="text" class="input">
         <button id="sendMsg" class="btn">发送</button>
     </div>
-    <div id="log-container">
-		<div id="msg">
-		</div>
-	</div>
+
+<!--    <script id="msg" type="text/html" style='display:block'>-->
+
+<!--    </script>-->
+
+    <div id="log-container" contenteditable="true">
+        <pre id="msg"></pre>
+    </div>
     <div class="support"></div>
 
     <script>
@@ -253,10 +263,13 @@
             if(msg&&msg.trim()&&!msg.endsWith('\n')){
                 msg+='\n';
             }
-            msg = msg.replaceAll('\n','</br>');
-            $("#log-container div").append(msg);
+            // msg = msg.replaceAll('\n','</br>');
+            // $("#log-container #msg").append(msg);
+
+            $("#log-container #msg").text($("#log-container #msg").text()+msg);
             // 滚动条滚动到最低部
-            $("#log-container").scrollTop($("#log-container div").height() - $("#log-container").height());
+            // $("#log-container").scrollTop($("#log-container div #msg").height() - $("#log-container").height());
+            $("#log-container").scrollTop($("#log-container pre").height() - $("#log-container").height());
         }
         $(document).ready(function() {
             checkLoading();
@@ -278,7 +291,7 @@
                             text: '确认',
                             btnClass: 'btn-primary',
                             action: function() {
-                                $("#log-container div").text('');
+                                $("#log-container #msg").html('');
                             }
                         },
                         cancel: {

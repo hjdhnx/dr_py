@@ -18,4 +18,4 @@ function setSessionStorage(key, val) {
 function getSessionStorage(key) {
     return window.sessionStorage.getItem(key);
 }
-window.onload = clickclose;
+// window.onload = clickclose;

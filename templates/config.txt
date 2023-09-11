@@ -4,7 +4,7 @@
 "mode": {{ mode }},
 "spider": "{{ host }}/liveslib",
 {% if alists|length > 0 %}"drives": {{alists_str}},{% endif %}
-"homepage":"https://gitcode.net/qq_32394351/dr_py",
+"homepage":"https://github.com/hjdhnx/dr_py",
 "sites": [{% for rule in rules.list %}{% if js_mode != 1 %}
 {
     "key":"dr_{{ rule.name }}",
@@ -272,14 +272,7 @@
         ]
     }
 ],
-"rules":[
-{
-"host":"ss.rongliren.com",
-"rule":["m3u8\?id="],
-},{
-"host":"hei17.com",
-"rule":["img\.hei17\.com","storage/uploads/","\.m3u8$"],
-}],
+"rules":{{config.EXT_FUNC or []}},
 "ads": [
     "mimg.0c1q0l.cn",
     "www.googletagmanager.com",
@@ -337,6 +330,10 @@
     "vivovip.mmszxc.top",
     "qiu.xixiqiu.com",
     "cdnjs.hnfenxun.com",
-    "cms.qdwght.com"
+    "cms.qdwght.com",
+    "wan.51img1.com",
+    "iqiyi.hbuioo.com",
+    "vip.ffzyad.com",
+    "https://lf1-cdn-tos.bytegoofy.com/obj/tos-cn-i-dy/455ccf9e8ae744378118e4bd289288dd"
 ]
 }

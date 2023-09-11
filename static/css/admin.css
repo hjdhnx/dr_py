@@ -124,7 +124,17 @@ body {
     font-size: 15px;
     padding-left: 5px
 }
-
+.btn-player{
+    border-radius: 25px;
+    font-size: 15px;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+    border: #1e98d4;
+    color: #FFFFFF;
+    text-decoration: none;
+    background-image: linear-gradient(to right, rgb(71, 74, 252), rgb(252, 70, 243));
+}
 .ver {
     font-size: 16px;
     margin-left: 5px;
@@ -491,7 +501,7 @@ a {
     font-weight: bold;
     font-size: 1rem;
     width: 290px;
-    height: 26;
+    height: 26px;
     border-radius: 25px;
     color: #eeeff9;
     background-color: rgb(71, 143, 250);

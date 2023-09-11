@@ -22,7 +22,8 @@ public class HtmlParser {
     private static String pdfa_html = "";
     private static final Pattern p = Pattern.compile("url\\((.*?)\\)", Pattern.MULTILINE | Pattern.DOTALL);
     private static final Pattern NOADD_INDEX = Pattern.compile(":eq|:lt|:gt|:first|:last|^body$|^#");  // 不自动加eq下标索引
-    private static final Pattern URLJOIN_ATTR = Pattern.compile("(url|src|href|-original|-src|-play|-url)$", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);  // 需要自动urljoin的属性
+    private static final Pattern URLJOIN_ATTR = Pattern.compile("(url|src|href|-original|-src|-play|-url|style)$", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);  // 需要自动urljoin的属性
+    private static final Pattern SPECIAL_URL = Pattern.compile("^(ftp|magnet|thunder|ws):", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);  // 过滤特殊链接,不走urlJoin
     private static Document pdfh_doc = null;
     private static Document pdfa_doc = null;
 
@@ -199,12 +200,15 @@ public class HtmlParser {
                     if (m.find()) {
                         result = m.group(1);
                     }
+                    // 2023/07/28新增 style取内部链接自动去除首尾单双引号
+                    result = result.replaceAll("^['|\"](.*)['|\"]$", "$1");
                 }
                 if (JSUtils.isNotEmpty(result) && JSUtils.isNotEmpty(add_url)) {
                     // 需要自动urljoin的属性
                     Matcher m = URLJOIN_ATTR.matcher(option);
+                    Matcher n = SPECIAL_URL.matcher(result);
                     //if (isUrl(option)) {
-                    if (m.find()) {
+                    if (m.find() && !n.find()){
                         if (result.contains("http")) {
                             result = result.substring(result.indexOf("http"));
                         } else {

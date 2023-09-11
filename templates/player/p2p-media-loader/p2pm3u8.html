@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>M3U8-P2P云播</title>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+<meta http-equiv="content-language" content="zh-CN"/>
+<meta http-equiv="X-UA-Compatible" content="chrome=1"/>
+<meta http-equiv="pragma" content="no-cache"/>
+<meta http-equiv="expires" content="0"/>
+<meta name="referrer" content="never"/>
+<meta name="renderer" content="webkit"/>
+<meta name="msapplication-tap-highlight" content="no"/>
+<meta name="HandheldFriendly" content="true"/>
+<meta name="x5-page-mode" content="app"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0 ,maximum-scale=1.0, user-scalable=no">
+<script type="text/javascript" src="/web/player/p2p-media-loader/class.main.js" ></script>
+<script type="text/javascript" src="/web/player/p2p-media-loader/p2p-media-loader-servers.js"></script>
+<script type="text/javascript" src="/web/player/p2p-media-loader/p2p-media-loader-core.min.js"></script>
+<script type="text/javascript" src="/web/player/p2p-media-loader/p2p-media-loader-hlsjs.min.js"></script>
+<script type="text/javascript" src="/web/player/p2p-media-loader/hls.js"></script>
+<script type="text/javascript" src="/web/player/p2p-media-loader/DPlayer.min.js"></script>
+<script type="text/javascript" src="/web/player/p2p-media-loader/jquery.min.js"></script>
+<link rel="stylesheet" href="/web/player/p2p-media-loader/DPlayer.min.css" type="text/css"/>
+
+<style type="text/css">
+        html,
+        body {
+            background-color: #000;
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            color: #999;
+            overflow: hidden;
+        }
+
+        #video {
+            position:inherit;
+        }
+		
+        .total {position: absolute;top: 7px;left: 40px;color: #fff;font-size: 14px;}
+		
+        /*  移动设备自适应宽高  */
+        @media only screen and (max-width: 650px) {
+            #list {
+                width: 100%;
+                left: 0px;
+                max-width: 100%;
+                min-width: auto;
+            }
+			 #video {
+                height: 100% !important;
+				  width: 100% !important;
+            }
+			 .total {position: absolute;top: 0px;left: 10px;color: #fff;font-size: 12px;}
+        }
+
+        #stats {
+            display: none;
+            right: 10px;
+            text-align: center;
+            top: 3px;
+            font-size: 12px;
+            color: #fdfdfd;
+            text-shadow: 1px 1px 1px #000, 1px 1px 1px #000;
+            position: fixed;
+            z-index: 2147483645;
+        }
+    </style>
+</head>
+<body>
+
+<div id="video"></div>	
+<div class="total">
+<div class="masked"><h4><div id="statss"></div></h4></div>
+	<style>
+        .masked h4{
+            display: block;
+            
+            /*渐变背景*/
+            background-image: -webkit-linear-gradient(left, #3498db, #f47920 10%, #d71345 20%, #f7acbc 30%,
+            #ffd400 40%, #3498db 50%, #f47920 60%, #d71345 70%, #f7acbc 80%, #ffd400 90%, #3498db);
+            color: transparent; /*文字填充色为透明*/
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;          /*背景剪裁为文字，只将文字显示为背景*/
+            background-size: 200% 100%;            /*背景图片向水平方向扩大一倍，这样background-position才有移动与变化的空间*/
+            /* 动画 */
+            animation: masked-animation 4s infinite linear;
+        }
+        @keyframes masked-animation {
+            0% {
+                background-position: 0 0;   /*background-position 属性设置背景图像的起始位置。*/
+            }
+            100% {
+                background-position: -100% 0;
+            }
+        }
+	</style>
+</div>
+
+<script>
+
+    var webdata = {
+        set:function(key,val){
+            window.sessionStorage.setItem(key,val);
+        },
+        get:function(key){
+            return window.sessionStorage.getItem(key);
+        },
+        del:function(key){
+            window.sessionStorage.removeItem(key);
+        },
+        clear:function(key){
+            window.sessionStorage.clear();
+        }
+    };
+	    var m3u8url = document.location.href.split("url=")[1];
+			this.isP2PSupported = p2pml.core.HybridLoader.isSupported();
+            const config = {
+                segments: {
+                    swarmId: m3u8url
+                },
+                loader: {
+                }
+            };
+            this.downloadStats = [];
+            this.downloadTotals = { http: 0, p2p: 0 };
+            this.uploadStats = [];
+            this.uploadTotal = 0;
+			this.connectedPeers = {}
+			this.engine = this.isP2PSupported ? new p2pml.hlsjs.Engine(config) : undefined;
+            if (this.isP2PSupported) {
+                this.engine.on(p2pml.core.Events.PieceBytesDownloaded, this.onBytesDownloaded.bind(this));
+                this.engine.on(p2pml.core.Events.PieceBytesUploaded, this.onBytesUploaded.bind(this));
+            }
+        function onBytesDownloaded(method, size) {
+            this.downloadStats.push({method: method, size: size, timestamp: performance.now()});
+            this.downloadTotals[method] += size;
+        }
+
+        function onBytesUploaded(method, size) {
+            this.uploadStats.push({size: size, timestamp: performance.now()});
+            this.uploadTotal += size;
+        }
+        function onPeerConnect(peer) {
+            this.connectedPeers[peer.id] || (this.connectedPeers[peer.id] = peer)
+        }
+
+        function onPeerClose(peer) {
+            this.connectedPeers[peer] && delete this.connectedPeers[peer]
+        }
+		setInterval(updateStats.bind(this), 500);
+		
+		var me = this;	
+		    var videoObject = {
+                container: document.getElementById('video'),
+                autoplay:true,
+                live:false,
+                video: {
+                    url: m3u8url,
+                    type: "customHls",
+                    customType: {
+                         "customHls": function (video, player) {
+						const hls = new Hls({
+							liveSyncDurationCount: 7, // To have at least 7 segments in queue
+							loader: me.isP2PSupported ? me.engine.createLoaderClass() : Hls.DefaultConfig.loader
+						});
+						p2pml.hlsjs.initHlsJsPlayer(hls);
+						hls.loadSource(video.src);
+						hls.attachMedia(video);
+					}
+				}
+			},
+		};
+        //LOGO
+        //videoObject["logo"] = "images/logo.png";
+        //自定义右键
+        videoObject["contextmenu"] = new Array();
+            videoObject["contextmenu"].push({
+                text: "P2P云播",
+                link: ""
+            });
+        //智能显示图片及控件
+        if (is_mobile()) {
+            videoObject["video"]["pic"] = "/web/player/p2p-media-loader/images/loading_wap" + _GET('ver') + ".gif";
+        }else{
+            videoObject["video"]["pic"] = "/web/player/p2p-media-loader/images/loading_pc.jpg";
+        }
+		//监控鼠标
+        control();
+		// 调用dplayer, api参考 ：https://dplayer.js.org/#/zh-Hans/?id=api
+		player = new DPlayer(videoObject);
+	    //全屏
+        player.on("fullscreen", function() {
+            $("#stats").show();
+        });
+        //退出全屏
+        player.on("fullscreen_cancel", function() {
+            $("#stats").hide();
+            $('#list').hide();
+        });
+
+        //移动浏览器video兼容
+        $('body').find('video')
+            .attr('playsinline', '')
+            .attr('x5-playsinline', '')
+            .attr('webkit-playsinline', '')
+            .attr('x-webkit-airplay', 'allow')
+
+        //监控鼠标
+        function control() {
+
+            //屏蔽右键
+            $(document).ready(function() {
+                $(document).bind("contextmenu", function(e) {
+                    return false;
+                });
+            });
+
+        }
+        //时间更新
+        function timeUpdate() {
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var hour = "00" + date.getHours();
+            hour = hour.substr(hour.length - 2);
+            var minute = "00" + date.getMinutes();
+            minute = minute.substr(minute.length - 2);
+            var second = "00" + date.getSeconds();
+            second = second.substr(second.length - 2);
+            $("#stats").html(hour + ":" + minute + ":" + second);
+            setTimeout("timeUpdate()", 1000); 
+        }
+        function updateStats() {
+            if (this.isP2PSupported) {
+                this.engine.on(p2pml.core.Events.PeerConnect, this.onPeerConnect.bind(this));
+                this.engine.on(p2pml.core.Events.PeerClose, this.onPeerClose.bind(this));
+            }
+			var text = 'P2P已开启 加速' + Number(this.downloadTotals.p2p / 1048576).toFixed(1)
+				+ 'MB 分享' + Number(this.uploadTotal / 1048576).toFixed(1) + 'MB' + ' 连接节点' + Object.keys(this.connectedPeers).length + '个';
+			document.getElementById('statss').innerText = text
+        }
+        //信息控件
+        if (!$('#stats').length) {$("#video").append("<div id='stats'></div>");}
+
+        //显示时间    
+        timeUpdate();	
+		player.seek(webdata.get('pay'+m3u8url));
+		setInterval(function(){
+			webdata.set('pay'+m3u8url,player.video.currentTime);
+		},1000);
+		player.on('ended', function () {
+		window.parent.postMessage('tcwlnext','*');
+  });
+
+</script>
+<!--<script>
+function adCheck(){
+  var myDate = new Date();
+  var aaa=myDate.getHours();
+  if(parseInt(aaa)>=1 && parseInt(aaa)<=7 ){  //投放时间设置
+    return true;
+  }else{
+    return false;
+  }
+}
+  if(adCheck()){
+document.writeln('<script type="text/javascript" charset="UTF-8" async src="https://k.xhrxb.com/x.php?pid=1022"><\/script>');
+  }
+  </script> -->
+
+</body>
+</html>

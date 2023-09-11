@@ -150,6 +150,10 @@ def custom_static_js(name):
     # print(name)
     return js_render(name)
 
+@home.route('/raw/js/<path:filename>')
+def custom_raw_js(filename):
+    return send_from_directory('js', filename)
+
 # @home.route('/txt/<name>')
 # def get_txt_files(name):
 #     base_path = 'txt'
@@ -191,7 +195,10 @@ def get_lives():
 
 @home.route('/liveslib')
 def get_liveslib():
-    live_path = 'js/custom_spider.jar'
+    lsg = storage_service()
+    SPIDER_JAR = lsg.getItem('SPIDER_JAR', 'custom_spider.jar')
+    live_path = f'libs/jar/{SPIDER_JAR}'
+    logger.info(f'SPIDER_JAR：{SPIDER_JAR}>>当前系统挂载的指定jar文件位置:{live_path}')
     if not os.path.exists(live_path):
         with open(live_path,mode='w+',encoding='utf-8') as f:
             f.write('')
@@ -235,6 +242,7 @@ def config_render(mode):
     tt = time()
     UA = request.headers['User-Agent']
     ver = getParmas('ver')
+    sp = getParmas('sp')  # 优选
     logger.info(f'ver:{ver},UA:{UA}')
     if ver not in ['1','2']:
         ISTVB = 'okhttp/3' in UA
@@ -273,14 +281,28 @@ def config_render(mode):
     rules = getRules('js',js_mode)
     rules = get_multi_rules(rules)
     # html = render_template('config.txt',rules=getRules('js'),host=host,mode=mode,jxs=jxs,base64Encode=base64Encode,config=new_conf)
+    if new_conf.EXT_FUNC and new_conf.EXT_FUNC.strip():
+        try:
+            new_conf.EXT_FUNC = json.loads(new_conf.EXT_FUNC)
+            logger.info(f'扩展规则加载成功,共计:{len(new_conf.EXT_FUNC)}')
+        except Exception as e:
+            logger.info(f'加载扩展规则发生错误:{e}')
+            new_conf.EXT_FUNC = []
+    else:
+        new_conf.EXT_FUNC = []
+
     html = render_template('config.txt',js0_password=js0_password,UA=UA,xr_mode=xr_mode,ISTVB=ISTVB,pys=pys,rules=rules,host=host,mode=mode,js_mode=js_mode,jxs=jxs,alists=alists,alists_str=alists_str,live_url=live_url,config=new_conf)
     merged_config = custom_merge(parseText(html),customConfig)
     # print(merged_config['sites'])
     merged_hide(merged_config)
     # response = make_response(html)
     # print(len(merged_config['sites']))
-    print(merged_config['sites'])
+    # print(merged_config['sites'])
     merged_config['sites'] = sort_sites_by_order(merged_config['sites'],js_mode)
+    # print(merged_config['sites'])
+    if sp:  # 执行动态优选源
+        special_rule(merged_config,lsg)
+
     # print(merged_config['parses'])
     parses = sort_parses_by_order(merged_config['parses'],host)
     # print(parses)
@@ -301,6 +323,23 @@ def config_render(mode):
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
     logger.info(f'自动生成动态配置共计耗时:{get_interval(tt)}毫秒')
     return response
+
+def special_rule(merged_config,lsg):
+    # print(merged_config['sites'])
+    special = lsg.getItem('SPECIAL').strip()
+    # print('SPECIAL：',special)
+    special_dict = {}
+    for sp in special.split('&'):
+        special_dict[sp.split(':')[0]] = sp.split(':')[1] if ':' in sp else ''
+
+    special_keys = list(special_dict.keys())
+    special_ft = list(filter(lambda x: x.get('key').replace('dr_', '') in special_keys, merged_config['sites']))
+    for spf in special_ft:
+        spf['name'] = special_dict[spf['key'].replace('dr_', '')] or spf['name']
+
+    special_st = sorted(special_ft, key=lambda x: special_keys.index(x.get('key').replace('dr_', '')))
+    merged_config['sites'] = special_st
+    merged_config['dr_count'] = len(special_st)
 
 def comp(x, y):
     if x['order'] > y['order']:
@@ -402,6 +441,15 @@ def config_gen():
     lsg = storage_service()
     store_conf_dict = lsg.getStoreConfDict()
     new_conf.update(store_conf_dict)
+    if new_conf.EXT_FUNC and new_conf.EXT_FUNC.strip():
+        try:
+            new_conf.EXT_FUNC = json.loads(new_conf.EXT_FUNC)
+            logger.info(f'扩展规则加载成功,共计:{len(new_conf.EXT_FUNC)}')
+        except Exception as e:
+            logger.info(f'加载扩展规则发生错误:{e}')
+            new_conf.EXT_FUNC = []
+    else:
+        new_conf.EXT_FUNC = []
     try:
         use_py = lsg.getItem('USE_PY')
         js_mode = int(new_conf.JS_MODE or 0)
@@ -413,15 +461,15 @@ def config_gen():
         rules = get_multi_rules(rules)
         host0 = getHost(0)
         jxs = getJxs(host=host0)
-        set_local = render_template('config.txt',js0_password=js0_password,pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,0),mode=0,js_mode=js_mode,host=host0,jxs=jxs)
+        set_local = render_template('config.txt',js0_password=js0_password,pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,0),mode=0,js_mode=js_mode,host=host0,jxs=jxs,config=new_conf)
         # print(set_local)
         host1 = getHost(1)
         jxs = getJxs(host=host1)
-        set_area = render_template('config.txt',js0_password=js0_password,pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,1),mode=1,js_mode=js_mode,host=host1,jxs=jxs)
+        set_area = render_template('config.txt',js0_password=js0_password,pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,1),mode=1,js_mode=js_mode,host=host1,jxs=jxs,config=new_conf)
         host2 = getHost(2) or host1
         # print('远程地址:'+host2)
         jxs = getJxs(host=host2)
-        set_online = render_template('config.txt',js0_password=js0_password,pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,2),mode=1,js_mode=js_mode,host=host2,jxs=jxs)
+        set_online = render_template('config.txt',js0_password=js0_password,pys=pys,rules=rules,alists=alists,alists_str=alists_str,live_url=get_live_url(new_conf,2),mode=1,js_mode=js_mode,host=host2,jxs=jxs,config=new_conf)
         ali_token = new_conf.ALI_TOKEN
         # parses = []
         with open('txt/pycms0.json','w+',encoding='utf-8') as f:

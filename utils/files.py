@@ -65,6 +65,36 @@ def getAlist():
         print(f'获取alist列表失败:{e}')
         return []
 
+def get_jar_list():
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
+    jar_path = os.path.join(base_path, 'libs/jar')
+    if not os.path.exists(jar_path):
+        os.makedirs(jar_path, exist_ok=True)
+        logger.info(f'初始化{jar_path}目录')
+
+    jars = os.listdir(jar_path)
+    jars = list(filter(lambda x: str(x).endswith('.jar') and str(x).find('base') < 0, jars))
+    # print(jars)
+    # jar_list = [file.replace('.jar', '') for file in jars]
+    return jars
+
+def get_drop_js(jsd_list):
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
+    js_path = os.path.join(base_path, 'js')
+    js_list = [os.path.join(js_path, jsd.replace('jsd','js')) for jsd in jsd_list]
+    return js_list
+
+def get_jsd_list():
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
+    js_path = os.path.join(base_path, 'js')
+    if not os.path.exists(js_path):
+        os.makedirs(js_path, exist_ok=True)
+        logger.info(f'初始化{js_path}目录')
+
+    jsds = os.listdir(js_path)
+    jsds = list(filter(lambda x: str(x).endswith('.jsd'), jsds))
+    return jsds
+
 def custom_merge(original:dict,custom:dict):
     """
     合并用户配置
@@ -106,6 +136,7 @@ def getCustonDict(host,ali_token='',js0_password=''):
         with open(customFile,'r',encoding='utf-8') as f:
             text = f.read()
             customConfig = parseText(render_template_string(text,host=host,ali_token=ali_token,js0_password=js0_password))
+            print(customConfig)
     except Exception as e:
         logger.info(f'用户自定义配置加载失败:{e}')
     return customConfig

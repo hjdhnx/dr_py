@@ -1,14 +1,11 @@
 // 搜索验证
-// 网址发布页 https://www.555dy.app
+// 网址发布页 https://www.555dy.top
 muban.mxpro.二级.desc = '.module-info-item:eq(-1)&&Text;;;.module-info-item-content:eq(2)&&Text;.module-info-item-content:eq(0)&&Text';
 var rule = {
     title:'555影视[飞]',
     模板:'mxpro',
-    host:'https://zhenfanjixie.com',
-    // host:'https://www.555dy.vip',
-    // host:'https://www.555yy7.com',
-    // host:'https://www.555yy8.com',
-    // host:'https://www.555yy9.com',
+	host: 'https://www.555dyy.top',
+	hostJs:'print(HOST);let html=request(HOST,{headers:{"User-Agent":PC_UA}});let src=jsp.pdfh(html,".row:eq(1)&&a&&href");print(src);HOST=src',
     url:'/vodshow/fyfilter.html',
     filterable:1,//是否启用分类筛选,
     filter_url:'{{fl.cateId}}-{{fl.area}}-{{fl.by}}-{{fl.class}}-{{fl.lang}}----fypage---{{fl.year}}',
@@ -27,7 +24,7 @@ var rule = {
         124:{cateId:'124',by:'time'}
     },
     cate_exclude:'福利',
-    searchUrl:'/index.php/ajax/suggest?mid=fypage&wd=**',
+    searchUrl:'/index.php/ajax/suggest?mid=1&wd=**&limit=50',
     detailUrl:'/voddetail/fyid.html', //非必填,二级详情拼接链接
     搜索:'json:list;name;pic;;id',
 }

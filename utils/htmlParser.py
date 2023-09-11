@@ -13,7 +13,8 @@ from jsonpath import jsonpath
 
 PARSE_CACHE = True  # 解析缓存
 NOADD_INDEX = ':eq|:lt|:gt|:first|:last|^body$|^#'  # 不自动加eq下标索引
-URLJOIN_ATTR = '(url|src|href|-original|-src|-play|-url)$'  # 需要自动urljoin的属性
+URLJOIN_ATTR = '(url|src|href|-original|-src|-play|-url|style)$'  # 需要自动urljoin的属性
+SPECIAL_URL = '^(ftp|magnet|thunder|ws):'  # 过滤特殊链接,不走urlJoin
 
 
 class jsoup:
@@ -193,12 +194,13 @@ class jsoup:
                 if self.contains(option.lower(), 'style') and self.contains(ret, 'url('):
                     try:
                         ret = re.search('url\((.*?)\)', ret, re.M | re.S).groups()[0]
+                        # 2023/07/28新增 style取内部链接自动去除首尾单双引号
+                        ret = re.sub(r"^['\"]|['\"]$", '', ret)
                     except:
                         pass
-
                 if ret and base_url:
                     # need_add = re.search(URLJOIN_ATTR, option, re.M | re.I)
-                    need_add = self.test(URLJOIN_ATTR, option)
+                    need_add = self.test(URLJOIN_ATTR, option) and not self.test(SPECIAL_URL, ret)
                     if need_add:
                         if 'http' in ret:
                             ret = ret[ret.find('http'):]
