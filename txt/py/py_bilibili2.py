@@ -204,12 +204,12 @@ n='cid'
 m='id'
 l='</em>'
 k='<em class="keyword">'
-i='page'
-h='master'
-g=map
-f='$$$'
-e='duration'
-d='cover'
+i='cover'
+h='page'
+g='master'
+f=map
+e='$$$'
+d='duration'
 c='users'
 b='order'
 a='aid'
@@ -250,21 +250,21 @@ sys.path.append('..')
 AF,DA=os.path.split(os.path.abspath(__file__))
 sys.path.append(AF)
 class Spider(Spider):
-	defaultConfig={Bj:'20230708_1',CN:B,CO:B,Bk:AQ,Bl:L,Y:10,BB:'15',Ao:'80',Bm:'7',Ap:'30280',Aq:AG,CP:AG,CQ:AG,CR:AG,CS:AG,CT:AG,Bn:L,Ar:[AR,Ad,AH,AI,As,Ae,BE,BF,BG],BC:[A3,Bo,Bp,'入站必刷','番剧时间表','国创时间表'],BD:['动画','音乐','舞蹈','游戏','鬼畜','知识','科技','运动','生活','美食','动物','汽车','时尚','娱乐',Ad,'原创','新人']}
+	defaultConfig={Bj:'20230808_1',CN:B,CO:B,Bk:AQ,Bl:L,Y:10,BB:'15',Ao:'80',Bm:'7',Ap:'30280',Aq:AG,CP:AG,CQ:AG,CR:AG,CS:AG,CT:AG,Bn:L,Ar:[AR,Ad,AH,AI,As,Ae,BE,BF,BG],BC:[A3,Bo,Bp,'入站必刷','番剧时间表','国创时间表'],BD:['动画','音乐','舞蹈','游戏','鬼畜','知识','科技','运动','生活','美食','动物','汽车','时尚','娱乐',Ad,'原创','新人']}
 	focus_on_up_list=[{"n":"LexBurner", "v":"777536"},{"n":"黑色脑回路", "v":"121895315"},{"n":"JOKER鹏少", "v":"92678046"}]
 	focus_on_search_key=['经典无损音乐合集','帕梅拉','太极拳','健身','舞蹈','音乐','歌曲','MV4K','演唱会4K','白噪音4K','知名UP主','说案','解说','演讲','探索发现超清','纪录片超清','平面设计教学','软件教程','实用教程','旅游','风景4K','食谱','美食超清','搞笑','球星','动物世界超清','相声小品','戏曲','儿童','小姐姐4K','荒野求生超清']
 	def getName(A):return'哔哩哔哩'
 	def load_config(A):
 		try:
 			with B9(f"{AF}/config.json",encoding=At)as D:A.userConfig=I.load(D)
-			E={h:'cookie_dic',AS:'cookie_vip_dic',P:'cookie_fake_dic'}
+			E={g:'cookie_dic',AS:'cookie_vip_dic',P:'cookie_fake_dic'}
 			for(F,C)in E.items():
 				C=A.userConfig.get(C)
 				if C:
 					if not A.userConfig.get(c):A.userConfig[c]={}
 					A.userConfig[c][F]={A4:C}
 			B=A.userConfig.get(c,{})
-			if B.get(h)and B[h].get(A4):A.session_master.cookies=Bf.cookiejar_from_dict(B[h][A4]);A.userid=B[h][Au]
+			if B.get(g)and B[g].get(A4):A.session_master.cookies=Bf.cookiejar_from_dict(B[g][A4]);A.userid=B[g][Au]
 			if B.get(P)and B[P].get(A4):A.session_fake.cookies=Bf.cookiejar_from_dict(B[P][A4])
 		except:A.userConfig={}
 		A.userConfig={**A.defaultConfig,**A.userConfig}
@@ -295,26 +295,26 @@ class Spider(Spider):
 		A=co.strip().split('=',1)
 		if not'%'in A[1]:A[1]=quote(A[1])
 		return A
-	def getCookie(A,_type=h):
+	def getCookie(A,_type=g):
 		D=_type;G=CN
 		if D==AS:G=CO
 		G=A.userConfig.get(G);K=A.userConfig.get(c,{});C=K.get(D,{})
 		if not G and not C:
-			if D==h:A.getCookie_event.set()
+			if D==g:A.getCookie_event.set()
 			with A.con:A.con.notifyAll()
 			return
 		J=C.get(A4,{})
-		if G:J=A2(g(A.getCookie_dosth,G.split(';')))
+		if G:J=A2(f(A.getCookie_dosth,G.split(';')))
 		L=Bf.cookiejar_from_dict(J);N=CU;O=A.fetch(N,headers=A.header,cookies=L);H=I.loads(O.text);C[Br]=0
 		if H[M]==0:
 			C[Br]=1;C[Au]=H[E][W];C[A7]=H[E][A7];C[A8]=H[E][A8];C[A4]=J;C[Bs]=F(H[E]['vipStatus'])
-			if D==h:A.session_master.cookies=L;A.userid=C[Au];A.csrf=J['bili_jct']
+			if D==g:A.session_master.cookies=L;A.userid=C[Au];A.csrf=J['bili_jct']
 			if C[Bs]:A.session_vip.cookies=L
 		else:A.userid=B
 		K[D]=C
 		with A.con:
 			if V(C)>1:A.userConfig.update({c:K})
-			if D==h:A.getCookie_event.set()
+			if D==g:A.getCookie_event.set()
 	getFakeCookie_event=j.Event()
 	def getFakeCookie(A,fromSearch=AU):
 		if A.session_fake.cookies:A.getFakeCookie_event.set()
@@ -327,19 +327,19 @@ class Spider(Spider):
 	add_fav_filter_event=j.Event()
 	def add_fav_filter(B):
 		N=B.userConfig.get(c,{})
-		if N.get(h)and N[h].get(Au):F=B.userConfig[c][h][Au]
+		if N.get(g)and N[g].get(Au):F=B.userConfig[c][g][Au]
 		else:B.getCookie_event.wait();F=B.userid
 		K=[]
 		if F:
 			P='https://api.bilibili.com/x/v3/fav/folder/created/list-all?up_mid=%s&jsonp=jsonp'%A(F);Q=B._get_sth(P);L=I.loads(Q.text)
-			if L[M]==0 and L.get(E):R=L[E].get(H);K=s(g(B.get_fav_list_dict,R))
+			if L[M]==0 and L.get(E):R=L[E].get(H);K=s(f(B.get_fav_list_dict,R))
 		U=[{D:'追番',C:T},{D:'追剧',C:A0}];O=B.config[Z].get(Ae)
 		if O:O.insert(0,{S:Af,J:BI,G:U+K})
 		B.add_fav_filter_event.set();B.userConfig[CV]=K
 	def get_channel_list_dict(F,channel):A=channel;E={D:A[J].replace(k,B).replace(l,B).replace(AJ,AK).strip(),C:A[m]};return E
 	def get_channel_list(A):
 		C='https://api.bilibili.com/x/web-interface/web/channel/category/channel/list?id=100&offset=0&page_size=15';D=A._get_sth(C,P);B=I.loads(D.text);G=[]
-		if B[M]==0:F=B[E].get('channels');A.userConfig[Av]=s(g(A.get_channel_list_dict,F))
+		if B[M]==0:F=B[E].get('channels');A.userConfig[Av]=s(f(A.get_channel_list_dict,F))
 		return A.userConfig[Av]
 	add_channel_filter_event=j.Event()
 	def add_channel_filter(A):
@@ -354,16 +354,16 @@ class Spider(Spider):
 		if not B.session_master.cookies:B.getCookie_event.wait()
 		if B.session_master.cookies:
 			P='https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/all?timezone_offset=-480&type=video&page=1';Q=B._get_sth(P);H=I.loads(Q.text)
-			if H[M]==0 and H.get(E):R=H[E].get(BJ,[]);F=s(g(lambda x:{D:x[BK][Bu][J],C:A(x[BK][Bu][W])},R))
+			if H[M]==0 and H.get(E):R=H[E].get(BJ,[]);F=s(f(lambda x:{D:x[BK][Bu][J],C:A(x[BK][Bu][W])},R))
 		if V(B.focus_on_up_list)>0:
-			T=s(g(lambda x:x[C],B.focus_on_up_list))
+			T=s(f(lambda x:x[C],B.focus_on_up_list))
 			for L in F:
 				if L[C]in T:F.remove(L)
 			F.extend(B.focus_on_up_list)
 		U=[{D:'登录与设置',C:'登录'}];F=O+F+U;K=B.config[Z].get(AI,[])
 		if K:K.insert(0,{S:W,J:BL,G:F})
 		B.config[Z][AI]=K;B.add_focus_on_up_filter_event.set()
-	def get_live_parent_area_list(N,parent_area):B=parent_area;E=B[J];id=A(B[m]);F=B[H];I=s(g(lambda area:{D:area[J],C:A(area['parent_id'])+K+A(area[m])},F));L={S:A1,J:E,G:I};M={m:id+'_0',G:L};return E,M
+	def get_live_parent_area_list(N,parent_area):B=parent_area;E=B[J];id=A(B[m]);F=B[H];I=s(f(lambda area:{D:area[J],C:A(area['parent_id'])+K+A(area[m])},F));L={S:A1,J:E,G:I};M={m:id+'_0',G:L};return E,M
 	def get_live_list(A):
 		C='https://api.live.bilibili.com/xlive/web-interface/v1/index/getWebAreaList?source_id=2';D=A._get_sth(C,P);B=I.loads(D.text);G={}
 		if B[M]==0:F=B[E][E];A.userConfig[AT]=A2(A.pool.map(A.get_live_parent_area_list,F))
@@ -387,8 +387,8 @@ class Spider(Spider):
 	add_search_key_event=j.Event()
 	def add_search_key(A):
 		B=A.focus_on_search_key;L='https://api.bilibili.com/x/web-interface/search/square?limit=10&platform=web';N=A._get_sth(L,P);F=I.loads(N.text);Q={}
-		if F[M]==0:O=F[E]['trending'].get(H,[]);B+=s(g(lambda x:x[Aw],O))
-		K={S:Aw,J:'搜索词',G:[]};K[G]=s(g(lambda i:{D:i,C:i},B));A.config[Z][BG].insert(0,K);A.add_search_key_event.set()
+		if F[M]==0:O=F[E]['trending'].get(H,[]);B+=s(f(lambda x:x[Aw],O))
+		K={S:Aw,J:'搜索词',G:[]};K[G]=s(f(lambda i:{D:i,C:i},B));A.config[Z][BG].insert(0,K);A.add_search_key_event.set()
 	def get_tuijian_filter(E):
 		K={'番剧时间表':'10001','国创时间表':'10004',Bo:L,'动画':T,'音乐':AQ,'舞蹈':'129','游戏':AV,'鬼畜':'119','知识':'36','科技':'188','运动':'234','生活':'160','美食':'211','动物':'217','汽车':'223','时尚':'155','娱乐':'5',Ad:'181','原创':'origin','新人':'rookie'};M=[{D:BC,C:BI},{D:BD,C:Bo}];F=[]
 		for H in M:
@@ -443,16 +443,16 @@ class Spider(Spider):
 	def get_Login_qrcode(D,pg):
 		R='setting_login_';N='https://www.bilibili.com/favicon.ico';A={}
 		if F(pg)!=1:return A
-		G=[{Q:'setting_tab&filter',O:'标签与筛选',U:N},{Q:'setting_liveExtra',O:CX,U:N}];J='https://passport.bilibili.com/x/passport-login/web/qrcode/generate';S=D._get_sth(J,P);K=I.loads(S.text)
-		if K[M]==0:
-			id=K[E]['qrcode_key'];J=K[E][o];T={h:'主账号',AS:'副账号'};V={0:'未登录',1:'已登录'};W={0:B,1:'👑'};Y=D.userConfig.get(c,{})
+		G=[{Q:'setting_tab&filter',O:'标签与筛选',U:N},{Q:'setting_liveExtra',O:CX,U:N}];K='https://passport.bilibili.com/x/passport-login/web/qrcode/generate';S=D._get_sth(K,P);J=I.loads(S.text)
+		if J[M]==0:
+			id=J[E]['qrcode_key'];K=J[E][o];T={g:'主账号',AS:'副账号'};V={0:'未登录',1:'已登录'};W={0:B,1:'👑'};Y=D.userConfig.get(c,{})
 			for(Z,a)in T.items():
 				C=Y.get(Z)
 				if C:G.append({Q:R+id,O:C[A8],U:D.format_img(C[A7]),X:W[C[Bs]]+a+AL+V[C[Br]]})
-			L={'qrcode':J}
+			L={'qrcode':'https://passport.bilibili.com/h5-app/passport/login/scan?qrcode_key='+id+'&navhide=1'}
 			if not AF.startswith('/data/'):L['qr_chs']='208x117'
 			G.append({Q:R+id,O:'有效期3分钟，确认后点这里',U:D.mirror_site+'/?'+CM(L)})
-		A[H]=G;A[i]=1;A[t]=1;A[u]=1;A[p]=1;return A
+		A[H]=G;A[h]=1;A[t]=1;A[u]=1;A[p]=1;return A
 	time_diff1={T:[0,300],A0:[300,900],AQ:[900,1800],AV:[1800,3600],'5':[3600,0x4ee2d6d415b85acef80ffffffff]};time_diff=L;dynamic_offset=B
 	def get_dynamic(C,pg,mid,order):
 		if mid==L:
@@ -463,8 +463,8 @@ class Spider(Spider):
 				C.dynamic_offset=K[E].get(CY);P=[];V=K[E][BJ]
 				for N in V:
 					if not N['visible']:continue
-					W=N[BK][Bu][J];G=N[BK]['module_dynamic']['major'][BM];Y=A(G[a]).strip();Z=G[R].strip().replace(k,B).replace(l,B);b=G[d].strip();c=A(C.second_to_time(C.str2sec(G['duration_text']))).strip()+Ag+A(W).strip();P.append({Q:v+Y,O:Z,U:C.format_img(b),X:c})
-				D[H]=P;D[i]=pg;D[t]=9999;D[u]=99;D[p]=999999
+					W=N[BK][Bu][J];G=N[BK]['module_dynamic']['major'][BM];Y=A(G[a]).strip();Z=G[R].strip().replace(k,B).replace(l,B);b=G[i].strip();c=A(C.second_to_time(C.str2sec(G['duration_text']))).strip()+Ag+A(W).strip();P.append({Q:v+Y,O:Z,U:C.format_img(b),X:c})
+				D[H]=P;D[h]=pg;D[t]=9999;D[u]=99;D[p]=999999
 			return D
 		else:return C.get_up_videos(mid=mid,pg=pg,order=order)
 	def get_found_vod(D,vod):
@@ -486,20 +486,20 @@ class Spider(Spider):
 				if'人气飙升'in G:G='  🔥人气飙升'
 			elif P:G='  已关注'
 			else:G=Ag+C[AX][J].strip()
-			H=A(D.second_to_time(C[e])).strip()+BO+D.zh(C[BP][Ay])+G
+			H=A(D.second_to_time(C[d])).strip()+BO+D.zh(C[BP][Ay])+G
 		L=[{Q:E,O:M,U:D.format_img(N),X:H}]
 		for T in D.pool.map(D.get_found_vod,C.get('others',[])):L.extend(T)
 		return L
 	_popSeriesInit=0
 	def get_found(B,tid,rid,pg):
-		K=pg;G=tid;J={}
-		if G==AR:T=B.encrypt_wbi(feed_version='V3',fresh_idx=K,ps=B.userConfig[Y]);C=f"https://api.bilibili.com/x/web-interface/wbi/index/top/feed/rcmd?{T}"
+		J=pg;G=tid;K={}
+		if G==AR:T=B.encrypt_wbi(fresh_type=4,feed_version='V3',brush=1,fresh_idx=J,fresh_idx_1h=J,ps=B.userConfig[Y]);C=f"https://api.bilibili.com/x/web-interface/wbi/index/top/feed/rcmd?{T}"
 		else:
 			C='https://api.bilibili.com/x/web-interface/ranking/v2?rid={0}&type={1}'.format(rid,G)
-			if G==A3:C='https://api.bilibili.com/x/web-interface/popular?pn={0}&ps={1}'.format(K,B.userConfig[Y])
+			if G==A3:C='https://api.bilibili.com/x/web-interface/popular?pn={0}&ps={1}'.format(J,B.userConfig[Y])
 			elif G=='入站必刷':C='https://api.bilibili.com/x/web-interface/popular/precious'
 			elif G==Bp:
-				if not B._popSeriesInit or F(K)==1:C='https://api.bilibili.com/x/web-interface/popular/series/list';Q=B._get_sth(C,P);L=I.loads(Q.text);N=B._popSeriesInit=L[E][H][0]['number'];B._popSeriesNum=[F(N),1]
+				if not B._popSeriesInit or F(J)==1:C='https://api.bilibili.com/x/web-interface/popular/series/list';Q=B._get_sth(C,P);L=I.loads(Q.text);N=B._popSeriesInit=L[E][H][0]['number'];B._popSeriesNum=[F(N),1]
 				else:N=B._popSeriesNum[0]
 				C='https://api.bilibili.com/x/web-interface/popular/series/one?number='+A(N)
 		Q=B._get_sth(C);L=I.loads(Q.text)
@@ -512,11 +512,11 @@ class Spider(Spider):
 					if R>0:R+=1
 					if not F(R):B._popSeriesNum=[F(N)-1,1]
 					else:B._popSeriesNum[1]=O+1
-				else:O=K
+				else:O=J
 				D=B.pagination(D,O)
 			for U in B.pool.map(B.get_found_vod,D):S.extend(U)
-			J[H]=S;J[i]=K;J[t]=9999;J[u]=99;J[p]=999999
-		return J
+			K[H]=S;K[h]=J;K[t]=9999;K[u]=99;K[p]=999999
+		return K
 	def get_bangumi(D,tid,pg,order,season_status):
 		a='first_ep';Z='first_ep_info';W=order;G=tid;J={}
 		if W=='追番剧':K='https://api.bilibili.com/x/space/bangumi/follow/list?type={0}&vmid={1}&pn={2}&ps={3}'.format(G,D.userid,pg,D.userConfig[Y]);b=D._get_sth(K)
@@ -533,29 +533,29 @@ class Spider(Spider):
 			if V(L)>D.userConfig[Y]:L=D.pagination(L,pg)
 			c=[]
 			for C in L:
-				f=A(C[AY]).strip();g=C[R];N=C.get('ss_horizontal_cover')
+				e=A(C[AY]).strip();f=C[R];N=C.get('ss_horizontal_cover')
 				if not N or G==T and not D.userConfig[CR]:
-					if C.get(Z)and d in C[Z]:N=C[Z][d]
-					elif C.get(a)and d in C[a]:N=C[a][d]
-					else:N=C[d].strip()
+					if C.get(Z)and i in C[Z]:N=C[Z][i]
+					elif C.get(a)and i in C[a]:N=C[a][i]
+					else:N=C[i].strip()
 				F=C.get(Az,B)
 				if not F and C.get(A_)and C[A_].get(Az):F=C[A_][Az]
-				F=F.replace('更新至','🆕');e=C.get(BP)
-				if e:F='▶'+D.zh(e.get(Ay))+'  '+F
-				c.append({Q:q+f,O:g,U:D.format_img(N),X:F})
-			J[H]=c;J[i]=pg;J[t]=9999;J[u]=90;J[p]=999999
+				F=F.replace('更新至','🆕');d=C.get(BP)
+				if d:F='▶'+D.zh(d.get(Ay))+'  '+F
+				c.append({Q:q+e,O:f,U:D.format_img(N),X:F})
+			J[H]=c;J[h]=pg;J[t]=9999;J[u]=90;J[p]=999999
 		return J
 	def get_timeline(E,tid,pg):
-		Z='pub_index';D={};a='https://api.bilibili.com/pgc/web/timeline/v2?season_type={0}&day_before=2&day_after=4'.format(tid);b=E._get_sth(a,P);c=b.text;F=I.loads(c)
+		a='pub_index';Z='ep_cover';D={};b='https://api.bilibili.com/pgc/web/timeline/v2?season_type={0}&day_before=2&day_after=4'.format(tid);c=E._get_sth(b,P);d=c.text;F=I.loads(d)
 		if F[M]==0:
 			T=[];G=F[AM]['latest']
-			for C in G:J=A(C[AY]).strip();K=C[R].strip();N=C[d].strip();S='🆕'+C[Z]+'  ❤ '+C['follows'].replace('系列',B).replace('追番',B);T.append({Q:q+J,O:K,U:E.format_img(N),X:S})
+			for C in G:J=A(C[AY]).strip();K=C[R].strip();N=C[Z].strip();S='🆕'+C[a]+'  ❤ '+C['follows'].replace('系列',B).replace('追番',B);T.append({Q:q+J,O:K,U:E.format_img(N),X:S})
 			W=[];Y=F[AM]['timeline']
 			for e in range(V(Y)):
 				G=Y[e][BQ]
 				for C in G:
-					if A(C['published'])==L:J=A(C[AY]).strip();K=A(C[R]).strip();N=A(C[d]).strip();f=A(x.strftime('%m-%d %H:%M',x.localtime(C['pub_ts'])));S=f+'   '+C[Z];W.append({Q:q+J,O:K,U:E.format_img(N),X:S})
-			D[H]=W+T;D[i]=1;D[t]=1;D[u]=90;D[p]=999999
+					if A(C['published'])==L:J=A(C[AY]).strip();K=A(C[R]).strip();N=A(C[Z]).strip();f=A(x.strftime('%m-%d %H:%M',x.localtime(C['pub_ts'])));S=f+'   '+C[a];W.append({Q:q+J,O:K,U:E.format_img(N),X:S})
+			D[H]=W+T;D[h]=1;D[t]=1;D[u]=90;D[p]=999999
 		return D
 	def get_live(G,pg,parent_area_id,area_id):
 		V='recommend_room_list';K=parent_area_id;D={}
@@ -571,9 +571,9 @@ class Spider(Spider):
 			elif H in C:C=C[H]
 			for F in C:
 				W=A(F[Cc]).strip();Z=F[R].replace(k,B).replace(l,B).replace(AJ,AK);L=F.get(Cd)
-				if not L:L=F.get(d)
+				if not L:L=F.get(i)
 				a='👁'+F[Ca][Cb].strip()+Ag+F[A8].strip();T.append({Q:W,O:Z,U:G.format_img(L),X:a})
-			D[H]=T;D[i]=pg;D[t]=9999;D[u]=99;D[p]=999999
+			D[H]=T;D[h]=pg;D[t]=9999;D[u]=99;D[p]=999999
 		return D
 	get_up_videos_result={}
 	def get_up_videos(C,mid,pg,order):
@@ -591,7 +591,7 @@ class Spider(Spider):
 			if K:G[H]=K;return G
 		Z=L
 		if V:C.get_up_info_event.wait();Z=C.up_info[D][Bv]-F(L)+1
-		e=C.encrypt_wbi(mid=D,pn=Z,ps=C.userConfig[Y],order=S);f=f"https://api.bilibili.com/x/space/wbi/arc/search?{e}";g=C._get_sth(f,P);h=g.text;b=I.loads(h);K=[]
+		e=C.encrypt_wbi(mid=D,pn=Z,ps=C.userConfig[Y],order=S);f=f"https://api.bilibili.com/x/space/wbi/arc/search?{e}";g=C._get_sth(f,P);i=g.text;b=I.loads(i);K=[]
 		if b[M]==0:
 			j=b[E][H]['vlist']
 			for N in j:
@@ -604,7 +604,7 @@ class Spider(Spider):
 				if T:d='UP: '+C.up_info[D][J]
 				q={Q:AZ+A(D),O:d,U:C.format_img(C.up_info[D][A7]),X:C.up_info[D][Ai]+'  👥'+C.up_info[D][Aj]+'  🎬'+A(C.up_info[D][BR])};K.insert(0,q)
 			if T:C.get_up_videos_result[D]=K
-			G[H]=K;G[i]=L;G[t]=99;G[u]=99;G[p]=999999
+			G[H]=K;G[h]=L;G[t]=99;G[u]=99;G[p]=999999
 		return G
 	history_view_at=0
 	def get_history(D,type,pg):
@@ -612,35 +612,35 @@ class Spider(Spider):
 		if F(pg)==1:D.history_view_at=0
 		Z='https://api.bilibili.com/x/web-interface/history/cursor?ps={0}&view_at={1}&type={2}'.format(D.userConfig[Y],D.history_view_at,type)
 		if type==BS:Z='https://api.bilibili.com/x/v2/history/toview'
-		f=D._get_sth(Z);T=I.loads(f.text)
+		e=D._get_sth(Z);T=I.loads(e.text)
 		if T[M]==0:
 			b=[];V=T[E].get(H,[])
 			if type==BS:V=D.pagination(V,pg)
 			else:D.history_view_at=T[E]['cursor']['view_at']
 			for C in V:
 				J=C.get('history',B)
-				if J:K=J['business'];N=A(J['oid']).strip();c=C[d].strip();S=A(J[By]).strip()
-				else:K=BM;N=A(C[a]).strip();c=C[Ax].strip();S=A(C[i][By]).strip()
+				if J:K=J['business'];N=A(J['oid']).strip();c=C[i].strip();S=A(J[By]).strip()
+				else:K=BM;N=A(C[a]).strip();c=C[Ax].strip();S=A(C[h][By]).strip()
 				if K=='article':continue
-				elif K=='pgc':N=z+A(J['epid']);e=C[p];S=C.get('show_title')
-				elif K==BM:N=v+N;e=C[Ch]
-				g=C[R].replace(k,B).replace(l,B).replace(AJ,AK)
-				if K==AW:h=C.get('badge',B);P=h+Ag+C['author_name'].strip()
+				elif K=='pgc':N=z+A(J['epid']);d=C[p];S=C.get('show_title')
+				elif K==BM:N=v+N;d=C[Ch]
+				f=C[R].replace(k,B).replace(l,B).replace(AJ,AK)
+				if K==AW:g=C.get('badge',B);P=g+Ag+C['author_name'].strip()
 				else:
 					if A(C[W])=='-1':P='已看完'
 					elif A(C[W])==L:P='刚开始看'
 					else:j=A(D.second_to_time(C[W])).strip();P='看到  '+j
-					if not e in[0,1]and S:P+=' ('+A(S)+')'
-				b.append({Q:N,O:g,U:D.format_img(c),X:P})
-			G[H]=b;G[i]=pg;G[t]=9999;G[u]=90;G[p]=999999
+					if not d in[0,1]and S:P+=' ('+A(S)+')'
+				b.append({Q:N,O:f,U:D.format_img(c),X:P})
+			G[H]=b;G[h]=pg;G[t]=9999;G[u]=90;G[p]=999999
 		return G
 	def get_fav_detail(F,pg,mlid,order):
 		K='cnt_info';D={};L='https://api.bilibili.com/x/v3/fav/resource/list?media_id=%s&order=%s&pn=%s&ps=10&platform=web&type=0'%(mlid,order,pg);N=F._get_sth(L);P=N.text;G=I.loads(P)
 		if G[M]==0:
 			J=[];S=G[E].get('medias',[])
 			for C in S:
-				if C.get(r)in[2]and C.get(R)!='已失效视频':T=A(C[m]).strip();V=C[R].replace(k,B).replace(l,B).replace(AJ,AK);W=C[d].strip();Y=A(F.second_to_time(C[e])).strip()+BO+F.zh(C[K][Bw])+Ci+F.zh(C[K][BT]);J.append({Q:v+T+'_mlid'+A(mlid),O:V,U:F.format_img(W),X:Y})
-			D[H]=J;D[i]=pg;D[t]=9999;D[u]=99;D[p]=999999
+				if C.get(r)in[2]and C.get(R)!='已失效视频':T=A(C[m]).strip();V=C[R].replace(k,B).replace(l,B).replace(AJ,AK);W=C[i].strip();Y=A(F.second_to_time(C[d])).strip()+BO+F.zh(C[K][Bw])+Ci+F.zh(C[K][BT]);J.append({Q:v+T+'_mlid'+A(mlid),O:V,U:F.format_img(W),X:Y})
+			D[H]=J;D[h]=pg;D[t]=9999;D[u]=99;D[p]=999999
 		return D
 	get_up_info_event=j.Event();up_info={}
 	def get_up_info(D,mid,**P):
@@ -680,21 +680,21 @@ class Spider(Spider):
 		if A(pg)==T:C.channel_offset=B
 		if R==Cl:S='https://api.bilibili.com/x/web-interface/web/channel/featured/list?channel_id={0}&filter_type=0&offset={1}&page_size={2}'.format(cid,C.channel_offset,C.userConfig[Y])
 		else:S='https://api.bilibili.com/x/web-interface/web/channel/multiple/list?channel_id={0}&sort_type={1}&offset={2}&page_size={3}'.format(cid,R,C.channel_offset,C.userConfig[Y])
-		f=C._get_sth(S,P);L=I.loads(f.text)
+		e=C._get_sth(S,P);L=I.loads(e.text)
 		if L.get(M)==0:
 			C.channel_offset=L[E].get(CY);V=[];G=L[E][H]
-			if pg==T and BJ in G[0]:g=G[0][BJ];del G[0];G=g+G
+			if pg==T and BJ in G[0]:f=G[0][BJ];del G[0];G=f+G
 			for D in G:
 				if N in D and C0 in D[N]:W=C.find_bangumi_id(D[N])
 				else:W=v+A(D[m]).strip()
-				h=D[J].replace(k,B).replace(l,B).replace(AJ,AK);j=D[d].strip();K='▶'+A(D['view_count']);Z=D.get(e,B)
+				g=D[J].replace(k,B).replace(l,B).replace(AJ,AK);j=D[i].strip();K='▶'+A(D['view_count']);Z=D.get(d,B)
 				if Z:K=A(C.second_to_time(C.str2sec(Z))).strip()+'  '+K
 				a=D.get(BT,B);b=D.get('like_count',B);c=D.get('follow_count',B)
 				if a:K+=Bx+C.zh(a)
 				elif b:K+='  👍'+A(b)
 				elif c:K+='  ❤'+A(c)
-				V.append({Q:W,O:h,U:C.format_img(j),X:K})
-			F[H]=V;F[i]=pg;F[t]=9999;F[u]=99;F[p]=999999
+				V.append({Q:W,O:g,U:C.format_img(j),X:K})
+			F[H]=V;F[h]=pg;F[t]=9999;F[u]=99;F[p]=999999
 		return F
 	def get_follow(G,pg,sort):
 		K=pg;D=sort;L={}
@@ -722,7 +722,7 @@ class Spider(Spider):
 			else:P=AZ+A(C[W]);Y=A(C[A8]).strip();Z=A(C[A7]).strip()
 			if C3 in C and C[C3]==1:V=B2
 			a.append({Q:P,O:Y,U:G.format_img(Z),X:V})
-		L[H]=a;L[i]=K;L[t]=9999;L[u]=99;L[p]=999999;return L
+		L[H]=a;L[h]=K;L[t]=9999;L[u]=99;L[p]=999999;return L
 	homeVideoContent_result={}
 	def homeVideoContent(A):
 		if not A.homeVideoContent_result:B=A.get_found(rid=L,tid=C4,pg=1)[H][0:F(A.userConfig[Bk])];A.homeVideoContent_result[H]=B
@@ -774,9 +774,9 @@ class Spider(Spider):
 			if b in D:I=D[b]
 			return H.get_up_videos(mid=M,pg=J,order=I)
 		elif E==BE:
-			d='最常访问'
-			if C6 in D:d=D[C6]
-			return H.get_follow(J,d)
+			e='最常访问'
+			if C6 in D:e=D[C6]
+			return H.get_follow(J,e)
 		elif E==Ae:
 			O=A(H.userConfig[Bl])
 			if Af in D:O=D[Af]
@@ -797,7 +797,7 @@ class Spider(Spider):
 			return H.get_history(type=type,pg=J)
 		else:
 			g=L
-			if e in D:g=D[e]
+			if d in D:g=D[d]
 			type=AB
 			if r in D:type=D[r]
 			I=Cn
@@ -813,7 +813,7 @@ class Spider(Spider):
 	def get_search_content(D,key,pg,duration_diff,order,type,ps):
 		K=pg;S=AU
 		if not K.isdigit():S=K;K=1
-		b=D.encrypt_wbi(keyword=key,page=K,duration=duration_diff,order=order,search_type=type,page_size=ps);c=f"https://api.bilibili.com/x/web-interface/wbi/search/type?{b}";f=D._get_sth(c,P);g=f.text;V=I.loads(g);F={}
+		b=D.encrypt_wbi(keyword=key,page=K,duration=duration_diff,order=order,search_type=type,page_size=ps);c=f"https://api.bilibili.com/x/web-interface/wbi/search/type?{b}";e=D._get_sth(c,P);f=e.text;V=I.loads(f);F={}
 		if V.get(M)==0 and AM in V[E]:
 			Y=[];L=V[E].get(AM)
 			if L and type==AW:L=L.get('live_room')
@@ -821,23 +821,23 @@ class Spider(Spider):
 			for C in L:
 				J=B
 				if type==C7:G=AZ+A(C[W]).strip();T=C['upic'].strip();N='👥'+D.zh(C[Aj])+'  🎬'+D.zh(C[Ch]);J=C[A8]
-				elif type==AW:G=A(C[Cc]).strip();T=C[d].strip();N='👁'+D.zh(C['online'])+Ag+C[A8]
+				elif type==AW:G=A(C[Cc]).strip();T=C[i].strip();N='👁'+D.zh(C['online'])+Ag+C[A8]
 				elif'media'in type:
 					G=A(C[AY]).strip()
 					if D.detailContent_args:
-						h=D.detailContent_args.get(B3)
-						if h:
+						g=D.detailContent_args.get(B3)
+						if g:
 							Z=[]
 							for j in D.detailContent_args[B3]:Z.append(j[Q])
 							if G+q in Z:continue
-					G=q+G;T=C[d].strip();N=A(C[Az]).strip().replace('更新至','🆕')
+					G=q+G;T=C[i].strip();N=A(C[Az]).strip().replace('更新至','🆕')
 				else:
-					G=v+A(C[a]).strip();T=C[Ax].strip();N=A(D.second_to_time(D.str2sec(C[e]))).strip()+BO+D.zh(C[Bw])
+					G=v+A(C[a]).strip();T=C[Ax].strip();N=A(D.second_to_time(D.str2sec(C[d]))).strip()+BO+D.zh(C[Bw])
 					if S==AU:N+=Bx+D.zh(C[BT])
 				if not J:J=C[R].replace(k,B).replace(l,B).replace(AJ,AK).replace('&amp;','&')
 				if S:J=S+J
 				Y.append({Q:G,O:J,U:D.format_img(T),X:N})
-			F[H]=Y;F[i]=K;F[t]=9999;F[u]=99;F[p]=999999
+			F[H]=Y;F[h]=K;F[t]=9999;F[u]=99;F[p]=999999
 		return F
 	def cleanSpace(A,str):return str.replace('\n',B).replace('\t',B).replace('\r',B).replace(AL,B)
 	def get_normal_episodes(C,episode):
@@ -845,10 +845,10 @@ class Spider(Spider):
 		if not M:M=C.detailContent_args[a]
 		U=G.get(n,B);J=G.get(R,B)
 		if not J:J=G.get(By,B)
-		E=G.get(e,B)
+		E=G.get(d,B)
 		if not E:
-			V=G.get(i,B)
-			if V:E=V[e]
+			V=G.get(h,B)
+			if V:E=V[d]
 		D=I=W=Q=B;L=C.detailContent_args.get(B4,B)
 		if L:
 			L='_ss'+L;H=G.get(m,B)
@@ -884,7 +884,7 @@ class Spider(Spider):
 		C=section
 		if sections_len>1:A=B.detailContent_args[Am]+AL+C[R]
 		else:A=B.detailContent_args[Am]
-		A=A.replace(N,AC).replace(w,AD);D=C.get(BQ);E=N.join(g(B.get_normal_episodes,D));F=A,E;return F
+		A=A.replace(N,AC).replace(w,AD);D=C.get(BQ);E=N.join(f(B.get_normal_episodes,D));F=A,E;return F
 	get_vod_hot_reply_event=j.Event()
 	def get_vod_hot_reply(G,oid):
 		b='member';c='http://api.bilibili.com/x/v2/reply/main?type=1&ps=30&oid='+A(oid);d=G._get_sth(c,P);L=I.loads(d.text)
@@ -921,9 +921,9 @@ class Spider(Spider):
 		G.detailContent_args={}
 		if L.startswith(Cp):
 			try:
-				A8=Bg(url=L,headers=G.header,allow_redirects=False);d=A8.headers['Location'].split('?')[0].split(AA)
-				while d[-1]==B:d.pop(-1)
-				L=d[-1]
+				A8=Bg(url=L,headers=G.header,allow_redirects=False);f=A8.headers['Location'].split('?')[0].split(AA)
+				while f[-1]==B:f.pop(-1)
+				L=f[-1]
 				if not L.startswith(BV,0,2):return{}
 			except:return{}
 		id=t=j=B;G.get_vod_hot_reply_event.set()
@@ -941,7 +941,7 @@ class Spider(Spider):
 		elif AZ in L:return G.up_detailContent(c)
 		elif q in L or z in L:return G.ysContent(c)
 		elif L.isdigit():return G.live_detailContent(c)
-		AB=G.pool.submit(G.get_vod_relation,j);d='https://api.bilibili.com/x/web-interface/view/detail?'+j;AE=G._get_sth(d,P);m=I.loads(AE.text)
+		AB=G.pool.submit(G.get_vod_relation,j);f='https://api.bilibili.com/x/web-interface/view/detail?'+j;AE=G._get_sth(f,P);m=I.loads(AE.text)
 		if m[M]!=0:return{}
 		S=m[E]['View'];A0=S.get(BY,B)
 		if C0 in A0:
@@ -955,7 +955,7 @@ class Spider(Spider):
 		A4=m[E].get('Related');A5=S['pages'];AI=S[R].replace(k,B).replace(l,B);AJ=S[Ax];AK=S[AX][J];AL=S[Aa].strip();AM=S['tname'];AP=x.strftime('%Y%m%d',x.localtime(S[Ah]));g=S[BP];Z=[];Z.append('▶'+G.zh(g[Ay]));Z.append('💬'+G.zh(g[BT]));Z.append('👍'+G.zh(g[B0]));h=S.get('honor_reply')
 		if h:Z.insert(0,'🏅'+h['honor'][0][Aa])
 		if not h or h and h['honor'][0][r]==4:Z.append('💰'+G.zh(g[B_]));Z.append('⭐'+G.zh(g[Ck]))
-		AQ=A(S[e]).strip();An=S[e];A6=S['rights'].get('is_stein_gate',0);i={Q:v+A(L),O:AI,U:AJ,BH:AM,CA:AP,CB:Cs,X:AQ,BZ:Ab.join(Z),Ac:AL};y=[]
+		AQ=A(S[d]).strip();An=S[d];A6=S['rights'].get('is_stein_gate',0);i={Q:v+A(L),O:AI,U:AJ,BH:AM,CA:AP,CB:Cs,X:AQ,BZ:Ab.join(Z),Ac:AL};y=[]
 		if G.userid:
 			AR=Ct;AS=Cu;AT='👍点赞$1_notplay_like';AU='👍🏻取消点赞$2_notplay_like';AV='👍💰投币$1_notplay_coin';AW='👍💰💰投2币$2_notplay_coin';AY='👍💰⭐三连$notplay_triple';p=[AR,AY,AT,AV,AW,AS,AU]
 			if t:Ad=f"☆取消收藏${t}_del_notplay_fav";p.append(Ad)
@@ -975,7 +975,7 @@ class Spider(Spider):
 			if A7:Y.append('热门评论');b.extend([A7])
 		if n:
 			for o in Bh(A3):Y.append(o.result()[0]);b.append(o.result()[1])
-		i[AN]=f.join(Y);i[AO]=f.join(b);i[CC]='🆙 '+AK+Cv+G.up_info[A1][Aj]+Ab+Ab.join(AB.result())
+		i[AN]=e.join(Y);i[AO]=e.join(b);i[CC]='🆙 '+AK+Cv+G.up_info[A1][Aj]+Ab+Ab.join(AB.result())
 		if A6:G.detailContent_args['AllPt']=Y.copy();G.detailContent_args['AllPu']=b.copy();G.detailContent_args[Cw]=i.copy()
 		Al={H:[i]};return Al
 	def interaction_detailContent(C,array=B):
@@ -983,7 +983,7 @@ class Spider(Spider):
 		for D in F:
 			if D.startswith(BX):G=D.replace(BX,B)
 			elif D.startswith(n):V=D.replace(n,B)
-		W=C.detailContent_args.get(a);c=C.detailContent_args.get(B6);J='https://api.bilibili.com/x/stein/edgeinfo_v2?aid={0}&graph_version={1}&edge_id={2}'.format(W,c,G);d=C._get_sth(J,P);e=I.loads(d.text);L=e.get(E);X={}
+		W=C.detailContent_args.get(a);c=C.detailContent_args.get(B6);J='https://api.bilibili.com/x/stein/edgeinfo_v2?aid={0}&graph_version={1}&edge_id={2}'.format(W,c,G);d=C._get_sth(J,P);f=I.loads(d.text);L=f.get(E);X={}
 		if L:
 			g=L['edges'].get('questions',[]);M=[]
 			for Y in g:
@@ -994,7 +994,7 @@ class Spider(Spider):
 			if G:
 				Z=C.detailContent_args['AllPt'].copy()
 				if not M:Z[0]='互动视频'
-				b=C.detailContent_args['AllPu'].copy();k=A(L[R]).replace(N,AC).replace(w,AD);J='{0}${1}_{2}'.format(k,W,V);b[0]=J;U=C.detailContent_args[Cw].copy();U[AN]=f.join(Z);U[AO]=f.join(b);X[H]=[U]
+				b=C.detailContent_args['AllPu'].copy();k=A(L[R]).replace(N,AC).replace(w,AD);J='{0}${1}_{2}'.format(k,W,V);b[0]=J;U=C.detailContent_args[Cw].copy();U[AN]=e.join(Z);U[AO]=e.join(b);X[H]=[U]
 		return X
 	def up_detailContent(D,array):D.detailContent_args[W]=E=array[0].replace(AZ,B);D.get_up_info_event.clear();D.pool.submit(D.get_up_info,E);I=Cx;K='关注$1_notplay_follow';L='取消关注$2_notplay_follow';M='悄悄关注$3_notplay_follow';P='特别关注$-10_notplay_special_follow';R='取消特别关注$0_notplay_special_follow';F=[I,K,M,P,L,R];F=N.join(F);D.get_up_info_event.wait();C=D.up_info[E];G={Q:AZ+A(E),O:C[J]+Cg,U:C[A7],X:B,'vod_tags':'mv',BZ:'👥 '+C[Aj]+'\u3000🎬 '+C[BR]+'\u3000👍 '+C[Bz],CC:'🆙 '+C[J]+Ab+C[Ai]+Cy+A(E),Ac:C[Aa],AN:'关注TA$$$视频投稿在动态标签——筛选——上个UP，选择后查看'};G[AO]=F;S={H:[G]};return S
 	def setting_login_detailContent(E,key):
@@ -1002,7 +1002,7 @@ class Spider(Spider):
 		if not c:J=E.get_cookies(M)
 		if J:J=f"【{J}】通过手机客户端扫码确认登录后点击相应按钮设置账号"
 		else:J='【已扫码并确认登录】请点击相应按钮设置当前获取的账号为：'
-		R={O:'登录与设置',Ac:'通过手机客户端扫码并确认登录后，点击相应按钮设置cookie，设置后不需要管嗅探结果，直接返回二维码页面刷新，查看是否显示已登录，已登录即可重新打开APP以加载全部标签'};X=['登录$$$退出登录'];P=[];d=J+BW;e='设置为主账号，动态收藏关注等内容源于此$'+A(M)+'_master_login_setting';g='设置为备用的VIP账号，仅用于播放会员番剧$'+A(M)+'_vip_login_setting';P.append(N.join([d,e,g]));h='点击相应按钮退出账号>>>$ ';i='退出主账号$master_logout_setting';j='退出备用的VIP账号$vip_logout_setting';P.append(N.join([h,i,j]));Y=[{G:'主页站点推荐栏',C:Bk,D:{AQ:'3图',AV:'4图','6':'6图','8':'8图','10':'10图'}},{G:'视频画质',C:Ao,D:E.vod_qn_id},{G:'视频编码',C:Bm,D:E.vod_codec_id},{G:'音频码率',C:Ap,D:E.vod_audio_id},{G:'收藏默认显示',C:Bl,D:{L:'默认收藏夹',T:'追番',A0:'追剧'}},{G:'上传播放进度',C:BB,D:{L:'关','15':'开'}},{G:'直播筛选细化',C:Bn,D:{L:'关',T:'开'}}];S={G:'检查更新',C:CE};U=E.userConfig.get(AP,b);V=Z=0
+		R={O:'登录与设置',Ac:'通过手机客户端扫码并确认登录后，点击相应按钮设置cookie，设置后不需要管嗅探结果，直接返回二维码页面刷新，查看是否显示已登录，已登录即可重新打开APP以加载全部标签'};X=['登录$$$退出登录'];P=[];d=J+BW;f='设置为主账号，动态收藏关注等内容源于此$'+A(M)+'_master_login_setting';g='设置为备用的VIP账号，仅用于播放会员番剧$'+A(M)+'_vip_login_setting';P.append(N.join([d,f,g]));h='点击相应按钮退出账号>>>$ ';i='退出主账号$master_logout_setting';j='退出备用的VIP账号$vip_logout_setting';P.append(N.join([h,i,j]));Y=[{G:'主页站点推荐栏',C:Bk,D:{AQ:'3图',AV:'4图','6':'6图','8':'8图','10':'10图'}},{G:'视频画质',C:Ao,D:E.vod_qn_id},{G:'视频编码',C:Bm,D:E.vod_codec_id},{G:'音频码率',C:Ap,D:E.vod_audio_id},{G:'收藏默认显示',C:Bl,D:{L:'默认收藏夹',T:'追番',A0:'追剧'}},{G:'上传播放进度',C:BB,D:{L:'关','15':'开'}},{G:'直播筛选细化',C:Bn,D:{L:'关',T:'开'}}];S={G:'检查更新',C:CE};U=E.userConfig.get(AP,b);V=Z=0
 		if U!=b:U='远端：'+A(E.userConfig[AP][CF]);Z=1;V=E.userConfig[AP].get(Ba)
 		S[D]={A(Z):U}
 		if V:S[D][AL]=V
@@ -1017,7 +1017,7 @@ class Spider(Spider):
 				if Ap==I[C]:W=A(W).replace(C8,'k')
 				a.append(W+w+A(id)+K+I[C]+'_setting')
 			P.append(N.join(a))
-		R[AN]=f.join(X);R[AO]=f.join(P);k={H:[R]};return k
+		R[AN]=e.join(X);R[AO]=e.join(P);k={H:[R]};return k
 	def setting_tab_filter_detailContent(I):
 		L={O:'标签与筛选',Ac:'依次点击各标签，同一标签第一次点击为添加，第二次删除，可以返回到二维码页后重进本页查看预览，最后点击保存，未选择的将追加到末尾，如果未保存就重启app，将丢失未保存的配置'};M=[];P=[];U=[{D:Ar,C:'标签'},{D:BC,C:'推荐[分区]'},{D:BD,C:'推荐[排行榜]'},{D:y,C:AH}]
 		for Q in U:
@@ -1025,7 +1025,7 @@ class Spider(Spider):
 			if F:R='【未保存】'
 			else:F=I.userConfig.get(E,[])
 			if not F:F=I.defaultConfig.get(E)
-			if F and type(F[0])==A2:F=s(g(lambda x:x[D],F))
+			if F and type(F[0])==A2:F=s(f(lambda x:x[D],F))
 			S=['当前: '+','.join(F)+BW,f"{R}点击这里保存$_{E}_save_setting",f"点击这里恢复默认并保存$_{E}_clear_setting"];J=I.defaultConfig[E].copy()
 			if E==Ar and not A6 in J:J.append(A6)
 			elif E==y:V=I.userConfig.get(A5,[]);J.extend(V.copy())
@@ -1034,7 +1034,7 @@ class Spider(Spider):
 				if type(G)==A2:T=G[D]+An+G[C].replace(K,An);G=G[D]
 				S.append(f"{G}${T}_{E}_setting")
 			P.append(N.join(S))
-		L[AN]=f.join(M);L[AO]=f.join(P);W={H:[L]};return W
+		L[AN]=e.join(M);L[AO]=e.join(P);W={H:[L]};return W
 	def setting_liveExtra_detailContent(I):
 		Q='_liveFilter_setting';F={O:CX,Ac:'点击想要添加的标签，同一标签第一次点击为添加，第二次删除，完成后在[标签与筛选]页继续操作，以添加到直播筛选分区列中'};J=['已添加'];R=I.userConfig.get(A5,[]);E=['点击相应标签(只)可以删除$ #清空$clear_liveFilter_setting']
 		for B in R:S=B[C];B=B[D];E.append(B+w+'del_'+B+K+S+Q)
@@ -1045,14 +1045,14 @@ class Spider(Spider):
 			J.append(U);M=[]
 			for P in L:B=A(P[D]).replace(K,'-').replace(N,AC).replace(w,AD);id=A(P[C]).replace(K,An).replace(N,AC).replace(w,AD);M.append(B+'$add_'+B+K+id+Q)
 			E.append(N.join(M))
-		F[AN]=f.join(J);F[AO]=f.join(E);X={H:[F]};return X
+		F[AN]=e.join(J);F[AO]=e.join(E);X={H:[F]};return X
 	def get_all_season(C,season):
 		B=season;D=A(B[AY]);E=B[Am]
 		if D==C.detailContent_args[B4]:C.detailContent_args[B7]=E
-		F=B[d];G=B[A_][Az];H={Q:D+q,O:'系列：'+E,U:C.format_img(F),X:G};return H
+		F=B[i];G=B[A_][Az];H={Q:D+q,O:'系列：'+E,U:C.format_img(F),X:G};return H
 	def get_bangumi_section(B,section):
 		A=section;C=A[R].replace(N,AC).replace(w,AD);D=A[r]
-		if D in[1,2]and V(A['episode_ids'])==0:E=A[BQ];F=N.join(g(lambda x:B.get_normal_episodes(x)[0],E));return C,F
+		if D in[1,2]and V(A['episode_ids'])==0:E=A[BQ];F=N.join(f(lambda x:B.get_normal_episodes(x)[0],E));return C,F
 	def ysContent(C,array):
 		p='rating';E=array[0]
 		if z in E:C.detailContent_args[B5]=E;E='ep_id='+E.replace(z,B)
@@ -1062,28 +1062,28 @@ class Spider(Spider):
 		M=D.get(B3)
 		if V(M)==1:C.detailContent_args[B7]=M[0][Am];M=0
 		else:C.detailContent_args[B3]=s(C.pool.map(C.get_all_season,M))
-		g=D.get(BQ);h=[]
+		f=D.get(BQ);g=[]
 		for J in D.get('section',[]):
-			if J:b=C.pool.submit(C.get_bangumi_section,J);h.append(b)
-		x=D[d];y=D['share_sub_title'];A0=D['publish']['pub_time'][0:4];A1=D['evaluate'];A2=D[A_][Aa];S=D[BP];c='▶'+C.zh(S['views'])+Ci+C.zh(S['danmakus'])+'\u3000👍'+C.zh(S['likes'])+'\u3000💰'+C.zh(S['coins'])+'\u3000❤'+C.zh(S['favorites'])
+			if J:b=C.pool.submit(C.get_bangumi_section,J);g.append(b)
+		x=D[i];y=D['share_sub_title'];A0=D['publish']['pub_time'][0:4];A1=D['evaluate'];A2=D[A_][Aa];S=D[BP];c='▶'+C.zh(S['views'])+Ci+C.zh(S['danmakus'])+'\u3000👍'+C.zh(S['likes'])+'\u3000💰'+C.zh(S['coins'])+'\u3000❤'+C.zh(S['favorites'])
 		if p in D:c=A(D[p]['score'])+'分\u3000'+c
-		e={Q:q+C.detailContent_args[B4],O:w,U:x,BH:y,CA:A0,CB:Cs,X:A2,BZ:c,Ac:A1};a=[];G=[]
+		d={Q:q+C.detailContent_args[B4],O:w,U:x,BH:y,CA:A0,CB:Cs,X:A2,BZ:c,Ac:A1};a=[];G=[]
 		if C.userid:
 			a=['做点什么'];G='是否追番剧$ #❤追番剧$add_notplay_zhui#💔取消追番剧$del_notplay_zhui';A3=F(C.userConfig[Ao])
 			if A3>116:G+='#⚠️限高1080$116_notplay_vodTMPQn'
 			G=[G]
 		if M:a.append('更多系列');G.append('更多系列在快速搜索中查看$ #')
-		i=[];T=[];j=[];W=[];k=[];L=[]
-		if g:
-			for(l,m)in C.pool.map(C.get_normal_episodes,g):
+		h=[];T=[];j=[];W=[];k=[];L=[]
+		if f:
+			for(l,m)in C.pool.map(C.get_normal_episodes,f):
 				if m:T.append(l);L.append(m)
 				else:W.append(l)
-			if T:i=[C.detailContent_args[B7]];T=[N.join(T)]
+			if T:h=[C.detailContent_args[B7]];T=[N.join(T)]
 			if W:j=['预告'];W=[N.join(W)]
 			if not C.detailContent_args.get(Al):L=[]
 			if L:k=[A(C.detailContent_args[B7])+'【解析】'];L=[N.join(L)]
-		Y=k+i+j;Z=L+T+W
-		for b in Bh(h):
+		Y=k+h+j;Z=L+T+W
+		for b in Bh(g):
 			J=b.result()
 			if J:Y.append(J[0]);Z.append(J[1])
 		n=C.detailContent_args.get(B5,B)
@@ -1091,7 +1091,7 @@ class Spider(Spider):
 		if C.userConfig[Aq]:
 			C.get_vod_hot_reply_event.wait();o=C.detailContent_args.get(Ak,B)
 			if o:a.append('热门评论');G.append(o)
-		Y.insert(1,f.join(a));Z.insert(1,f.join(G));e[AN]=f.join(Y);e[AO]=f.join(Z);A4={H:[e]};return A4
+		Y.insert(1,e.join(a));Z.insert(1,e.join(G));d[AN]=e.join(Y);d[AO]=e.join(Z);A4={H:[d]};return A4
 	def get_live_api2_playurl(O,room_id):
 		Q=room_id;D='qn';R=[];S=[];H='https://api.live.bilibili.com/xlive/web-room/v2/index/getRoomPlayInfo?room_id={0}&no_playurl=0&mask=1&qn=0&platform=web&protocol=0,1&format=0,1,2&codec=0,1&dolby=5&panorama=1'.format(Q);Z=O._get_sth(H,P);U=I.loads(Z.text)
 		if U[M]==0:
@@ -1113,15 +1113,15 @@ class Spider(Spider):
 	def live_detailContent(C,array):
 		F=array[0];X=C.pool.submit(C.get_live_api2_playurl,F);c='https://api.live.bilibili.com/room/v1/Room/get_info?room_id='+A(F);d=C._get_sth(c,P);Y=I.loads(d.text);Z={}
 		if Y.get(M)==0:
-			D=Y[E];C.detailContent_args[W]=S=A(D['uid']);C.get_up_info_event.clear();C.pool.submit(C.get_up_info,S);e=D[R].replace(k,B).replace(l,B);g=D.get(Cd);h=D.get('description');i=D.get('parent_area_name')+'--'+D.get('area_name');G=D.get(CZ,B)
-			if G:G='开播时间：'+D.get('live_time')
+			D=Y[E];C.detailContent_args[W]=S=A(D['uid']);C.get_up_info_event.clear();C.pool.submit(C.get_up_info,S);f=D[R].replace(k,B).replace(l,B);g=D.get(Cd);h=D.get('description');i=D.get('parent_area_name')+'--'+D.get('area_name');G=D.get(CZ,B)
+			if G:G='开播时间：'+D.get('live_time').replace('-','.')
 			else:G='未开播'
-			K={Q:F,O:e,U:g,BH:i,CA:B,CB:'bililivedanmu',BZ:'房间号：'+F+Cy+S+Ab+G,Ac:h};T=B;a=B
+			K={Q:F,O:f,U:g,BH:i,CA:B,CB:'bililivedanmu',BZ:'房间号：'+F+Cy+S+Ab+G,Ac:h};T=B;a=B
 			if C.userid:T='关注Ta';j=Cx;m=Ct;n=Cu;p=[j,m,n];a=N.join(p)
 			L=X.result().get('From',[]);V=X.result().get(o,[])
 			if L:q='API_1';r='flv线路原画$platform=web&quality=4_'+F+'#flv线路高清$platform=web&quality=3_'+F+'#h5线路原画$platform=h5&quality=4_'+F+'#h5线路高清$platform=h5&quality=3_'+F;L.append(q);V.append(r)
 			if T:L.insert(1,T);V.insert(1,a)
-			K[AN]=f.join(L);K[AO]=f.join(V);C.get_up_info_event.wait();b=C.up_info[S];K[CC]='🆙 '+b[J]+Cv+C.zh(D.get(Cj))+Ab+b[Ai];Z[H]=[K]
+			K[AN]=e.join(L);K[AO]=e.join(V);C.get_up_info_event.wait();b=C.up_info[S];K[CC]='🆙 '+b[J]+Cv+C.zh(D.get(Cj))+Ab+b[Ai];Z[H]=[K]
 		return Z
 	search_key=B
 	def searchContent(A,key,quick):
@@ -1151,7 +1151,7 @@ class Spider(Spider):
 			if Y!=U:C.detailContent_args[B6]=U;C.pool.submit(C.interaction_detailContent)
 		R=F(C.userConfig[BB])
 		if not C.userid or not R:return
-		if not M:H='https://api.bilibili.com/x/web-interface/view?aid={0}&cid={1}'.format(N,L);Q=C._get_sth(H,P);Z=I.loads(Q.text);M=Z[E][e]
+		if not M:H='https://api.bilibili.com/x/web-interface/view?aid={0}&cid={1}'.format(N,L);Q=C._get_sth(H,P);Z=I.loads(Q.text);M=Z[E][d]
 		J=0
 		if F(D.get('last_play_cid',0))==F(L):
 			V=F(D.get('last_play_time'))
@@ -1173,7 +1173,7 @@ class Spider(Spider):
 		E=Bi(x.time())
 		if not D.wbi_key or abs(D.wbi_key[CJ])<30:D.get_wbiKey(E)
 		C[CJ]=E;C=A2(sorted(C.items()));C={C:B.join(filter(lambda chr:chr not in"!'()*",A(D)))for(C,D)in C.items()};F=CM(C);return F+'&w_rid='+hashlib.md5((F+D.wbi_key[S]).encode(encoding=At)).hexdigest()
-	def _get_sth(A,url,_type=h):
+	def _get_sth(A,url,_type=g):
 		D=_type;B=url
 		if D==AS and A.session_vip.cookies:C=A.session_vip.get(B,headers=A.header)
 		elif D==P:
@@ -1197,7 +1197,7 @@ class Spider(Spider):
 		elif'reply'in C:D.update({'oid':A(C[0]),'rpid':A(C[1]),r:T,'action':T});E='http://api.bilibili.com/x/v2/reply/action'
 		F._post_sth(url=E,data=D)
 	def get_cid(D,video):
-		C=video;F='https://api.bilibili.com/x/web-interface/view?aid=%s'%A(C[a]);G=D._get_sth(F);H=I.loads(G.text);B=H[E];C[n]=B[n];C[e]=B[e]
+		C=video;F='https://api.bilibili.com/x/web-interface/view?aid=%s'%A(C[a]);G=D._get_sth(F);H=I.loads(G.text);B=H[E];C[n]=B[n];C[d]=B[d]
 		if BY in B and C0 in B[BY]:C[z]=D.find_bangumi_id(B[BY])
 	cookie_dic_tmp={}
 	def get_cookies(A,key):
@@ -1243,7 +1243,7 @@ class Spider(Spider):
 				if E in A.userConfig.get(y,[]):A.userConfig[y].remove(E)
 				if E in A.userConfig.get(F,[]):A.userConfig[F].remove(E)
 			A.userConfig.pop(A5)
-		elif id in s(g(lambda x:x[C],A.userConfig.get(A5,[]))):
+		elif id in s(f(lambda x:x[C],A.userConfig.get(A5,[]))):
 			B={D:name,C:id};A.userConfig[A5].remove(B);B[C]=id.replace(An,K)
 			if B in A.userConfig.get(y,[]):A.userConfig[y].remove(B)
 			if B in A.userConfig.get(F,[]):A.userConfig[F].remove(B)
@@ -1286,7 +1286,7 @@ class Spider(Spider):
 			else:C=A(I.userConfig[Ao]);J=120
 			N=A(I.userConfig[Bm])
 		elif E==Bd:C=A(I.userConfig[Ap]);J=F(C);N=L
-		G=s(g(lambda x:A(x[m])+K+A(x[D3]),D));H=[]
+		G=s(f(lambda x:A(x[m])+K+A(x[D3]),D));H=[]
 		if C+K+N in G:H.append(D[G.index(C+K+N)])
 		if not H and E==AB:
 			for Q in I.vod_codec_id.keys():
@@ -1300,10 +1300,10 @@ class Spider(Spider):
 					M=F(O[0])
 					if E==AB and A(O[1])==N:H=[D[G.index(A(P))]];break
 					H.append(D[G.index(A(P))])
-		R=f'\n    <AdaptationSet>\n      <ContentComponent contentType="{E}"/>{B.join(g(I.get_dash_media,H))}\n    </AdaptationSet>';return R
+		R=f'\n    <AdaptationSet>\n      <ContentComponent contentType="{E}"/>{B.join(f(I.get_dash_media,H))}\n    </AdaptationSet>';return R
 	get_dash_event=j.Event()
 	def get_dash(A,ja):
-		B=ja.get(e);C=ja.get('minBufferTime');D=A.pool.submit(A.get_dash_media_list,ja.get(AB));E=A.pool.submit(A.get_dash_media_list,ja.get(Bd));F=f'<MPD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:mpeg:dash:schema:mpd:2011" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" type="static" mediaPresentationDuration="PT{B}S" minBufferTime="PT{C}S" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011">\n  <Period duration="PT{B}S" start="PT0S">{D.result()}{E.result()}\n  </Period>\n</MPD>'
+		B=ja.get(d);C=ja.get('minBufferTime');D=A.pool.submit(A.get_dash_media_list,ja.get(AB));E=A.pool.submit(A.get_dash_media_list,ja.get(Bd));F=f'<MPD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:mpeg:dash:schema:mpd:2011" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" type="static" mediaPresentationDuration="PT{B}S" minBufferTime="PT{C}S" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011">\n  <Period duration="PT{B}S" start="PT0S">{D.result()}{E.result()}\n  </Period>\n</MPD>'
 		with B9(f"{AF}/playurl.mpd",'w',encoding=At)as G:G.write(F)
 		A.get_dash_event.set();x.sleep(3);os.remove(f"{AF}/playurl.mpd")
 	def get_durl(I,ja):
@@ -1316,6 +1316,7 @@ class Spider(Spider):
 			if A==-1:A=0
 			G=ja[A][o]
 		return G
+
 	def playerContent(C,flag,id,vipFlags):
 		C.stop_heartbeat_event.set();D={D5:B,o:B};F=id.split(K)
 		if'web'in id or D6==F[0]:return C.live_playerContent(flag,id,vipFlags)
@@ -1331,46 +1332,71 @@ class Spider(Spider):
 			return D
 		elif'notplay'in F:C.pool.submit(C.do_notplay,F);return D
 		elif G==n:
-			N={a:A(H)};C.get_cid(N);G=N[n];F.append(CH+A(N[e]));P=N.get(z)
+			N={a:A(H)};C.get_cid(N);G=N[n];F.append(CH+A(N[d]));P=N.get(z)
 			if P:id+=K+P;F.append(P)
-		U=C.encrypt_wbi(avid=H,cid=G,fnval=4048,fnver=0,fourk=1);O=f"https://api.bilibili.com/x/player/wbi/playurl?{U}"
+		U=C.encrypt_wbi(avid=H,cid=G,fnval=4048,fnver=0,fourk=1)
+		O=f"https://api.bilibili.com/x/player/wbi/playurl?{U}"
+		dan = f'https://api.bilibili.com/x/v1/dm/list.so?oid={G}'
 		if z in id:
-			if Al in id:W=s(A for A in g(lambda x:x if z in x else AU,F)if A is not AU);O='https://www.bilibili.com/bangumi/play/'+W[0];D[o]=O;D['flag']='bilibili';D[Al]=T;D['jx']=T;D[CL]=A({A9:C.header[A9]});return D
+			if Al in id:
+				W=s(A for A in f(lambda x:x if z in x else AU,F)if A is not AU);O='https://www.bilibili.com/bangumi/play/'+W[0];D[o]=O;D['flag']='bilibili';D[Al]=T;D['jx']=T;D[CL]=A({A9:C.header[A9]})
+				D['danmaku'] = dan
+				return D
 			O='https://api.bilibili.com/pgc/player/web/playurl?aid={}&cid={}&fnval=4048&fnver=0&fourk=1'.format(H,G)
 		X=C._get_sth(O,AS);J=I.loads(X.text)
 		if J[M]==0:
 			if E in J:Q=J[E]
 			elif AM in J:Q=J[AM]
-			else:return D
-		else:return D
+			else:
+				D['danmaku'] = dan
+				return D
+		else:
+			D['danmaku'] = dan
+			return D
 		R=Q.get('dash')
 		if R:C.get_dash_event.clear();Y=C.pool.submit(C.get_dash,R);C.get_dash_event.wait();D[o]=f"{AF}/playurl.mpd"
 		else:D[o]=C.get_durl(Q.get('durl',{}))
-		D[Al]=L;D[B8]=B;D[CL]=C.header;C.pool.submit(C.start_heartbeat,H,G,F);return D
+		D[Al]=L;D[B8]=B;D[CL]=C.header;C.pool.submit(C.start_heartbeat,H,G,F)
+		D['danmaku'] = dan
+		return D
+
 	def live_playerContent(G,flag,id,vipFlags):
 		U='video/x-flv';T='url_info';C={D5:B,o:B};D=id.split(K)
-		if V(D)<2:return C
+		dan = f'https://api.bilibili.com/x/v1/dm/list.so?oid={D[1]}'
+		if V(D)<2:
+			C['danmaku'] = dan
+			return C
 		if G.userid and F(G.userConfig[BB])>0:G.pool.submit(G.post_live_history,D[-1])
 		if D[0]==D6:
 			W=F(D[1]);format=F(D[2]);H=F(D[3]);X=F(D[-1]);O='https://api.live.bilibili.com/xlive/web-room/v2/index/getRoomPlayInfo?room_id={0}&protocol=0,1&format={1}&codec={2}&qn={3}&ptype=8&platform=web&dolby=5&panorama=1&no_playurl=0&mask=1'.format(X,format,H,W);Q=G._get_sth(O,P);J=I.loads(Q.text)
 			if J[M]==0:
 				try:N=J[E][Cz].get(CG);H=N[C_][0][Bc][0][Bb][0]
-				except:return C
+				except:
+					C['danmaku'] = dan
+					return C
 				Y=A(H['base_url']);Z=A(H[T][0]['host']);a=A(H[T][0]['extra']);N=Z+Y+a;C[o]=N
 				if'.flv'in N:C[B8]=U
 				else:C[B8]=B
-			else:return C
+			else:
+				C['danmaku'] = dan
+				return C
 		else:
 			O='https://api.live.bilibili.com/room/v1/Room/playUrl?cid=%s&%s'%(D[1],D[0])
 			try:Q=G._get_sth(O)
-			except:return C
+			except:
+				C['danmaku'] = dan
+				return C
 			R=I.loads(Q.text)
 			if R[M]==0:
 				J=R[E];S=J['durl']
 				if V(S)>0:C[o]=S[0][o]
 				if'h5'in D[0]:C[B8]=B
 				else:C[B8]=U
-			else:return C
-		C[Al]=L;C[CL]={D7:'https://live.bilibili.com',A9:G.header[A9]};return C
-	config={'player':{},Z:{BE:[{S:C6,J:'分类',G:[{D:B1,C:B1},{D:C1,C:C1},{D:B2,C:B2},{D:C2,C:C2},{D:'我的粉丝',C:'我的粉丝'}]}],AI:[{S:b,J:'个人动态排序',G:[{D:'最新发布',C:Ah},{D:'最多播放',C:'click'},{D:'最多收藏',C:'stow'},{D:'最早发布',C:Ce}]}],Ad:[{S:A1,J:'分类',G:[{D:'番剧',C:T},{D:'国创',C:AV},{D:'电影',C:A0},{D:'电视剧',C:'5'},{D:'纪录片',C:AQ},{D:'综艺',C:'7'}]},{S:b,J:'排序',G:[{D:A3,C:A3},{D:'播放数量',C:A0},{D:'更新时间',C:L},{D:'最高评分',C:AV},{D:'弹幕数量',C:T},{D:'追看人数',C:AQ},{D:'开播时间',C:'5'},{D:'上映时间',C:'6'}]},{S:C5,J:'付费',G:[{D:'全部',C:'-1'},{D:'免费',C:T},{D:'付费',C:'2%2C6'},{D:'大会员',C:'4%2C6'}]}],As:[{S:b,J:'排序',G:[{D:'近期热门',C:'hot'},{D:'月播放量',C:Ay},{D:'最新投稿',C:'new'},{D:'频道精选',C:Cl}]}],Ae:[{S:b,J:'排序',G:[{D:'收藏时间',C:'mtime'},{D:'播放量',C:Ay},{D:'投稿时间',C:'pubtime'}]}],BF:[{S:r,J:'分类',G:[{D:'视频',C:BM},{D:AH,C:AW},{D:BL,C:BL},{D:BS,C:BS}]}],BG:[{S:r,J:'类型',G:[{D:'视频',C:AB},{D:'番剧',C:D0},{D:Ad,C:D1},{D:AH,C:AW},{D:'用户',C:C7}]},{S:b,J:'视频排序',G:[{D:'综合排序',C:Cn},{D:'最新发布',C:Ah},{D:'最多点击',C:'click'},{D:'最多收藏',C:'stow'},{D:'最多弹幕',C:'dm'}]},{S:e,J:'视频时长',G:[{D:'全部',C:L},{D:'60分钟以上',C:AV},{D:'30~60分钟',C:AQ},{D:'5~30分钟',C:A0},{D:'5分钟以下',C:T}]}]}};header={'Origin':Bt,D7:Bt,A9:'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_2_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15'}
+			else:
+				C['danmaku'] = dan
+				return C
+		C[Al]=L;C[CL]={D7:'https://live.bilibili.com',A9:G.header[A9]}
+		C['danmaku'] = dan
+		return C
+	config={'player':{},Z:{BE:[{S:C6,J:'分类',G:[{D:B1,C:B1},{D:C1,C:C1},{D:B2,C:B2},{D:C2,C:C2},{D:'我的粉丝',C:'我的粉丝'}]}],AI:[{S:b,J:'个人动态排序',G:[{D:'最新发布',C:Ah},{D:'最多播放',C:'click'},{D:'最多收藏',C:'stow'},{D:'最早发布',C:Ce}]}],Ad:[{S:A1,J:'分类',G:[{D:'番剧',C:T},{D:'国创',C:AV},{D:'电影',C:A0},{D:'电视剧',C:'5'},{D:'纪录片',C:AQ},{D:'综艺',C:'7'}]},{S:b,J:'排序',G:[{D:A3,C:A3},{D:'播放数量',C:A0},{D:'更新时间',C:L},{D:'最高评分',C:AV},{D:'弹幕数量',C:T},{D:'追看人数',C:AQ},{D:'开播时间',C:'5'},{D:'上映时间',C:'6'}]},{S:C5,J:'付费',G:[{D:'全部',C:'-1'},{D:'免费',C:T},{D:'付费',C:'2%2C6'},{D:'大会员',C:'4%2C6'}]}],As:[{S:b,J:'排序',G:[{D:'近期热门',C:'hot'},{D:'月播放量',C:Ay},{D:'最新投稿',C:'new'},{D:'频道精选',C:Cl}]}],Ae:[{S:b,J:'排序',G:[{D:'收藏时间',C:'mtime'},{D:'播放量',C:Ay},{D:'投稿时间',C:'pubtime'}]}],BF:[{S:r,J:'分类',G:[{D:'视频',C:BM},{D:AH,C:AW},{D:BL,C:BL},{D:BS,C:BS}]}],BG:[{S:r,J:'类型',G:[{D:'视频',C:AB},{D:'番剧',C:D0},{D:Ad,C:D1},{D:AH,C:AW},{D:'用户',C:C7}]},{S:b,J:'视频排序',G:[{D:'综合排序',C:Cn},{D:'最新发布',C:Ah},{D:'最多点击',C:'click'},{D:'最多收藏',C:'stow'},{D:'最多弹幕',C:'dm'}]},{S:d,J:'视频时长',G:[{D:'全部',C:L},{D:'60分钟以上',C:AV},{D:'30~60分钟',C:AQ},{D:'5~30分钟',C:A0},{D:'5分钟以下',C:T}]}]}};header={'Origin':Bt,D7:Bt,A9:'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_2_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15'}
 	def localProxy(A,param):return[200,'video/MP2T',action,B]
