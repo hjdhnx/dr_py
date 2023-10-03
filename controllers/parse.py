@@ -86,6 +86,7 @@ def parse_home(filename):
     env = get_env()
     py_ctx.update({
         'vipUrl': url,
+        'realUrl': '',
         'input': url,
         'fetch_params': {'headers': {'Referer':url}, 'timeout': 10, 'encoding': 'utf-8'},
         'jsp':jsp,
