@@ -55,7 +55,7 @@ function pre(){
 }
 
 let rule = {};
-const VERSION = 'drpy1 3.9.48beta2 20231003';
+const VERSION = 'drpy1 3.9.48beta3 20231003';
 /** 已知问题记录
  * 1.影魔的jinjia2引擎不支持 {{fl}}对象直接渲染 (有能力解决的话尽量解决下，支持对象直接渲染字符串转义,如果加了|safe就不转义)[影魔牛逼，最新的文件发现这问题已经解决了]
  * Array.prototype.append = Array.prototype.push; 这种js执行后有毛病,for in 循环列表会把属性给打印出来 (这个大毛病需要重点排除一下)
@@ -1606,6 +1606,11 @@ function searchParse(searchObj) {
     p = p.trim();
     let pp = rule.一级.split(';');
     let url = searchObj.searchUrl.replaceAll('**', searchObj.wd).replaceAll('fypage', searchObj.pg);
+    if(searchObj.pg === 1 && url.includes('[')&&url.includes(']')){
+        url = url.split('[')[1].split(']')[0];
+    }else if(searchObj.pg > 1 && url.includes('[')&&url.includes(']')){
+        url = url.split('[')[0];
+    }
     MY_URL = url;
     console.log(MY_URL);
     // log(searchObj.搜索);
@@ -2299,7 +2304,14 @@ function isVideoParse(isVideoObj){
         }else{
             rule.url = rule.host && rule.url ? urljoin(rule.host,rule.url) : rule.url;
         }
-        rule.searchUrl = rule.host && rule.searchUrl ? urljoin(rule.host,rule.searchUrl) : rule.searchUrl;
+
+        if(rule.searchUrl.includes('[')&&rule.searchUrl.includes(']')){
+            let u1 = rule.searchUrl.split('[')[0]
+            let u2 = rule.searchUrl.split('[')[1].split(']')[0]
+            rule.searchUrl = rule.host && rule.searchUrl?urljoin(rule.host,u1)+'['+urljoin(rule.host,u2)+']':rule.searchUrl;
+        }else{
+            rule.searchUrl = rule.host && rule.searchUrl ? urljoin(rule.host,rule.searchUrl) : rule.searchUrl;
+        }
 
         rule.timeout = rule.timeout||5000;
         rule.encoding = rule.编码||rule.encoding||'utf-8';
