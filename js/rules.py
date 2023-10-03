@@ -183,7 +183,7 @@ def jxTxt2Json(text: str, host: str):
     return jxs
 
 
-def getJxs(path='js', host=None):
+def getJxs(path=None, host=None):
     custom_jx = 'base/解析.conf'
     if not os.path.exists(custom_jx):
         with open(custom_jx, 'w+', encoding='utf-8') as f1:
@@ -195,8 +195,10 @@ def getJxs(path='js', host=None):
             """
             f1.write(msg)
     base_path = 'jiexi'  # 自建解析目录
+    if path is None:
+        path =  base_path
     os.makedirs(base_path, exist_ok=True)
-    file_name = os.listdir(base_path)
+    file_name = os.listdir(path)
     file_name = list(
         filter(lambda x: str(x).endswith('.js') and str(x).find('模板') < 0 and str(x).find('加密') < 0, file_name))
     # print(file_name)
