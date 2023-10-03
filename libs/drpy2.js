@@ -41,7 +41,7 @@ function pre(){
 
 let rule = {};
 let vercode = typeof(pdfl) ==='function'?'drpy2.1':'drpy2';
-const VERSION = vercode+' 3.9.48beta3 20231003';
+const VERSION = vercode+' 3.9.48beta4 20231004';
 /** 已知问题记录
  * 1.影魔的jinjia2引擎不支持 {{fl}}对象直接渲染 (有能力解决的话尽量解决下，支持对象直接渲染字符串转义,如果加了|safe就不转义)[影魔牛逼，最新的文件发现这问题已经解决了]
  * Array.prototype.append = Array.prototype.push; 这种js执行后有毛病,for in 循环列表会把属性给打印出来 (这个大毛病需要重点排除一下)
@@ -1504,11 +1504,25 @@ function searchParse(searchObj) {
     }
     p = p.trim();
     let pp = rule.一级.split(';');
-    let url = searchObj.searchUrl.replaceAll('**', searchObj.wd).replaceAll('fypage', searchObj.pg);
+    let url = searchObj.searchUrl.replaceAll('**', searchObj.wd);
     if(searchObj.pg === 1 && url.includes('[')&&url.includes(']')){
         url = url.split('[')[1].split(']')[0];
     }else if(searchObj.pg > 1 && url.includes('[')&&url.includes(']')){
         url = url.split('[')[0];
+    }
+
+    if(/fypage/.test(url)){
+        if(url.includes('(')&&url.includes(')')){
+            let url_rep = url.match(/.*?\((.*)\)/)[1];
+            // console.log(url_rep);
+            let cnt_page = url_rep.replaceAll('fypage', searchObj.pg);
+            // console.log(cnt_page);
+            let cnt_pg = eval(cnt_page);
+            // console.log(cnt_pg);
+            url = url.replaceAll(url_rep,cnt_pg).replaceAll('(','').replaceAll(')','');
+        }else{
+            url = url.replaceAll('fypage',searchObj.pg);
+        }
     }
 
     MY_URL = url;
