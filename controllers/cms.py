@@ -1335,11 +1335,28 @@ class CMS:
         pg = str(fypage)
         if not self.searchUrl:
             return self.blank()
-        url = self.searchUrl.replace('**', key).replace('fypage', pg)
+        url = self.searchUrl.replace('**', key)
         if fypage == 1 and self.test('[\[\]]', url):
             url = url.split('[')[1].split(']')[0]
         elif fypage > 1 and self.test('[\[\]]', url):
             url = url.split('[')[0]
+
+        if url.find('fypage') > -1:
+            if '(' in url and ')' in url:
+                # url_rep = url[url.find('('):url.find(')')+1]
+                # cnt_page = url.split('(')[1].split(')')[0].replace('fypage',pg)
+                # print(url_rep)
+                url_rep = re.search('.*?\((.*)\)', url, re.M | re.S).groups()[0]
+                cnt_page = url_rep.replace('fypage', pg)
+                # print(url_rep)
+                # print(cnt_page)
+                cnt_ctx = {}
+                exec(f'cnt_pg={cnt_page}', cnt_ctx)
+                cnt_pg = str(cnt_ctx['cnt_pg'])  # 计算表达式的结果
+                url = url.replace(url_rep, str(cnt_pg)).replace('(', '').replace(')', '')
+                # print(url)
+            else:
+                url = url.replace('fypage', pg)
 
         logger.info(f'{self.getName()}搜索链接:{url}')
         if not self.搜索:
