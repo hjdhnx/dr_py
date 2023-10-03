@@ -246,8 +246,14 @@ class CMS:
         else:
             self.url = urljoin(host, url) if host and url else url
 
+        if searchUrl.find('[') > -1 and searchUrl.find(']') > -1:
+            u1 = searchUrl.split('[')[0]
+            u2 = searchUrl.split('[')[1].split(']')[0]
+            self.searchUrl = urljoin(host, u1) + '[' + urljoin(host, u2) + ']' if host and searchUrl else searchUrl
+        else:
+            self.searchUrl = urljoin(host, searchUrl) if host and searchUrl else searchUrl
+
         self.detailUrl = urljoin(host, detailUrl) if host and detailUrl else detailUrl
-        self.searchUrl = urljoin(host, searchUrl) if host and searchUrl else searchUrl
         self.class_name = rule.get('class_name', '')
         self.class_url = rule.get('class_url', '')
         self.class_parse = rule.get('class_parse', '')
@@ -1330,6 +1336,11 @@ class CMS:
         if not self.searchUrl:
             return self.blank()
         url = self.searchUrl.replace('**', key).replace('fypage', pg)
+        if fypage == 1 and self.test('[\[\]]', url):
+            url = url.split('[')[1].split(']')[0]
+        elif fypage > 1 and self.test('[\[\]]', url):
+            url = url.split('[')[0]
+
         logger.info(f'{self.getName()}搜索链接:{url}')
         if not self.搜索:
             return self.blank()
