@@ -242,6 +242,7 @@ def config_render(mode):
     tt = time()
     UA = request.headers['User-Agent']
     ver = getParmas('ver')
+    m = getParmas('mode')
     sp = getParmas('sp')  # 优选
     logger.info(f'ver:{ver},UA:{UA}')
     if ver not in ['1','2']:
@@ -267,6 +268,11 @@ def config_render(mode):
     js_proxy = new_conf.JS_PROXY
     js0_password = new_conf.JS0_PASSWORD
     js_mode = int(new_conf.JS_MODE or 0)
+    if m:
+        try:
+            js_mode = int(m)
+        except:
+            pass
     print(f'{type(js_mode)} jsmode:{js_mode}')
     # print(ali_token)
     customConfig = getCustonDict(host,ali_token,js0_password)
