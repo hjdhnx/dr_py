@@ -415,6 +415,7 @@ def sort_parses_by_order(parses,host):
             parses[i]['order'] = 0
             parses[i]['write_date'] = 0
 
+        # 外层自动补header
         if not parses[i].get('header'):
             parses[i]['header'] = {'User-Agent': 'Mozilla/5.0'}
         if str(parses[i]['url']).startswith('/'):

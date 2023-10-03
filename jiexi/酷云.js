@@ -1,3 +1,4 @@
+var flag = [];
 function lazy() {
     let jxUrl = 'http://api.kunyu77.com/api.php/provide/parserUrl?url=';
     var t = Math.floor(new Date().getTime() / 1000).toString();

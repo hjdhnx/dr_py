@@ -20,6 +20,7 @@ function getSign(script, rid, did, tt){
 }
 // log(env);
 // fetch_params.headers.Referer = input;
+var flag = [];
 function lazy() {
     try {
         // realUrl = null;

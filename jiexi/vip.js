@@ -1,3 +1,4 @@
+var flag = [];
 function lazy() {
     let jxUrl = 'https://80k.tv/jxplayer.php?v=';
     fetch_params.headers.Referer = 'https://1080p.tv';

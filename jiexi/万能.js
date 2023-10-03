@@ -1,3 +1,4 @@
+var flag = [];
 function lazy() {
     let jxUrl = 'https://json.legendwhb.cn/llq/?url=';
     fetch_params.headers.Referer = jxUrl;

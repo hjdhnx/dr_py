@@ -202,16 +202,40 @@ def getJxs(path=None, host=None):
     file_name = list(
         filter(lambda x: str(x).endswith('.js') and str(x).find('模板') < 0 and str(x).find('加密') < 0, file_name))
     # print(file_name)
-    jx_list = [file.replace('.js', '') for file in file_name]
+    # jx_list = [file.replace('.js', '') for file in file_name]
     # print(file_name)
     # print(jx_list)
-    jx_str = '\n'.join([jx + ',{{host}}' + f'/parse/api/{jx}.js?url=,1' for jx in jx_list])
+    # jx_str = '\n'.join([jx + ',{{host}}' + f'/parse/api/{jx}.js?url=,1' for jx in jx_list])
     # print(jx_str)
+    jxs = []
+    for file in file_name:
+        ctx = Context()
+        with open(os.path.join(base_path,file),encoding='utf-8') as f0:
+            code = f0.read()
+        try:
+            ctx.eval(code)
+            flag = ctx.get('flag')
+            if flag:
+                flag = flag.json()
+                flag = ujson.loads(flag)
+                if isinstance(flag,list) and len(flag) > 0:
+                    jx = file.replace('.js', '')
+                    logger.info(f'自建解析可用:{jx}')
+                    jxs.append({
+                        'name': jx,
+                        'url': f'{host}/parse/api/{jx}.js?url=',
+                        'type': 1,
+                        'ua': UA,
+                        'flag': flag,
+                    })
+        except Exception as e:
+            logger.info(f'自建解析{file}写法有误:{e}')
 
-    with open(f'{path}/解析.conf', encoding='utf-8') as f:
-        text = f.read()
-    text = jx_str + '\n' + text
-    jxs = jxTxt2Json(text, host)
+    with open(f'{path}/解析.conf', encoding='utf-8') as f1:
+        text = f1.read()
+    # text = jx_str + '\n' + text
+    jxs1 = jxTxt2Json(text, host)
+    jxs.extend(jxs1)
     with open(custom_jx, encoding='utf-8') as f2:
         text = f2.read()
     jxs2 = jxTxt2Json(text, host)

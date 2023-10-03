@@ -1,14 +1,6 @@
 // print(env);
 // input = 'https://www.bilibili.com/bangumi/play/ep704873';
-fetch_params.headers = {
-        'User-Agent':PC_UA,
-        "Referer": "https://www.bilibili.com",
-        "Cookie":env.bili_cookie||''
-};
-let appkey = env.appkey||'';
-let access_key = env.access_key||'';
-// print(fetch_params);
-
+var flag = ['bilibili'];
 function getEpUrl(ssUrl){
 let html = request(ssUrl);
 let short_link = html.match(/short_link(.*?),/)[1];
@@ -61,6 +53,14 @@ return null
 }
 }
 function lazy(){
+fetch_params.headers = {
+        'User-Agent':PC_UA,
+        "Referer": "https://www.bilibili.com",
+        "Cookie":env.bili_cookie||''
+};
+let appkey = env.appkey||'';
+let access_key = env.access_key||'';
+
 if(!/bilibili/.test(input)){
    realUrl = input;
 }else {

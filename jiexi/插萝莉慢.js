@@ -1,3 +1,4 @@
+var flag = [];
 function lazy() {
     let jxUrl = 'http://chaloli.cn/home/api?type=ys&uid=1&key=ekloswzABCGHKLOT58&url=';
     fetch_params.headers.Referer = jxUrl;

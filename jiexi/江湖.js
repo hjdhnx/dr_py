@@ -1,3 +1,4 @@
+var flag = [];
 function lazy() {
     let jxUrl = 'http://45.248.10.163:4433/json.php?wap=0&url=';
     fetch_params.headers.Referer = jxUrl;

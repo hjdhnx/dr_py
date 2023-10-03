@@ -1,3 +1,4 @@
+var flag = [];
 function lazy(){
 let jxUrl = 'https://vip.lianfaka.com/vip/?url=';
 fetch_params.headers.Referer = 'https://www.dy6g.com';

@@ -1,4 +1,5 @@
 // 星驰免嗅
+var flag = [];
 function lazy() {
     let jxUrl = 'https://vip.swuii.top/player/analysis.php?v=';
     fetch_params.headers.Referer = jxUrl;

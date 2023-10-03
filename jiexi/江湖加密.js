@@ -1,3 +1,4 @@
+var flag = [];
 function lazy() {
     let PWD = 'drpy';
 // log(params);
