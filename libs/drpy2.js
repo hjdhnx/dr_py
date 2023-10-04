@@ -35,6 +35,7 @@ function init_test(){
     // var str = encryptor.encrypt(text) // 对数据进行加密
     // console.log("加密数据：" + str);
     log('rsax:'+typeof(rsax));
+    log('rsaX:'+typeof(rsaX));
 }
 
 /**
