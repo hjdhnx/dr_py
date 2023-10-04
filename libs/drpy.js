@@ -55,7 +55,7 @@ function pre(){
 }
 
 let rule = {};
-const VERSION = 'drpy1 3.9.48beta4 20231004';
+const VERSION = 'drpy1 3.9.48beta8 20231004';
 /** 已知问题记录
  * 1.影魔的jinjia2引擎不支持 {{fl}}对象直接渲染 (有能力解决的话尽量解决下，支持对象直接渲染字符串转义,如果加了|safe就不转义)[影魔牛逼，最新的文件发现这问题已经解决了]
  * Array.prototype.append = Array.prototype.push; 这种js执行后有毛病,for in 循环列表会把属性给打印出来 (这个大毛病需要重点排除一下)
@@ -433,6 +433,34 @@ function getCryptoJS(){
     // return request('https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/libs/crypto-hiker.js');
     return 'console.log("CryptoJS已装载");'
 }
+
+// 封装的RSA加解密类
+const RSA = {
+    encode:function (data,key,option){
+        // log('encode');
+        if(typeof(rsaEncrypt)==='function'){
+            if(!option||typeof(option)!=='object'){
+                return rsaEncrypt(data,key);
+            }else{
+                return rsaEncrypt(data,key,option);
+            }
+        }else{
+            return false
+        }
+    },
+    decode:function (data,key,option){
+        // log('decode');
+        if(typeof(rsaDecrypt)==='function'){
+            if(!option||typeof(option)!=='object'){
+                return rsaDecrypt(data,key);
+            }else{
+                return rsaDecrypt(data,key,option);
+            }
+        }else{
+            return false
+        }
+    }
+};
 
 /**
  * 获取壳子返回的代理地址
