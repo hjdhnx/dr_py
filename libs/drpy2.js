@@ -2,6 +2,7 @@ import cheerio from 'assets://js/lib/cheerio.min.js';
 import 'assets://js/lib/crypto-js.js';
 import 模板 from"../js/模板.js"
 import {gbkTool} from './gbk.js'
+// import './rsa.js'
 
 // import cheerio from "https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/libs/cheerio.min.js";
 // import "https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/libs/crypto-js.js";
@@ -17,6 +18,22 @@ function init_test(){
     console.log(RKEY);
     console.log(JSON.stringify(rule));
     console.log("init_test_end");
+
+    // console.log(typeof (CryptoJS));
+    // console.log(typeof (JSEncrypt));
+    // var publicKey = "-----BEGIN PUBLIC KEY-----\n" +
+    //     "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDTTt5d1LYtIxiW9ekKFBVonFOT\n" +
+    //     "XJHv4PY4xCDLPYbHWRKa/mRO7J11OJX+cR7bqzNq6uxH1W339wV\n" +
+    //     "lLP/x3Rl1RBh4prj0eYOEIsDVTvLTJONKazRtQrZ7yzSZ69o/3CQv\n" +
+    //     "ex6kb4js+9zho4U9fwIDAQAB\n" +
+    //     "-----END PUBLIC KEY-----";
+    // var text = '你好';
+    // const encryptor = new JSEncrypt();
+    // console.log(typeof (encryptor.setPublicKey));
+    // console.log(typeof (encryptor.encrypt));
+    // encryptor.setPublicKey(publicKey) // 设置公钥
+    // var str = encryptor.encrypt(text) // 对数据进行加密
+    // console.log("加密数据：" + str);
 }
 
 /**
