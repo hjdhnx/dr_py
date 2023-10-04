@@ -2411,7 +2411,8 @@ function proxy(params){
 function sniffer(){
     let enable_sniffer =  rule.sniffer || false;
     if(enable_sniffer){
-        log('准备执行辅助嗅探代理规则:\n'+rule.isVideo);
+        // log('准备执行辅助嗅探代理规则:\n'+rule.isVideo);
+        log('开始执行辅助嗅探代理规则...');
     }
     return enable_sniffer
 }
@@ -2435,7 +2436,11 @@ function isVideo(url){
         isVideo:is_video,
         t:t,
     };
-    return isVideoParse(isVideoObj)
+    let result = isVideoParse(isVideoObj);
+    if(result){
+        log('成功执行辅助嗅探规则并检测到视频地址:\n'+rule.isVideo);
+    }
+    return result
 }
 
 function DRPY(){//导出函数
