@@ -34,6 +34,7 @@ function init_test(){
     // encryptor.setPublicKey(publicKey) // 设置公钥
     // var str = encryptor.encrypt(text) // 对数据进行加密
     // console.log("加密数据：" + str);
+    log('rsax:'+typeof(rsax));
 }
 
 /**
