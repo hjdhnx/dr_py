@@ -67,14 +67,14 @@ function pre(){
 
 let rule = {};
 let vercode = typeof(pdfl) ==='function'?'drpy2.1':'drpy2';
-const VERSION = vercode+' 3.9.48beta8 20231004';
+const VERSION = vercode+' 3.9.48beta16 20231011';
 /** 已知问题记录
  * 1.影魔的jinjia2引擎不支持 {{fl}}对象直接渲染 (有能力解决的话尽量解决下，支持对象直接渲染字符串转义,如果加了|safe就不转义)[影魔牛逼，最新的文件发现这问题已经解决了]
  * Array.prototype.append = Array.prototype.push; 这种js执行后有毛病,for in 循环列表会把属性给打印出来 (这个大毛病需要重点排除一下)
  * 2.import es6py.js但是里面的函数没有被装载进来.比如drpy规则报错setResult2 is undefiend(合并文件了可以不管了)
  * 3.无法重复导入cheerio(怎么解决drpy和parseTag里都需要导入cheerio的问题) 无法在副文件导入cheerio (现在是全部放在drpy一个文件里了,凑合解决?)
  * 4.有个错误不知道哪儿来的 executeScript: com.quickjs.JSObject$Undefined cannot be cast to java.lang.String 在 点击选集播放打印init_test_end后面打印(貌似不影响使用)
- * 5.需要实现 stringify 函数,比起JSON.stringify函数,它会原封不动保留中文不会编码unicode
+ * 5.需要实现 stringify 函数,比起JSON.strifngify函数,它会原封不动保留中文不会编码unicode
  * 6.base64Encode,base64Decode,md5函数还没有实现 (抄影魔代码实现了)
  * 7.eval(getCryptoJS());还没有实现 (可以空实现了,以后遇到能忽略)
  * done:  jsp:{pdfa,pdfh,pd},json:{pdfa,pdfh,pd},jq:{pdfa,pdfh,pd}
@@ -2003,6 +2003,8 @@ function vodDeal(vod){
     let tab_ordered_list = vod_play_from;
     // 线路重命名后的列表
     let tab_renamed_list = vod_play_from;
+    // 定义实际要返回线路
+    let tab_list = vod_play_from;
     // 选集列表根据线路排序
     let play_ordered_list = vod_play_url;
 
@@ -2013,6 +2015,7 @@ function vodDeal(vod){
 
         if(rule.tab_remove&&rule.tab_remove.length>0){
             tab_removed_list = vod_play_from.filter(it=>!rule.tab_remove.includes(it));
+            tab_list = tab_removed_list;
         }
 
         if(rule.tab_order&&rule.tab_order.length>0){
@@ -2020,15 +2023,16 @@ function vodDeal(vod){
             tab_ordered_list = tab_removed_list.sort((a, b) => {
             return (tab_order.indexOf(a)===-1?9999:tab_order.indexOf(a)) - (tab_order.indexOf(b)===-1?9999:tab_order.indexOf(b))
             });
-            play_ordered_list = tab_ordered_list.map(it=>vod_play_url[tab_index_dict[it]]);
+            tab_list = tab_ordered_list;
         }
+        play_ordered_list = tab_list.map(it=>vod_play_url[tab_index_dict[it]]);
     }
 
     if(rule.tab_rename&&typeof(rule.tab_rename)==='object'&Object.keys(rule.tab_rename).length>0){
-        tab_renamed_list = tab_ordered_list.map(it=>rule.tab_rename[it]||it);
+        tab_renamed_list = tab_list.map(it=>rule.tab_rename[it]||it);
+        tab_list = tab_renamed_list;
     }
-
-    vod.vod_play_from = tab_renamed_list.join('$$$');
+    vod.vod_play_from = tab_list.join('$$$');
     vod.vod_play_url = play_ordered_list.join('$$$');
     return vod
 }
