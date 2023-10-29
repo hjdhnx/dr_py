@@ -1,6 +1,7 @@
 /**
  * 已知问题：
     * [推荐]页面：'雷电模拟器'播放部份影片会出错，'播放器'改成'ijk' & '解码方式'改成'软解'，即可正常播放
+ * 影视TV 超連結跳轉支持
  * 影视TV 弹幕支持
     * https://t.me/fongmi_offical/
     * https://github.com/FongMi/Release/tree/main/apk

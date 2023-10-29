@@ -1,3 +1,9 @@
+/**
+ * 影视TV 超連結跳轉支持
+ * https://t.me/fongmi_offical/
+ * https://github.com/FongMi/Release/tree/main/apk
+ */
+
 var rule = {
 	title: '荐片',
 	host: 'http://api2.rinhome.com',
