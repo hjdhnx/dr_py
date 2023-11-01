@@ -4,9 +4,9 @@ var rule = {
     homeUrl: '/api.php/provide/vod?ac=detail',
     searchUrl: '/api.php/provide/vod?ac=detail&wd=**&pg=fypage',
     detailUrl: '/api.php/provide/vod?ac=detail&ids=fyid', //非必填,二级详情拼接链接
-    searchable: 2,//是否启用全局搜索,
-    quickSearch: 1,//是否启用快速搜索,
-    filterable: 1,//是否启用分类筛选,
+    searchable: 2,
+    quickSearch: 0,
+    filterable: 1,
     play_parse: false,
     lazy: '',
     multi: 1,
