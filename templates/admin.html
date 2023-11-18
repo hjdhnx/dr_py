@@ -215,6 +215,52 @@
                 }
             });
 
+            $('#choose_update').click(function () {
+                $('#fileInput').click();
+            });
+
+            $('#fileInput').change(function () {
+                //获取选择的文件信息
+                let file = this.files[0];
+                //执行上传操作
+                if(file){
+                    console.log(file);
+                    if(file.name.includes('dr_py')||file.name.includes('drpy')){
+                        if(confirm('已选择文件:'+file.name+',体积:'+(file.size/1024).toFixed(2)+'kb 进行手动升级,是否继续?')){
+                            var name = file.name;
+                            if (!name.endsWith('.zip')) {
+                                alert('仅支持上传zip文件');
+                                return false
+                            }
+                            let form_data = new FormData();
+                            // 把所有表单信息
+                            form_data.append("id", "001");
+                            form_data.append("name", name);
+                            form_data.append("file", file);
+                            $.ajax({
+                                type: "POST",
+                                url: "/admin/upload_update?force=1",
+                                dataType: "json",
+                                processData: false,  // 注意：让jQuery不要处理数据
+                                contentType: false,  // 注意：让jQuery不要设置contentType
+                                data: form_data
+                            }).success(function (ret) {
+                                console.log(ret);
+                                alert(ret.msg);
+                                if(ret.msg && ret.msg.includes('文件上传成功')){
+                                    location.reload();
+                                }
+                            }).fail(function (ret) {
+                                console.log(ret);
+                                alert(ret.msg);
+                            });
+                        }
+                    }else{
+                        alert('你选择的文件:'+file.name+'看起来不像是drpy的升级文件压缩包。一般文件名长这样:dr_py-main.zip，请重新选择')
+                    }
+                }
+            });
+
             $('#use_py').click(function () {
                 $.get("/admin/change_use_py", function (data, status) {
                     console.log(data);
@@ -265,7 +311,7 @@
 
         });
         function getFileSize(fileObj) {
-            $('#file_size').text('文件大小为:' + fileObj.files[0].size / 1024 + 'kb');
+            $('#file_size').text('文件大小为:' + (fileObj.files[0].size / 1024).toFixed(2) + 'kb');
         }
     </script>
     <div class="title">欢迎使用DR-PY管理界面<div><span class="ver_title">当前版本: {{ ver }}</span><span
@@ -301,6 +347,8 @@
                     <ul>
                         <li><a href="javascript:void(0);" class="funcbtn" id="checkUpdate">检测升级</a></li>
                         <li><a href="javascript:void(0);" class="funcbtn" id="force_update">强制升级</a></li>
+                        <li><a href="javascript:void(0);" class="funcbtn" id="choose_update">手动升级</a></li>
+                        <input type="file" id="fileInput" accept=".zip,.rar" style="display:none;">
                     </ul>
                 </li>
 
@@ -325,7 +373,7 @@
   
     <form action="/admin/upload" method="POST" enctype="multipart/form-data">
         <!--     <input type = "file" name = "file" class="btn" accept=".js"  onchange="getFileSize(this)"/>-->
-        <input type="file" name="file" class="btn" onchange="getFileSize(this)" />
+        <input type="file" name="file" class="btn" onchange="getFileSize(this)" accept=".js,.jsd,.txt"/>
         <!--     <input type = "submit" value="上传" class="btn"/>-->
         <input type="button" id="upload" value="上传" class="btn" />
     </form>

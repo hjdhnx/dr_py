@@ -6,13 +6,13 @@
 import os
 
 import ujson
-from flask import Blueprint, request, render_template, render_template_string, jsonify, make_response, redirect
+from flask import Blueprint, abort, request, render_template, render_template_string, jsonify, make_response, redirect
 from controllers.service import storage_service, rules_service, parse_service
 from base.R import R
 from base.database import db
 from utils.log import logger
 import shutil
-from utils.update import getLocalVer, getOnlineVer, download_new_version, download_lives, copy_to_update
+from utils.update import zipfile, getLocalVer, getOnlineVer, download_new_version, download_lives, copy_to_update
 from utils import parser
 from utils.env import get_env, update_env
 from utils.web import getParmas, verfy_token
@@ -365,6 +365,7 @@ def admin_change_use_py():
     msg = f'已修改的配置记录id为:{id},结果为{state}'
     return R.success(msg)
 
+
 @admin.route('/clear_drop')
 def admin_clear_drop():
     if not verfy_token():
@@ -385,6 +386,7 @@ def admin_clear_drop():
     msg = f'清理完毕,本次共计清理{len(rm_list)}个\n {rm_str}'
     return R.success(msg)
 
+
 # @admin.route('/get_use_py')
 # def admin_get_use_py():
 #     if not verfy_token():
@@ -393,6 +395,23 @@ def admin_clear_drop():
 #     use_py = lsg.getItem('USE_PY')
 #     state = 1 if use_py else 0
 #     return R.success(state)
+
+def get_size(fobj):
+    if fobj.content_length:
+        return fobj.content_length
+
+    try:
+        pos = fobj.tell()
+        fobj.seek(0, 2)  # seek to end
+        size = fobj.tell()
+        fobj.seek(pos)  # back to original position
+        return size
+    except (AttributeError, IOError):
+        pass
+
+    # in-memory file object that doesn't support seeking or tell
+    return 0
+
 
 @admin.route('/upload', methods=['POST'])
 def upload_file():
@@ -403,6 +422,12 @@ def upload_file():
     if request.method == 'POST':
         try:
             file = request.files['file']
+            lsg = storage_service()
+            js_max_len = lsg.getItem('JS_MAX_LENGTH', 0.1 * 1024 * 1024)
+            if get_size(file) > float(js_max_len):
+                logger.info(f'文件体积过大,禁止上传。当前体积:{get_size(file)},源体积限制:{js_max_len}')
+                abort(413)  # request entity too large
+
             filename = secure_filename(file.filename)
             logger.info(f'推荐安全文件命名:{filename}')
             savePath = f'js/{file.filename}'
@@ -446,6 +471,33 @@ def upload_file():
         # return render_template('upload.html')
         return R.failed('文件上传失败')
 
+
+@admin.route('/upload_update', methods=['POST'])
+def upload_update():
+    args = request.args
+    force = args.get('force')
+    print('force:', force)
+    if not verfy_token():
+        return render_template('login.html')
+    if request.method == 'POST':
+        try:
+            file = request.files['file']
+            filename = secure_filename(file.filename)
+            logger.info(f'推荐安全文件命名:{filename}')
+            savePath = f'tmp/dr_py.zip'
+            file.seek(0)  # 读取后变成空文件,重新赋能
+            file.save(savePath)
+            logger.info(f'开始解压文件:{savePath}')
+            f = zipfile.ZipFile(savePath, 'r')  # 压缩文件位置
+            for file in f.namelist():
+                f.extract(file, 'tmp')  # 解压位置
+            f.close()
+            # print('解压完毕,开始升级')
+            logger.info('解压完毕,开始升级')
+            # ret = copy_to_update()
+            return R.success('升级文件上传成功,请确认drpy目录内是否存在/tmp/dr_py-main/文件夹，如果ok你可以点击强制升级按钮升级刚才上传的文件')
+        except Exception as e:
+            return R.failed(f'升级文件上传失败!{e}')
 
 @admin.route('/login', methods=['GET', 'POST'])
 def login_api():
