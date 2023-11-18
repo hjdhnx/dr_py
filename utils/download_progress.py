@@ -164,6 +164,11 @@ def file_downloads(files, save_path='download'):
     logger.info(
         "\n{} file{} download successfully, {} file{} download failed!".format(sn, 's' * (sn > 1), fn, 's' * (fn > 1)))
 
+    if fn > 0:
+        return False
+    else:
+        return True
+
 
 if __name__ == '__main__':
     # urlTxt = 'download/urls.txt'

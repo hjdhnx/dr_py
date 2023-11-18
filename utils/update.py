@@ -226,7 +226,9 @@ def download_new_version(update_proxy='https://ghproxy.liuzhicong.com/'):
         #     f.write(rb)
 
         # 2023/11/18 改为带进度条的下载
-        file_downloads([{'url': url, 'name': 'dr_py.zip'}], tmp_path)
+        download_ok = file_downloads([{'url': url, 'name': 'dr_py.zip'}], tmp_path)
+        if not download_ok:
+            return '带进度条的下载升级文件失败。具体参考后台日志'
 
         # print(f'开始解压文件:{download_path}')
         logger.info(f'开始解压文件:{download_path}')
