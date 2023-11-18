@@ -95,6 +95,7 @@ banip_num(){
 			    #rm -rf /usr/local/bin/banips
 			    # EDITOR=vi;export EDITOR
 			    #crontab -e
+			    # PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 			    #15分钟执行一次封ip
 			    # */15 * * * * banips run >> /etc/nginx/conf.d/banips.log  2>&1
 			    # /etc/init.d/cron stop
