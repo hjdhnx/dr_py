@@ -93,9 +93,12 @@ banip_num(){
 			    # cat /dev/null > banips.sh
 			    #ln -s /etc/nginx/conf.d/banips.sh /usr/local/bin/banips
 			    #rm -rf /usr/local/bin/banips
+			    # EDITOR=vi;export EDITOR
 			    #crontab -e
 			    #15分钟执行一次封ip
 			    # */15 * * * * banips run >> /etc/nginx/conf.d/banips.log  2>&1
+			    # /etc/init.d/cron stop
+				  # /etc/init.d/cron start
 			    # iptables -L -n --line-numbers
 			    # iptables -I INPUT -s 168.138.198.222 -j DROP
 			    # cat /var/log/nginx/access.log | grep HEAD
