@@ -98,6 +98,7 @@ banip_num(){
 			    # PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 			    #15分钟执行一次封ip
 			    # */15 * * * * banips run >> /etc/nginx/conf.d/banips.log  2>&1
+			    # cat /dev/null > /etc/nginx/conf.d/banips.log
 			    # /etc/init.d/cron stop
 				  # /etc/init.d/cron start
 			    # iptables -L -n --line-numbers
