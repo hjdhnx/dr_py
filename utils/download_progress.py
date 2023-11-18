@@ -11,7 +11,7 @@ import time
 import requests
 from urllib.parse import unquote
 from contextlib import closing
-from log import logger
+from utils.log import logger
 
 chunkSize = 1024 * 1024
 loop = 5
