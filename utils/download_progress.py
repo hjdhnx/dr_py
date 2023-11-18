@@ -51,7 +51,8 @@ def get_file_name(url, headers):
 def file_download(fileUrl, filePath):
     if os.path.exists(filePath):
         os.remove(filePath)
-    response = requests.get(fileUrl, headers=headers, stream=True, verify=False)
+    # response = requests.get(fileUrl, headers=headers, stream=True, verify=False)
+    response = requests.get(fileUrl, headers=headers, stream=True)
     fileSize = int(response.headers['content-length'])  # 文件大小
     logger.info(f'fileSize:{fileSize}')
 
@@ -76,7 +77,7 @@ def file_download(fileUrl, filePath):
 
         if remainSize > 0:
 
-            with closing(requests.get(fileUrl, headers=_headers, stream=True, verify=False)) as _response, open(
+            with closing(requests.get(fileUrl, headers=_headers, stream=True)) as _response, open(
                     filePath,
                     "ab") as file:
                 for content in _response.iter_content(chunk_size=chunkSize):
