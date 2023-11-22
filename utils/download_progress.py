@@ -150,7 +150,8 @@ def file_downloads(files, save_path='download'):
                 logger.info(localtime + ': {} download failed! Url: {}'.format(filename, fileUrl))
                 failedUrl.append(fileUrl)
 
-        except:
+        except Exception as e:
+            logger.info(f'链接{fileUrl}下载失败,由于出现了错误:{e}')
             failedUrl.append(fileUrl)
 
     if len(failedUrl):
