@@ -71,15 +71,18 @@ def rules_to_view():
 def random_pics():
     id = getParmas('id')
     # print(f'id:{id}')
-    pics = getPics()
+    base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
+    path = 'images'
+    img_path = os.path.join(base_path, f'{path}')
+    pics = getPics(img_path)
     # print(pics)
     new_conf = cfg
     lsg = storage_service()
     store_conf_dict = lsg.getStoreConfDict()
     new_conf.update(store_conf_dict)
-    if not new_conf.WALL_PAPER and len(pics) > 0:
-        if id and f'images/{id}.jpg' in pics:
-            pic = f'images/{id}.jpg'
+    if not new_conf.WALL_PAPER or (id and len(pics) > 0):
+        if id and f'{img_path}/{id}.jpg' in pics:
+            pic = f'{img_path}/{id}.jpg'
         else:
             pic = random.choice(pics)
         file = open(pic, "rb").read()

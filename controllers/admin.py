@@ -552,3 +552,31 @@ def admin_lives():
     response = make_response(files)
     response.headers['Content-Type'] = 'text/plain; charset=utf-8'
     return response
+
+@admin.route('/lives_web')
+def admin_lives_web():
+    if not verfy_token():
+        return R.failed('请登录后再试')
+
+    # host_url = request.host_url
+    def get_lives():
+        base_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))  # 上级目录
+        live_path = os.path.join(base_path, f'base/直播.txt')
+        with open(live_path,encoding='utf-8') as f:
+            text = f.read()
+        return text
+
+    text = get_lives()
+    # response = make_response(text)
+    # response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+    # return response
+    lives = []
+    for line in text.split('\n'):
+        if ',http' in line:
+            lives.append({
+                'title':line.split(',')[0],
+                'url':line.split(',')[1],
+            })
+    print(lives)
+    # lsg = storage_service()
+    return render_template('lives.html',ver=getLocalVer(),lives=lives)

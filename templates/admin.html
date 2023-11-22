@@ -298,6 +298,10 @@
             $('#lives').click(function () {
                 location.href = '/admin/lives'
             });
+            $('#lives_web').click(function () {
+                location.href = '/admin/lives_web'
+            });
+
             $("summary").click(function() {
                 // console.log('summary被点击');
                 const details = $('details');
@@ -360,6 +364,7 @@
                         <li><a href="javascript:void(0);" class="funcbtn" id="update_lives">同步直播源</a></li>
                         <li><a href="javascript:void(0);" class="funcbtn" id="use_py">已{% if pystate=='1' %}启用{% else %}关闭{% endif %}py源</a></li>
                         <li><a href="javascript:void(0);" class="funcbtn" id="lives">直播源列表</a></li>
+                        <li><a href="javascript:void(0);" class="funcbtn" id="lives_web">网页在线直播</a></li>
                     </ul>
                 </li>
 
