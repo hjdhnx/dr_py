@@ -246,7 +246,7 @@ class CMS:
         else:
             self.url = urljoin(host, url) if host and url else url
 
-        if searchUrl.find('[') > -1 and searchUrl.find(']') > -1:
+        if searchUrl.find('[') > -1 and searchUrl.find(']') > -1 and '#' not in searchUrl:
             u1 = searchUrl.split('[')[0]
             u2 = searchUrl.split('[')[1].split(']')[0]
             self.searchUrl = urljoin(host, u1) + '[' + urljoin(host, u2) + ']' if host and searchUrl else searchUrl
@@ -1336,9 +1336,9 @@ class CMS:
         if not self.searchUrl:
             return self.blank()
         url = self.searchUrl.replace('**', key)
-        if fypage == 1 and self.test('[\[\]]', url):
+        if fypage == 1 and self.test('[\[\]]', url) and '#' not in url:
             url = url.split('[')[1].split(']')[0]
-        elif fypage > 1 and self.test('[\[\]]', url):
+        elif fypage > 1 and self.test('[\[\]]', url) and '#' not in url:
             url = url.split('[')[0]
 
         if url.find('fypage') > -1:
