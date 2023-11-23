@@ -37,6 +37,7 @@ OCR_API = 'https://api.nn.ci/ocr/b64/text'  # 验证码识别接口,传参数dat
 UNAME = 'admin'  # 管理员账号
 PWD = 'drpy'  # 管理员密码
 USE_PY = 0  # 开启py源
+FORCE_UP = 1  # 带进度条下载失败后强制下载
 JS0_DISABLE = 0  # 禁用js0
 JS0_PASSWORD = ''  # js0密码
 JS_MODE = 0  # js模式 0 drpy服务器解析 1 pluto本地解析

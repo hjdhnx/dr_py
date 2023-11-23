@@ -198,7 +198,7 @@ def copy_to_update():
     return True
 
 
-def download_new_version(update_proxy='https://ghproxy.liuzhicong.com/'):
+def download_new_version(update_proxy='https://ghproxy.liuzhicong.com/',force_up=False):
     update_proxy = (update_proxy or '').strip()
     logger.info(f'update_proxy:{update_proxy}')
     t1 = getTime()
@@ -218,17 +218,17 @@ def download_new_version(update_proxy='https://ghproxy.liuzhicong.com/'):
         logger.info(f'开始下载:{url}')
         download_path = os.path.join(tmp_path, 'dr_py.zip')
 
-        # r = requests.get(url, headers=headers, timeout=(20, 20), verify=False)
-        # rb = r.content
-        # # 保存文件前清空目录
-        # del_file(tmp_path)
-        # with open(download_path,mode='wb+') as f:
-        #     f.write(rb)
-
         # 2023/11/18 改为带进度条的下载
         download_ok = file_downloads([{'url': url, 'name': 'dr_py.zip'}], tmp_path)
-        if not download_ok:
-            return '带进度条的下载升级文件失败。具体参考后台日志'
+        if not download_ok and not force_up:
+            return '带进度条的下载升级文件失败,并没有启用强制下载功能。具体参考后台日志'
+        elif not download_ok and force_up:
+            r = requests.get(url, headers=headers, timeout=(20, 20), verify=False)
+            rb = r.content
+            # 保存文件前清空目录
+            del_file(tmp_path)
+            with open(download_path,mode='wb+') as f:
+                f.write(rb)
 
         # print(f'开始解压文件:{download_path}')
         logger.info(f'开始解压文件:{download_path}')

@@ -275,6 +275,20 @@
                 });
             });
 
+            $('#force_up').click(function () {
+                $.get("/admin/change_force_up", function (data, status) {
+                    console.log(data);
+                    if (data.code === 200) {
+                        alert(data.msg);
+                        location.reload();
+                    } else {
+                        alert(data.msg);
+                        console.log('升级失败了...');
+                        return false
+                    }
+                });
+            });
+
             $("#logtail").click(function () {
                 location.href = '/admin/logtail';
             });
@@ -352,6 +366,7 @@
                         <li><a href="javascript:void(0);" class="funcbtn" id="checkUpdate">检测升级</a></li>
                         <li><a href="javascript:void(0);" class="funcbtn" id="force_update">强制升级</a></li>
                         <li><a href="javascript:void(0);" class="funcbtn" id="choose_update">手动升级</a></li>
+                        <li><a href="javascript:void(0);" class="funcbtn" id="force_up">已{% if force_up=='1' %}启用{% else %}关闭{% endif %}强制下载</a></li>
                         <input type="file" id="fileInput" accept=".zip,.rar" style="display:none;">
                     </ul>
                 </li>
