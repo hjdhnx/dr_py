@@ -74,8 +74,9 @@
     </style>
 <div id="loading"  align="center"></div>
 <script type="text/javascript">
+    let url = document.location.href.split("url=")[1];
     var config = {
-        "url":"{{ctx.url}}",
+        "url":url||"{{ctx.url}}",
         "key":"",
         "vkey":"",
         "time":"",
