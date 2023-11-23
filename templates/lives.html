@@ -51,7 +51,7 @@
     <div class="container">
         {% for live in lives %}
         <div class="block">
-            <a href="/web/player1?url={{ live.url }}" target="_blank">
+            <a href="/web/player{{zb_player}}?url={{ live.url }}" target="_blank">
                 <h2>{{ live.title }}</h2>
             </a>
         </div>

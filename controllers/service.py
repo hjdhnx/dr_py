@@ -26,7 +26,7 @@ class storage_service(object):
                      'LAZYPARSE_MODE', 'WALL_PAPER_ENABLE',
                      'WALL_PAPER', 'UNAME', 'PWD', 'LIVE_MODE', 'CATE_EXCLUDE', 'TAB_EXCLUDE', 'SEARCH_TIMEOUT',
                      'SEARCH_LIMIT', 'MULTI_MODE', 'XR_MODE', 'JS_PROXY', 'UPDATE_PROXY', 'ENV', 'ALI_TOKEN', 'OCR_API',
-                     'SPECIAL', 'SPIDER_JAR', 'EXT_FUNC', 'JS_MAX_LENGTH']
+                     'SPECIAL', 'SPIDER_JAR','ZB_PLAYER', 'EXT_FUNC', 'JS_MAX_LENGTH']
         for conf in conf_list:
             if not self.hasItem(conf):
                 print(f'开始初始化{conf}')
@@ -35,12 +35,12 @@ class storage_service(object):
     @classmethod
     def getStoreConf(self):
         # MAX_CONTENT_LENGTH 最大上传和端口ip一样是顶级配置,无法外部修改的
-        conf_list = ['LIVE_URL', 'LIVE_MODE', 'PLAY_URL', 'PID_URL', 'USE_PY', 'FORCE_UP','JS_MODE', 'JS0_DISABLE', 'JS0_PASSWORD',
+        conf_list = ['LIVE_URL', 'LIVE_MODE','ZB_PLAYER', 'PLAY_URL', 'PID_URL', 'USE_PY', 'FORCE_UP','JS_MODE', 'JS0_DISABLE', 'JS0_PASSWORD',
                      'PLAY_DISABLE', 'LAZYPARSE_MODE', 'WALL_PAPER_ENABLE',
                      'WALL_PAPER', 'UNAME', 'PWD', 'CATE_EXCLUDE', 'TAB_EXCLUDE', 'SEARCH_TIMEOUT', 'SEARCH_LIMIT',
                      'MULTI_MODE', 'XR_MODE', 'JS_PROXY', 'UPDATE_PROXY', 'ENV', 'SPECIAL', 'SPIDER_JAR',
                      'EXT_FUNC', 'JS_MAX_LENGTH', 'ALI_TOKEN', 'OCR_API']
-        conf_name_list = ['直播地址', '直播模式', '远程地址', '进程管理链接', '启用py源','强制下载', 'js模式', '禁用js0',
+        conf_name_list = ['直播地址', '直播模式', '播放器','远程地址', '进程管理链接', '启用py源','强制下载', 'js模式', '禁用js0',
                           'js0密码', '禁用免嗅', '免嗅模式', '启用壁纸', '壁纸链接', '管理账号',
                           '管理密码', '分类排除', '线路排除', '聚搜超时', '搜索条数', '多源模式', '仙人模式', '源代理',
                           '升级代理', '环境变量', '优选源', '挂载JAR', '辅助规则', '源体积', '阿里tk', 'OCR接口']

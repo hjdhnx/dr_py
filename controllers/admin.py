@@ -64,7 +64,9 @@ def admin_settings():  # 管理员界面
     # print(conf_lists)
     jar_lists = get_jar_list()
     SPIDER_JAR = lsg.getItem('SPIDER_JAR', 'custom_spider.jar')
-    return render_template('settings.html', conf_lists=conf_lists, jar_lists=jar_lists, jar_now=SPIDER_JAR,
+    ZB_PLAYER = lsg.getItem('ZB_PLAYER', '1')
+    # print('ZB_PLAYER:',ZB_PLAYER)
+    return render_template('settings.html', conf_lists=conf_lists, jar_lists=jar_lists, jar_now=SPIDER_JAR,player_now=ZB_PLAYER,
                            ver=getLocalVer())
 
 
@@ -592,5 +594,6 @@ def admin_lives_web():
                 'url':line.split(',')[1],
             })
     print(lives)
-    # lsg = storage_service()
-    return render_template('lives.html',ver=getLocalVer(),lives=lives)
+    lsg = storage_service()
+    zb_player = lsg.getItem('ZB_PLAYER','1')
+    return render_template('lives.html',ver=getLocalVer(),lives=lives,zb_player=zb_player)
