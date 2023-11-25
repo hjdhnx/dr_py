@@ -313,8 +313,12 @@
                 location.href = '/admin/lives'
             });
             $('#lives_web').click(function () {
-                location.href = '/admin/lives_web'
+                open('/admin/lives_web');
             });
+
+            $('#live_tools').click(function (){
+                open('/admin/tools');
+            })
 
             $("summary").click(function() {
                 // console.log('summary被点击');
@@ -380,6 +384,7 @@
                         <li><a href="javascript:void(0);" class="funcbtn" id="use_py">已{% if pystate=='1' %}启用{% else %}关闭{% endif %}py源</a></li>
                         <li><a href="javascript:void(0);" class="funcbtn" id="lives">直播源列表</a></li>
                         <li><a href="javascript:void(0);" class="funcbtn" id="lives_web">网页在线直播</a></li>
+                        <li><a href="javascript:void(0);" class="funcbtn" id="live_tools">转换工具</a></li>
                     </ul>
                 </li>
 

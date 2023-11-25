@@ -597,3 +597,9 @@ def admin_lives_web():
     lsg = storage_service()
     zb_player = lsg.getItem('ZB_PLAYER','1')
     return render_template('lives.html',ver=getLocalVer(),lives=lives,zb_player=zb_player)
+
+@admin.route('/tools')
+def admin_tools():
+    if not verfy_token():
+        return R.failed('请登录后再试')
+    return render_template('tools.html', ver=getLocalVer())
