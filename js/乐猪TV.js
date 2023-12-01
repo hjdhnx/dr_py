@@ -1,6 +1,6 @@
 var rule = {
     title:'乐猪TV',
-    host:'http://www.lezhutv.com',
+    host:'http://www.jukankan.cc',
     // homeUrl:'/',
     url:'/list/fyclassfyfilter.html',
     filterable:1,//是否启用分类筛选,
