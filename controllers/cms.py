@@ -1351,6 +1351,10 @@ class CMS:
                 # print(url_rep)
                 # print(cnt_page)
                 cnt_ctx = {}
+                cnt_page = cnt_page.replace(';', '')
+                cnt_page = cnt_page.replace('"', '')
+                cnt_page = cnt_page.replace('\'', '')
+                cnt_page = cnt_page.replace('_', '')
                 exec(f'cnt_pg={cnt_page}', cnt_ctx)
                 cnt_pg = str(cnt_ctx['cnt_pg'])  # 计算表达式的结果
                 url = url.replace(url_rep, str(cnt_pg)).replace('(', '').replace(')', '')
