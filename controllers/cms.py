@@ -19,7 +19,7 @@ from utils.encode import base64Encode, base64Decode, fetch, post, request, getCr
 from utils.encode import verifyCode, setDetail, join, urljoin2, parseText, requireCache, forceOrder, base64ToImage, \
     encodeStr, decodeStr
 from utils.encode import md5 as mmd5
-from utils.safePython import safePython
+from utils.safePython import safePython, safe_eval
 from utils.parser import runPy, runJScode, JsObjectWrapper, PyJsObject, PyJsString
 from utils.htmlParser import jsoup
 from urllib.parse import urljoin, quote, unquote
@@ -185,7 +185,7 @@ class CMS:
                 if isinstance(HOST, PyJsString):  # JsObjectWrapper
                     HOST = parseText(str(HOST))
                 host = HOST.rstrip('/')
-                print('host:',host)
+                print('host:', host)
             except Exception as e:
                 logger.info(f'执行{hostJs}获取host发生错误:{e}')
 
@@ -828,8 +828,9 @@ class CMS:
                 # print(url_rep)
                 # print(cnt_page)
                 cnt_ctx = {}
-                exec(f'cnt_pg={cnt_page}', cnt_ctx)
-                cnt_pg = str(cnt_ctx['cnt_pg'])  # 计算表达式的结果
+                safe_eval(f'cnt_pg={cnt_page}', cnt_ctx)
+                # exec(f'cnt_pg={cnt_page}', cnt_ctx)
+                cnt_pg = str(cnt_ctx['cnt_pg']) if cnt_ctx.get('cnt_pg') else 1  # 计算表达式的结果
                 url = url.replace(url_rep, str(cnt_pg)).replace('(', '').replace(')', '')
                 # print(url)
             else:
@@ -1351,8 +1352,9 @@ class CMS:
                 # print(url_rep)
                 # print(cnt_page)
                 cnt_ctx = {}
-                exec(f'cnt_pg={cnt_page}', cnt_ctx)
-                cnt_pg = str(cnt_ctx['cnt_pg'])  # 计算表达式的结果
+                # exec(f'cnt_pg={cnt_page}', cnt_ctx)
+                safe_eval(f'cnt_pg={cnt_page}', cnt_ctx)
+                cnt_pg = str(cnt_ctx['cnt_pg']) if cnt_ctx.get('cnt_pg') else 1 # 计算表达式的结果
                 url = url.replace(url_rep, str(cnt_pg)).replace('(', '').replace(')', '')
                 # print(url)
             else:
