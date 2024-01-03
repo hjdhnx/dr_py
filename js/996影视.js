@@ -1,5 +1,5 @@
 var rule= {
-    title:'369影视',
+    title:'996影视',
     host:'https://www.cs1369.com',
     // url:'/index.php/vod/show/id/fyclass/page/fypage.html',
     url:'/show/id/fyclass/page/fypage.html',
