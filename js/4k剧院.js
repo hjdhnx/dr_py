@@ -3,7 +3,8 @@ muban.mxpro.二级.desc = '.module-info-item:eq(4)&&Text;;;.module-info-item-con
 var rule = {
 	title:'91free',
 	模板:'mxpro',
-	host:'https://91free.vip',
+	//host:'https://91free.vip',
+	host:'https://4k4k.live',
 	// url:'/vodshow/id/fyclass/page/fypage.html',
 	url:'/vodshow/id/fyfilter.html',
 	filterable:1,//是否启用分类筛选,
