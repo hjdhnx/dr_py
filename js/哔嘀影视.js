@@ -1,6 +1,7 @@
+// 发布页 https://www.bdys.me/
 var rule = {
     title: '哔嘀影视',
-    host: 'https://www.bdys01.com',
+    host: 'https://www.bdys10.com',
     // url: '/s/all/fypage?type=fyclass',
 	url: '/s/all/fypage?type=fyclassfyfilter',
 	filter_url:'&{{fl.area}}&{{fl.year}}&{{fl.by}}',

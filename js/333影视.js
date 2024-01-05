@@ -4,7 +4,8 @@ muban.首图.二级.desc = '.otherbox&&Text;;;.data--span:eq(2)&&Text;.data--spa
 var rule={
     title:'333影视',
     模板:'首图',
-    host:'https://www.ylwt33.com',
+    //host:'https://www.ylwt33.com',
+      host:'https://www.333ys.me',
     // url:'/vodshow/fyclass--------fypage---.html',
     url:'/vodshow/fyclassfyfilter.html',
     filterable:1,//是否启用分类筛选,
