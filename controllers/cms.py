@@ -1354,7 +1354,7 @@ class CMS:
                 cnt_ctx = {}
                 # exec(f'cnt_pg={cnt_page}', cnt_ctx)
                 safe_eval(f'cnt_pg={cnt_page}', cnt_ctx)
-                cnt_pg = str(cnt_ctx['cnt_pg']) if cnt_ctx.get('cnt_pg') else 1 # 计算表达式的结果
+                cnt_pg = str(cnt_ctx['cnt_pg']) if cnt_ctx.get('cnt_pg') else 1  # 计算表达式的结果
                 url = url.replace(url_rep, str(cnt_pg)).replace('(', '').replace(')', '')
                 # print(url)
             else:
