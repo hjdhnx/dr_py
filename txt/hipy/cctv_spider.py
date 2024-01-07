@@ -20,19 +20,21 @@ import time
 
 """
 配置示例:
-t4不支持ext,api里会自动含有ext参数是base64编码后的选中的筛选条件
+t4的配置里ext节点会自动变成api对应query参数extend,但t4的ext字符串不支持路径格式，比如./开头或者.json结尾
+api里会自动含有ext参数是base64编码后的选中的筛选条件
 
+错误示例,ext含有json:
 {
     "key":"hipy_cctv",
     "name":"hipy_cctv",
     "type":4,
-    "api":"http://192.168.31.49:5707/api/v1/vod/cctv_spider?api_ext=./cctv_spider.json",
+    "api":"http://192.168.31.49:5707/api/v1/vod/cctv_spider?api_ext={{host}}/txt/hipy/cctv_spider.json",
     "searchable":1,
     "quickSearch":1,
     "filterable":1,
-    "ext":"./cctv_spider.json"
+    "ext":"cctv_spider.json"
  }
- 
+ 正确示例。同时存在ext和api_ext会优先取ext作为extend加载init
  {
     "key":"hipy_cctv",
     "name":"hipy_cctv",
@@ -41,6 +43,7 @@ t4不支持ext,api里会自动含有ext参数是base64编码后的选中的筛�
     "searchable":1,
     "quickSearch":1,
     "filterable":1,
+    "ext":"cctv_spider"
  }
  
  {
@@ -194,9 +197,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             f.write(json.dumps(ext_file_dict, ensure_ascii=False))
 
     def init(self, extend=""):
-        print("============{0}============".format(extend))
-        if extend.startswith('./'):
-            ext_file = os.path.join(os.path.dirname(__file__), extend)
+        def init_file(ext_file):
             ext_file = Path(ext_file).as_posix()
             # print(f'ext_file:{ext_file}')
             if os.path.exists(ext_file):
@@ -208,12 +209,20 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
                         self.config['filter'].update(ext_dict)
                     except Exception as e:
                         print(f'更新扩展筛选条件发生错误:{e}')
+
+        print("============{0}============".format(extend))
+        if extend.startswith('./'):
+            ext_file = os.path.join(os.path.dirname(__file__), extend)
+            init_file(ext_file)
         elif extend.startswith('http'):
             try:
                 r = self.fetch(extend)
                 self.config['filter'].update(r.json())
             except Exception as e:
                 print(f'更新扩展筛选条件发生错误:{e}')
+        elif extend and not extend.startswith('./') and not extend.startswith('http'):
+            ext_file = os.path.join(os.path.dirname(__file__), './' + extend + '.json')
+            init_file(ext_file)
 
     def isVideoFormat(self, url):
         pass
