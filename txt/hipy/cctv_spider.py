@@ -36,8 +36,8 @@ api里会自动含有ext参数是base64编码后的选中的筛选条件
  }
  正确示例。同时存在ext和api_ext会优先取ext作为extend加载init
  {
-    "key":"hipy_cctv",
-    "name":"hipy_cctv",
+    "key":"hipy_t4_cctv",
+    "name":"cctv(hipy_t4)",
     "type":4,
     "api":"http://192.168.31.49:5707/api/v1/vod/cctv_spider?api_ext={{host}}/txt/hipy/cctv_spider.json",
     "searchable":1,
@@ -47,8 +47,8 @@ api里会自动含有ext参数是base64编码后的选中的筛选条件
  }
  
  {
-    "key": "t3_hipy_cctv",
-    "name": "t3_hipy_cctv",
+    "key": "hipy_t3_cctv",
+    "name": "cctv(hipy_t3)",
     "type": 3,
     "api": "{{host}}/txt/hipy/cctv_spider.py",
     "searchable": 1,
