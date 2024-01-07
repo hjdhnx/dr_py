@@ -750,8 +750,10 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         arr = content.split('\n')
         urlPrefix = self.get_RegexGetText(Text=link, RegexText='(http[s]?://[a-zA-z0-9.]+)/', Index=1)
         subUrl = arr[-1].split('/')
-        subUrl[3] = '1200'
-        subUrl[-1] = '1200.m3u8'
+        # subUrl[3] = '1200'
+        subUrl[3] = '2000'
+        # subUrl[-1] = '1200.m3u8'
+        subUrl[-1] = '2000.m3u8'
         hdUrl = urlPrefix + '/'.join(subUrl)
 
         url = urlPrefix + arr[-1]
