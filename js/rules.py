@@ -254,6 +254,7 @@ def getPys(path='txt/py'):
     # print(file_name)
     rule_list = [file.replace('.py', '') for file in file_name]
     py_path = [f'{path}/{rule}.py' for rule in rule_list]
+    # print(py_path)
     new_rule_list = []
     for i in range(len(rule_list)):
         new_rule_list.append({
