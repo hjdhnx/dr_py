@@ -60,6 +60,11 @@ api里会自动含有ext参数是base64编码后的选中的筛选条件
 
 
 class Spider(BaseSpider):  # 元类 默认的元类 type
+    module = None
+
+    def getDependence(self):
+        return ['base_spider']
+
     def getName(self):
         return "中央电视台"  # 可搜索
 
@@ -211,18 +216,24 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
                         print(f'更新扩展筛选条件发生错误:{e}')
 
         print("============{0}============".format(extend))
-        if extend.startswith('./'):
-            ext_file = os.path.join(os.path.dirname(__file__), extend)
-            init_file(ext_file)
-        elif extend.startswith('http'):
-            try:
-                r = self.fetch(extend)
-                self.config['filter'].update(r.json())
-            except Exception as e:
-                print(f'更新扩展筛选条件发生错误:{e}')
-        elif extend and not extend.startswith('./') and not extend.startswith('http'):
-            ext_file = os.path.join(os.path.dirname(__file__), './' + extend + '.json')
-            init_file(ext_file)
+        if isinstance(extend, str):
+            if extend.startswith('./'):
+                ext_file = os.path.join(os.path.dirname(__file__), extend)
+                init_file(ext_file)
+            elif extend.startswith('http'):
+                try:
+                    r = self.fetch(extend)
+                    self.config['filter'].update(r.json())
+                except Exception as e:
+                    print(f'更新扩展筛选条件发生错误:{e}')
+            elif extend and not extend.startswith('./') and not extend.startswith('http'):
+                ext_file = os.path.join(os.path.dirname(__file__), './' + extend + '.json')
+                init_file(ext_file)
+        elif isinstance(extend, list):
+            for lib in extend:
+                if '.Spider' in str(type(lib)):
+                    self.module = lib
+                    break
 
     def isVideoFormat(self, url):
         pass
@@ -254,6 +265,8 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         result = {
             'list': []
         }
+        if self.module:
+            result = self.module.homeVideoContent()
         return result
 
     def categoryContent(self, tid, pg, filter, extend):
