@@ -16,7 +16,6 @@ from urllib import request, parse
 from pathlib import Path
 import urllib
 import urllib.request
-import time
 
 """
 配置示例:
