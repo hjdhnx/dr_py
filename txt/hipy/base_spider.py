@@ -205,7 +205,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         }
         return result
 
-    def searchContent(self, wd, quick=False):
+    def searchContent(self, wd, quick=False, pg=1):
         """
         返回搜索列表
         @param wd: 搜索关键词
