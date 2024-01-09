@@ -213,21 +213,25 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
                     except Exception as e:
                         print(f'更新扩展筛选条件发生错误:{e}')
 
-        print("============{0}============".format(extend))
-        if isinstance(extend, str):
-            if extend.startswith('./'):
-                ext_file = os.path.join(os.path.dirname(__file__), extend)
+        print("============依赖列表:{0}============".format(extend))
+        ext = self.extend
+        print("============ext:{0}============".format(ext))
+        if isinstance(ext, str) and ext:
+            if ext.startswith('./'):
+                ext_file = os.path.join(os.path.dirname(__file__), ext)
                 init_file(ext_file)
-            elif extend.startswith('http'):
+            elif ext.startswith('http'):
                 try:
-                    r = self.fetch(extend)
+                    r = self.fetch(ext)
                     self.config['filter'].update(r.json())
                 except Exception as e:
                     print(f'更新扩展筛选条件发生错误:{e}')
-            elif extend and not extend.startswith('./') and not extend.startswith('http'):
-                ext_file = os.path.join(os.path.dirname(__file__), './' + extend + '.json')
+            elif not ext.startswith('./') and not ext.startswith('http'):
+                ext_file = os.path.join(os.path.dirname(__file__), './' + ext + '.json')
                 init_file(ext_file)
-        elif isinstance(extend, list):
+
+        # 装载模块，这里只要一个就够了
+        if isinstance(extend, list):
             for lib in extend:
                 if '.Spider' in str(type(lib)):
                     self.module = lib
