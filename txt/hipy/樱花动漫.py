@@ -9,18 +9,10 @@ import sys
 
 sys.path.append('..')
 try:
-    from base.spider import Spider as BaseSpider
+    # from base.spider import Spider as BaseSpider
+    from base.spider import BaseSpider
 except ImportError:
     from t4.base.spider import BaseSpider
-import json
-import time
-import base64
-import re
-import io
-import tokenize
-from Crypto.Cipher import AES, PKCS1_v1_5 as PKCS1_cipher
-from Crypto.Util.Padding import unpad
-from Crypto.PublicKey import RSA
 
 from cachetools import cached, TTLCache  # 可以缓存curd的函数，指定里面的key
 
@@ -109,7 +101,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         print(f'ext_file:{ext_file}')
         ext_file_dict = self.homeContent(True)['filters']
         with open(ext_file, mode='w+', encoding='utf-8') as f:
-            f.write(json.dumps(ext_file_dict, ensure_ascii=False))
+            f.write(self.json2str(ext_file_dict))
 
     def init(self, extend=""):
         """
@@ -117,11 +109,6 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         @param extend:
         @return:
         """
-        # cipher_text = 'qebgGqODxKrWujD2TaoZoyh6aeYntZLsTaZW8MQvVNORiHLLi/o/cEEEXkSs1vfHEuiURxMTr9zL2Kwbffz2pDvLCamrK1tuxIcczsaI7cfsAh5gcgyzOOdZUszoU45ZgS9Bi4HZ3RDHZAWEqP0JyTaH32oDxgO9nx/xhe1xyVRyj9y5gkfPVt2AP94I8/DwDI9CEstcPzGfRNHYxlCuGMtnMvVwzonmkNDyOw+N5xr2ZI3P8O1cj04mCEAE6/d2tGSU/o+EOyWVLWWw0R3hoduHvjAtuMbBt6WNCcsL51zWceiTcsl34acqd9Pya3lA52ZFRojME/R4zdTzMbvwrOEF3Up0eB58//+NM6k4tW+cBNAHDGgO8t7hcfSG/TnJLQ7Gigrn899dGbFeQMCEQf0zxMxfgYBDkADs0aza9N2QIXChgEDVFDvw0vE2m6b+bJfswmbrhNEIM//95XpMv68HEP3jCTwFEehattwHjyYE4fJoH3OtPO++pDiZltaxdizfFD6WmTO+v4qub1QfpUEXWHzG6nqDA9MioigiTRdRAb4PEMioBCJS5/gel+PGRja1cR1NtBjl4RKpSPstwrmczG8qKQrn2Zjwkz8f4OdnEBKRLaWzb/hVDAQgqRfUyohEdnQyocaYsnB5lJoMSp93QCzwAuHYueyMh2fNpcemWGfs58wrZr5VFSBaQDYv/HjsNntoPaCDpoQIV9DJKiqQsiYMblsz/Mdbnlfd1vI5X69TVPvItzh26zXjgpFBKsiFDOtvd3bNe92XnTH3jiDgBQbqoL6jUbvhNQapqRUZxovWk30UQ0YTQnqODkorKdrEB1IeNhKt0epurJG/G7A6DQ6/6lZ7pAwlYVlfXzFgZOGNb1Hs52j2F+sGvgWY00BAH1eHtpHPPdckL25JMKai3QDQUAVBxAI8njCmcNUPfl9kDZe62QMNJwaZKD9eaOjNrdVsKjah9gkiWL8BnDxJeGErZyrvKhyqg0fwNvyn8wEfeUlwRzfDysrvjdBz3'
-        # ret = self.decode_rsa(cipher_text[1:])
-        # print(ret)
-        # extend内容进行解密后可以获取key,iv,token等参数
-        # print('gParam:',gParam)
         if extend.startswith('http'):
             self.init_extend(extend)
         else:
@@ -248,7 +235,6 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         ret = r.json()
         data = self.decode(ret['data'])
         # print(data)
-
         vod = {"vod_id": vod_id,
                "vod_name": data['vod_name'],
                "vod_pic": data['vod_pic'],
@@ -346,141 +332,10 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
 
     # -----------------------------------------------自定义函数-----------------------------------------------
     def decode(self, text):
-        return json.loads(self.aes_cbs_decode(text, self.key, self.iv))
+        return self.str2json(self.aes_cbc_decode(text, self.key, self.iv))
 
     def decode_rsa(self, text):
-        return json.loads(self.rsa_private_decode(text, self.private_key))
-
-    def eval_computer(self, text):
-        """
-        自定义的字符串安全计算器
-        @param text:字符串的加减乘除
-        @return:计算后得到的值
-        """
-        localdict = {}
-        self.safe_eval(f'ret={text.replace("=", "")}', localdict)
-        ret = localdict.get('ret') or None
-        return ret
-
-    def safe_eval(self, code: str = '', localdict: dict = None):
-        code = code.strip()
-        if not code:
-            return {}
-        if localdict is None:
-            localdict = {}
-        builtins = __builtins__
-        if not isinstance(builtins, dict):
-            builtins = builtins.__dict__.copy()
-        else:
-            builtins = builtins.copy()
-        for key in ['__import__', 'eval', 'exec', 'globals', 'dir', 'copyright', 'open', 'quit']:
-            del builtins[key]  # 删除不安全的关键字
-        # print(builtins)
-        global_dict = {'__builtins__': builtins,
-                       'json': json, 'print': print,
-                       're': re, 'time': time, 'base64': base64
-                       }  # 禁用内置函数,不允许导入包
-        try:
-            self.check_unsafe_attributes(code)
-            exec(code, global_dict, localdict)
-            return localdict
-        except Exception as e:
-            return {'error': f'执行报错:{e}'}
-
-    # ==================== 静态函数 ======================
-    @staticmethod
-    def check_unsafe_attributes(string):
-        """
-        安全检测需要exec执行的python代码
-        :param string:
-        :return:
-        """
-        g = tokenize.tokenize(io.BytesIO(string.encode('utf-8')).readline)
-        pre_op = ''
-        for toktype, tokval, _, _, _ in g:
-            if toktype == tokenize.NAME and pre_op == '.' and tokval.startswith('_'):
-                attr = tokval
-                msg = "access to attribute '{0}' is unsafe.".format(attr)
-                raise AttributeError(msg)
-            elif toktype == tokenize.OP:
-                pre_op = tokval
-
-    @staticmethod
-    def aes_cbs_decode(ciphertext, key, iv):
-        # 将密文转换成byte数组
-        ciphertext = base64.b64decode(ciphertext)
-        # 构建AES解密器
-        decrypter = AES.new(key.encode(), AES.MODE_CBC, iv.encode())
-        # 解密
-        plaintext = decrypter.decrypt(ciphertext)
-        # 去除填充
-        plaintext = unpad(plaintext, AES.block_size)
-        # 输出明文
-        # print(plaintext.decode('utf-8'))
-        return plaintext.decode('utf-8')
-
-    @staticmethod
-    def rsa_private_decode(ciphertext, private_key):
-        # 计算需要添加的等号数
-        b64_ciphertext = ciphertext
-        num_padding = 4 - (len(b64_ciphertext) % 4)
-        if num_padding < 4:
-            b64_ciphertext += "=" * num_padding
-        # print(len(ciphertext), ciphertext)
-        # 将密文转换成byte数组
-        # ciphertext = base64.b64decode(b64_ciphertext.encode("utf8"))
-        ciphertext = base64.b64decode(b64_ciphertext)
-        # print(len(ciphertext), ciphertext)
-        # 构建RSA解密器
-        private_key = f'-----BEGIN RSA PRIVATE KEY-----\n{private_key}\n-----END RSA PRIVATE KEY-----'
-        pri_Key = RSA.importKey(private_key)
-        decrypter = PKCS1_cipher.new(pri_Key)
-        # 解密
-        length = len(ciphertext)
-        default_length = 256
-        # 长度不用分段
-        if length < default_length:
-            plaintext = b''.join(decrypter.decrypt(ciphertext, b' '))
-        else:
-            # 需要分段
-            offset = 0
-            res = []
-            while length - offset > 0:
-                if length - offset > default_length:
-                    res.append(decrypter.decrypt(ciphertext[offset:offset + default_length], b' '))
-                else:
-                    res.append(decrypter.decrypt(ciphertext[offset:], b' '))
-                offset += default_length
-
-            plaintext = b''.join(res)
-        return plaintext.decode('utf-8')
-
-    @staticmethod
-    def rsa_public_encode(text, public_key):
-        public_key = "-----BEGIN RSA PRIVATE KEY-----\n" + public_key + "\n-----END RSA PRIVATE KEY-----"
-        pub_key = RSA.importKey(public_key)
-        cipher = PKCS1_cipher.new(pub_key)
-        text = text.encode("utf-8)")
-        length = len(text)
-        default_length = 256
-        if length < default_length:
-            rsa_text = base64.b64encode(cipher.encrypt(text))  # 加密并转为b64编码
-        else:
-            # 需要分段
-            offset = 0
-            res = []
-            while length - offset > 0:
-                if length - offset > default_length:
-                    res.append(cipher.encrypt(text[offset:offset + default_length]))
-                else:
-                    res.append(cipher.encrypt(text[offset:]))
-                offset += default_length
-            byte_data = b''.join(res)
-
-            rsa_text = base64.b64encode(byte_data)
-
-        ciphertext = rsa_text.decode("utf8")
-        return ciphertext
+        return self.str2json(self.rsa_private_decode(text, self.private_key))
 
 
 if __name__ == '__main__':

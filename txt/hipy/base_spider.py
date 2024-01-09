@@ -10,7 +10,8 @@ import sys
 
 sys.path.append('..')
 try:
-    from base.spider import Spider as BaseSpider
+    # from base.spider import Spider as BaseSpider
+    from base.spider import BaseSpider
 except ImportError:
     from t4.base.spider import BaseSpider
 import json
