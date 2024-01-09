@@ -29,7 +29,17 @@ api里会自动含有ext参数是base64编码后的选中的筛选条件
     "quickSearch":1,
     "filterable":1,
     "ext":"https://jihulab.com/qiaoji/open/-/raw/main/yinghua"
-}
+},
+{
+    "key": "hipy_t3_樱花动漫",
+    "name": "樱花动漫(hipy_t3)",
+    "type": 3,
+    "api": "{{host}}/txt/hipy/樱花动漫.py",
+    "searchable": 1,
+    "quickSearch": 0,
+    "filterable": 1,
+    "ext": "https://jihulab.com/qiaoji/open/-/raw/main/yinghua"
+},
 """
 
 
@@ -109,10 +119,18 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         @param extend:
         @return:
         """
-        if extend.startswith('http'):
-            self.init_extend(extend)
+        ext = self.extend
+        if ext.startswith('http'):
+            self.init_extend(ext)
         else:
             self.init_extend(self.api_qj)
+
+        # 装载模块，这里只要一个就够了
+        if isinstance(extend, list):
+            for lib in extend:
+                if '.Spider' in str(type(lib)):
+                    self.module = lib
+                    break
 
     def isVideoFormat(self, url):
         pass

@@ -91,19 +91,28 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
                     except Exception as e:
                         print(f'更新扩展筛选条件发生错误:{e}')
 
+        ext = self.extend
         print(f"============{extend}============")
-        if extend.startswith('./'):
-            ext_file = os.path.join(os.path.dirname(__file__), extend)
-            init_file(ext_file)
-        elif extend.startswith('http'):
-            try:
-                r = self.fetch(extend)
-                self.config['filter'].update(r.json())
-            except Exception as e:
-                print(f'更新扩展筛选条件发生错误:{e}')
-        elif extend and not extend.startswith('./') and not extend.startswith('http'):
-            ext_file = os.path.join(os.path.dirname(__file__), './' + extend + '.json')
-            init_file(ext_file)
+        if isinstance(ext, str) and ext:
+            if ext.startswith('./'):
+                ext_file = os.path.join(os.path.dirname(__file__), ext)
+                init_file(ext_file)
+            elif ext.startswith('http'):
+                try:
+                    r = self.fetch(ext)
+                    self.config['filter'].update(r.json())
+                except Exception as e:
+                    print(f'更新扩展筛选条件发生错误:{e}')
+            elif not ext.startswith('./') and not ext.startswith('http'):
+                ext_file = os.path.join(os.path.dirname(__file__), './' + ext + '.json')
+                init_file(ext_file)
+
+        # 装载模块，这里只要一个就够了
+        if isinstance(extend, list):
+            for lib in extend:
+                if '.Spider' in str(type(lib)):
+                    self.module = lib
+                    break
 
     def isVideoFormat(self, url):
         pass
