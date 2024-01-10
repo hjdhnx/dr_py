@@ -338,7 +338,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         elif tid == '4K专区':
             cid = 'CHAL1558416868484111'
             url = 'https://api.cntv.cn/NewVideo/getLastVideoList4K?serviceId=cctv4k&cid={0}&p={1}&n={2}&t=json&cb=ko'.format(
-                cid,pg,pagecount
+                cid, pg, pagecount
             )
         else:
             url = 'https://tv.cctv.com/epg/index.shtml'
@@ -390,7 +390,8 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             # htmlTxt = self.webReadFile(urlStr=Url, header=self.header)
             htmlTxt = self.fetch(Url).text
         elif tid == "4K专区":
-            Url = 'https://api.cntv.cn/NewVideo/getVideoListByAlbumIdNew?id={0}&serviceId=cctv4k&p=1&n=100&mode=0&pub=1'.format(id)
+            Url = 'https://api.cntv.cn/NewVideo/getVideoListByAlbumIdNew?id={0}&serviceId=cctv4k&p=1&n=100&mode=0&pub=1'.format(
+                id)
             print(Url)
         else:
             Url = 'https://api.cntv.cn/NewVideo/getVideoListByAlbumIdNew?id={0}&serviceId=tvcctv&p=1&n=100&mode=0&pub=1'.format(
@@ -427,7 +428,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             return {}
         vod = {
             "vod_id": array[0],
-            "vod_name": title,
+            "vod_name": title.replace(' ', ''),
             "vod_pic": logo,
             "type_name": tid,
             "vod_year": vod_year,
