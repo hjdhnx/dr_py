@@ -219,7 +219,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         @param extend: 当前筛选数据
         @return:
         """
-        page_count = 21  # 默认赋值一页列表21条数据
+        page_count = 21  # 默认赋值一页列表21条数据|这个值一定要写正确看他默认一页多少条
         fls = extend.keys()  # 哪些刷新数据
         # ?type_id=1&area=&lang=&year=&order=time&type_name=&page=1&pageSize=21
         params = {'page': pg, 'pageSize': page_count, 'tid': tid, 'type_name': gParam['TypeDict'].get(str(tid)) or ''}
@@ -345,8 +345,8 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         "Referer": "https://www.baidu.com/"
     }
 
-    def localProxy(self, param):
-        return [200, "video/MP2T", action, ""]
+    def localProxy(self, params):
+        return [200, "video/MP2T", ""]
 
     # -----------------------------------------------自定义函数-----------------------------------------------
     def decode(self, text):
@@ -361,8 +361,9 @@ if __name__ == '__main__':
     # 分类页:http://60.204.185.245:7090/appto/v1/home/cateData?id=1
     # 推荐页:http://60.204.185.245:7090/appto/v1/config/get?p=android
     from t4.core.loader import t4_spider_init
+
     spider = Spider()
-    t4_spider_init(spider,'https://jihulab.com/qiaoji/open/-/raw/main/yinghua')
+    t4_spider_init(spider, 'https://jihulab.com/qiaoji/open/-/raw/main/yinghua')
     # spider.init_api_ext_file()  # 生成筛选对应的json文件
 
     # print(spider.homeContent(True))

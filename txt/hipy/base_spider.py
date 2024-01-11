@@ -317,8 +317,32 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         "Referer": "https://www.baidu.com/"
     }
 
-    def localProxy(self, param):
-        return [200, "video/MP2T", action, ""]
+    def localProxy(self, params):
+        # http://192.168.31.49:5707/api/v1/vod/哔滴影视?proxy=1&do=py&type=1.m3u8
+        print(params)
+        content = """
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-ALLOW-CACHE:YES
+#EXT-X-MEDIA-SEQUENCE:170471784
+#EXT-X-TARGETDURATION:10
+#EXT-X-PROGRAM-DATE-TIME:2024-01-11T20:43:53+08:00
+#EXTINF:10.000, no desc
+http://gctxyc.liveplay.myqcloud.com/gc/gllj01_1_md-170471784.ts
+#EXT-X-PROGRAM-DATE-TIME:2024-01-11T20:44:03+08:00
+#EXTINF:10.000, no desc
+http://gctxyc.liveplay.myqcloud.com/gc/gllj01_1_md-170471785.ts
+#EXT-X-PROGRAM-DATE-TIME:2024-01-11T20:44:13+08:00
+#EXTINF:10.000, no desc
+http://gctxyc.liveplay.myqcloud.com/gc/gllj01_1_md-170471786.ts
+#EXT-X-PROGRAM-DATE-TIME:2024-01-11T20:44:23+08:00
+#EXTINF:10.000, no desc
+http://gctxyc.liveplay.myqcloud.com/gc/gllj01_1_md-170471787.ts
+            """.strip()
+        return [200, 'text/plain', content]
+        # return [404, 'text/plain', 'Not Found']
+        # return [200, "video/MP2T", content]
+        # return [200, "video/MP2T", ""]
 
     # -----------------------------------------------自定义函数-----------------------------------------------
     def eval_computer(self, text):

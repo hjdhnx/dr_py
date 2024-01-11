@@ -237,8 +237,8 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
     }
     header = {}
 
-    def localProxy(self, param):
-        return [200, "video/MP2T", action, ""]
+    def localProxy(self, params):
+        return [200, "video/MP2T", ""]
 
     # -----------------------------------------------自定义函数-----------------------------------------------
     # 正则取文本
@@ -381,8 +381,10 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
                 print("'{0}':'{1}',".format(value.text, value.attrib['id']))
         return temporaryClass
 
+
 if __name__ == '__main__':
     from t4.core.loader import t4_spider_init
+
     spider = Spider()
     t4_spider_init(spider)
     print(spider.homeContent(True))

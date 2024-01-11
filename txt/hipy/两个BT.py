@@ -422,8 +422,8 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         "Referer": "https://www.bttwo.net/"
     }
 
-    def localProxy(self, param):
-        return [200, "video/MP2T", action, ""]
+    def localProxy(self, params):
+        return [200, "video/MP2T", ""]
 
     # -----------------------------------------------自定义函数-----------------------------------------------
     def eval_computer(self, text):
@@ -497,6 +497,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
 
 if __name__ == '__main__':
     from t4.core.loader import t4_spider_init
+
     spider = Spider()
     t4_spider_init(spider)
     spider.init_api_ext_file()  # 生成筛选对应的json文件

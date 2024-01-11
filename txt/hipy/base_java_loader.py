@@ -6,9 +6,6 @@
 # Date  : 2024/1/11
 
 import os
-import jpype
-from jpype.types import *
-
 import sys
 
 sys.path.append('..')
@@ -18,21 +15,38 @@ try:
 except ImportError:
     from t4.base.spider import BaseSpider
 
+# 全局变量
+gParam = {
+    # JVM已经启用过某个jar文件
+    "JVM": {'xx.jar': False},
+}
+
 
 class Spider(BaseSpider):  # 元类 默认的元类 type
-    def _prepare_env(self):
+    jar_path: str = ''
+    jClass = None
+
+    def _prepare_env(self, jpype):
+        global gParam
+        if gParam['JVM'].get(self.jar_path):
+            return
         try:
             jpype.startJVM(classpath=[self.jar_path], convertStrings=False)
-        except:
-            pass
+            gParam['JVM'][self.jar_path] = True
+        except Exception as e:
+            self.log(f'jpype.startJVM发生了错误:{e}')
 
     def init_jar(self, jar_path="./bdys.jar"):
         self.log(f'base_java_loader 初始化jar文件:{jar_path}')
         if not os.path.exists(jar_path):
             raise FileNotFoundError
         self.jar_path = jar_path
-        self._prepare_env()
-        self.jClass = jpype.JClass
+        if self.ENV.lower() == 't4':
+            import jpype
+            self._prepare_env(jpype)
+            self.jClass = jpype.JClass
+        elif self.ENV.lower() == 't3':
+            self.jClass = None
 
     def init(self, extend=""):
         pass

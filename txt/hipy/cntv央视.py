@@ -675,8 +675,8 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         "Referer": "https://tv.cctv.com/"
     }
 
-    def localProxy(self, param):
-        return [200, "video/MP2T", action, ""]
+    def localProxy(self, params):
+        return [200, "video/MP2T", ""]
 
     # -----------------------------------------------自定义函数-----------------------------------------------
     # 访问网页
