@@ -15,9 +15,9 @@ try:
 except ImportError:
     from t4.base.spider import BaseSpider
 
-import json
 from pathlib import Path
 import base64
+from cachetools import cached, TTLCache  # 可以缓存curd的函数，指定里面的key
 
 """
 配置示例:
@@ -46,6 +46,16 @@ api里会自动含有ext参数是base64编码后的选中的筛选条件
 """
 
 
+def envkey(self, url: str):
+    return url
+
+
+# 全局变量
+gParam = {
+    "inited": False,
+}
+
+
 class Spider(BaseSpider):  # 元类 默认的元类 type
 
     api: str = 'https://www.bdys03.com/api/v1'
@@ -58,22 +68,27 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
     def getName(self):
         return "哔滴影视"
 
+    @cached(cache=TTLCache(maxsize=3, ttl=3600), key=envkey)
+    def get_init_api(self, url):
+        try:
+            print('get_init_api请求URL:', url)
+            r = self.fetch(url)
+            ret = None
+            if r.status_code == 200:
+                self.log(f'url:{url},文件体积:{len(r.content)}')
+                ret = r.content
+            return ret
+        except Exception as e:
+            print(f'get_init_api请求URL发生错误:{e}')
+            return {}
+
     def init_api_ext_file(self):
         """
         这个函数用于初始化py文件对应的json文件，用于存筛选规则。
         执行此函数会自动生成筛选文件
         @return:
         """
-        ext_file = __file__.replace('.py', '.json')
-        print(f'ext_file:{ext_file}')
-        ext_file_dict = {
-            "分类1": [{"key": "letter", "name": "首字母", "value": [{"n": "A", "v": "A"}, {"n": "B", "v": "B"}]}],
-            "分类2": [{"key": "letter", "name": "首字母", "value": [{"n": "A", "v": "A"}, {"n": "B", "v": "B"}]},
-                      {"key": "year", "name": "年份",
-                       "value": [{"n": "2024", "v": "2024"}, {"n": "2023", "v": "2023"}]}],
-        }
-        with open(ext_file, mode='w+', encoding='utf-8') as f:
-            f.write(json.dumps(ext_file_dict, ensure_ascii=False))
+        pass
 
     def init(self, extend=""):
         """
@@ -81,35 +96,32 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         @param extend:
         @return:
         """
-
-        def init_file(ext_file):
-            """
-            根据与py对应的json文件去扩展规则的筛选条件
-            """
-            ext_file = Path(ext_file).as_posix()
-            if os.path.exists(ext_file):
-                with open(ext_file, mode='r', encoding='utf-8') as f:
-                    try:
-                        ext_dict = json.loads(f.read())
-                        self.config['filter'].update(ext_dict)
-                    except Exception as e:
-                        print(f'更新扩展筛选条件发生错误:{e}')
-
+        global gParam
         ext = self.extend
-        print(f"============{extend}============")
+
         if isinstance(ext, str) and ext:
-            if ext.startswith('./'):
-                ext_file = os.path.join(os.path.dirname(__file__), ext)
-                init_file(ext_file)
-            elif ext.startswith('http'):
-                try:
-                    r = self.fetch(ext)
-                    self.config['filter'].update(r.json())
-                except Exception as e:
-                    print(f'更新扩展筛选条件发生错误:{e}')
-            elif not ext.startswith('./') and not ext.startswith('http'):
-                ext_file = os.path.join(os.path.dirname(__file__), './' + ext + '.json')
-                init_file(ext_file)
+            if ext.endswith('.jar'):
+                jar_path = os.path.join(os.path.dirname(__file__), './jars')
+                os.makedirs(jar_path, exist_ok=True)
+                jar_file = os.path.join(os.path.dirname(__file__), './jars/bdys.jar')
+                jar_file = Path(jar_file).as_posix()
+                need_down = False
+                msg = ''
+                if not gParam['inited'] and not os.path.exists(jar_file):
+                    need_down = True
+                    msg = f'未inited,且文件不存在。开始下载文件'
+                elif gParam['inited'] and not os.path.exists(jar_file):
+                    need_down = True
+                    msg = f'已inited,但文件不存在。开始下载文件'
+                # elif not gParam['inited'] and os.path.exists(jar_file):
+                #     need_down = True
+                #     msg = f'未inited,但文件已存在。重新下载文件'
+
+                if need_down:
+                    self.log(msg)
+                    content = self.get_init_api(ext)
+                    with open(jar_file, mode='wb+') as f:
+                        f.write(content)
 
         # 装载模块，这里只要一个就够了
         if isinstance(extend, list):
@@ -125,6 +137,8 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             self.class1 = self.javar.jClass('com.C4355b')
             self.token = str(self.class1.getToken())
             self.headers.update({'token': self.token})
+
+        gParam['inited'] = True
 
     def isVideoFormat(self, url):
         pass
