@@ -92,7 +92,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
                         print(f'更新扩展筛选条件发生错误:{e}')
 
         ext = self.extend
-        print(f"============{extend}============")
+        print(f"============ext:{ext},extend:{extend}============")
         if isinstance(ext, str) and ext:
             if ext.startswith('./'):
                 ext_file = os.path.join(os.path.dirname(__file__), ext)
@@ -406,4 +406,8 @@ if __name__ == '__main__':
     # spider.init_api_ext_file()  # 生成筛选对应的json文件
     spider.log({'key': 'value'})
     spider.log('====文本内容====')
+    with open('test_1.txt', encoding='utf-8') as f:
+        code = f.read()
+        a = spider.superStr2dict(code)
+        print(type(a), a)
     # spider.searchContent('斗罗大陆')
