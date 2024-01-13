@@ -414,16 +414,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         content = pdata.strip()
 
         media_type = 'text/plain' if 'txt' in name else 'video/MP2T'
-        action = {
-            'url': url,
-            'header': headers,
-            'param': '',
-            'type': media_type,
-        }
-        if '3' in self.ENV:
-            return [200, media_type, action, content]
-        else:
-            return [200, media_type, content]
+        return [200, media_type, content]
 
     # -----------------------------------------------自定义函数-----------------------------------------------
     def decode(self, text):
