@@ -265,9 +265,13 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             if not plays.get(title):
                 plays[title] = []
 
-            if p.get('tosId'):
-                purl = self.api + '/playurl/' + str(p['id']) + '?type=' + str(p.get('tosId') or '0')
-                plays[title].append({'name': '至尊线路', 'url': f'vip://{purl}'})
+            _type = '1' if p.get('tosId') else '0'
+            purl = self.api + '/playurl/' + str(p['id']) + '?type=' + _type
+            plays[title].append({'name': '至尊线路', 'url': f'vip://{purl}'})
+
+            # if p.get('tosId'):
+            #     purl = self.api + '/playurl/' + str(p['id']) + '?type=' + str(p.get('tosId') or '0')
+            #     plays[title].append({'name': '至尊线路', 'url': f'vip://{purl}'})
 
             if p.get('url'):
                 for p0 in p['url'].split(','):
@@ -373,6 +377,12 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             proxyUrl = self.getProxyUrl()
             if proxyUrl:
                 url = proxyUrl + '&url=' + url + '&name=1.m3u8'
+        elif '/obj/' in url:
+            headers.update({
+                'Cookie': 'm=1',
+                'app': '1',
+                'Referer': 'https://doc.weixin.qq.com/',
+            })
         result = {
             'parse': parse,  # 1=嗅探,0=播放
             'playUrl': '',  # 解析链接
@@ -454,6 +464,13 @@ if __name__ == '__main__':
     r = requests.head(
         'http://192.168.31.49:5707/api/v1/vod/%E5%93%94%E6%BB%B4%E5%BD%B1%E8%A7%86?proxy=1&do=py&url=https://www.bde4.cc/10E79044B82A84F70BE1308FFA5232E4DC3D0CA9EC2BF6B1D4EF56B2CE5B67CF238965CCAE17F859665B7E166720986D.m3u8')
     print(r.headers, r.content)
+    r = requests.get('https://www.bdys10.com/obj/63BEE3B148E464F16EE62435C53087B994902679D844EA9CC3615658CF55E01D',
+                     headers={
+                         'Cookie': 'm=1',
+                         'app': '1',
+                         'Referer': 'https://doc.weixin.qq.com/',
+                     })
+    print(r.text)
     # print(spider.categoryContent('0', 1, False, None))
     # print(spider.detailContent([24420]))
     # spider.searchContent('斗罗大陆')
