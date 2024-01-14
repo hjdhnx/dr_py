@@ -269,7 +269,9 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             "特别节目": "特别节目",
             "纪录片": "纪录片",
             "电视剧": "电视剧",
-            "动画片": "动画片"
+            "动画片": "动画片",
+            "频道直播": "频道直播",
+
         }
         classes = []
         for k in cateManual:
@@ -364,6 +366,8 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             url = 'https://api.cntv.cn/NewVideo/getLastVideoList4K?serviceId=cctv4k&cid={0}&p={1}&n={2}&t=json&cb=ko'.format(
                 cid, pg, pagecount
             )
+        elif tid == '频道直播':
+            url = 'https://tv.cctv.com/epg/index.shtml'
         else:
             url = 'https://tv.cctv.com/epg/index.shtml'
 
@@ -379,6 +383,19 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             if index > -1:
                 htmlText = htmlText[3:index]
                 videos = self.get_list_4k(html=htmlText, tid=tid)
+        elif tid == '频道直播':
+            html = self.html(htmlText)
+            lis = html.xpath('//*[@id="jiemudan01"]//div[contains(@class,"channel_con")]//ul/li')
+            for li in lis:
+                vid = ''.join(li.xpath('./img/@title'))
+                pic = ''.join(li.xpath('./img/@src'))
+                pic = self.urljoin('https://tv.cctv.com/epg/index.shtml', pic)
+                videos.append({
+                    'vod_id': '||'.join([tid, vid, f'https://tv.cctv.com/live/{vid}/', pic]),
+                    'vod_name': vid,
+                    'vod_pic': pic,
+                    'vod_mark': '',
+                })
 
         else:
             videos = self.get_list(html=htmlText, tid=tid)
@@ -400,9 +417,21 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             did = did.split('$$$')[1]
         aid = did.split('||')
         tid = aid[0]
-        logo = aid[3]
-        lastVideo = aid[2]
         title = aid[1]
+        lastVideo = aid[2]
+        logo = aid[3]
+        if tid == '频道直播':
+            vod = {
+                "vod_id": did,
+                "vod_name": title.replace(' ', ''),
+                "vod_pic": logo,
+                "vod_content": f'频道{title}正在直播中',
+                "vod_play_from": '道长在线直播',
+                "vod_play_url": f'在线观看${title}||{lastVideo}',
+            }
+            result = {'list': [vod]}
+            return result
+
         id = aid[4]
 
         vod_year = aid[5]
@@ -469,7 +498,7 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         if len(videoList) == 0:
             return {}
         vod = {
-            "vod_id": array[0],
+            "vod_id": did,
             "vod_name": title.replace(' ', ''),
             "vod_pic": logo,
             "type_name": tid,
@@ -529,6 +558,18 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         }
         if flag == 'CCTV':
             url = self.get_m3u8(urlTxt=id)
+        elif flag == '道长在线直播':
+            # _url = id
+            title = id.split('||')[0]  # 获取标题
+            _url = f'https://vdn.live.cntv.cn/api2/liveHtml5.do?channel=pc://cctv_p2p_hd{title}&channel_id={title}'
+            htmlTxt = self.fetch(_url).text
+            # print(htmlTxt)
+            vdata = self.regStr(htmlTxt, "var .*?=.*?'(.*?)';")
+            vdata = self.str2json(vdata)
+            print(vdata)
+            url = vdata['hls_url']['hls1']
+            print(url)
+            url = self.fixm3u8_url(url)
         else:
             try:
                 # htmlTxt = self.webReadFile(urlStr=id, header=self.header)
@@ -806,6 +847,27 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             url = ''
         return url
 
+    def fixm3u8_url(self, url):
+        # 获取域名前缀
+        urlPrefix = self.get_RegexGetText(Text=url, RegexText='(http[s]?://[a-zA-z0-9.]+)/', Index=1)
+        # 域名前缀指定替换,然后可以获取到更高质量的视频列表
+        new_link = url.split('?')[0]
+        # print(new_link)
+        html = self.webReadFile(urlStr=new_link, header=self.header)
+        content = html.strip()
+        # print(content)
+        arr = content.split('\n')
+        subUrl = arr[3] if 'EXT-X-VERSION' in content else arr[2]
+        hdUrl = self.urljoin(new_link, subUrl).split('?')[0]
+        # hdUrl = hdUrl.replace(urlPrefix, 'https://newcntv.qcloudcdn.com')
+        hdRsp = self.TestWebPage(urlStr=hdUrl, header=self.header)
+        if hdRsp == 200:
+            url = hdUrl
+            self.log(f'视频链接: {url}')
+        else:
+            url = ''
+        return url
+
     # 搜索
     def get_list_search(self, html, tid):
         jRoot = json.loads(html)
@@ -945,7 +1007,8 @@ if __name__ == '__main__':
     # home_content = spider.homeContent(None)
     # print(home_content)
     # cate_content = spider.categoryContent('栏目大全', 1, {'cid': 'n'}, {})
-    # print(cate_content)
+    cate_content = spider.categoryContent('频道直播', 1, None, None)
+    print(cate_content)
     # vid = cate_content['list'][0]['vod_id']
     # print(vid)
     # detail_content = spider.detailContent([vid])
