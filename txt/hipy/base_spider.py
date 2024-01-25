@@ -294,7 +294,8 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
         @param vipFlags: vip标识
         @return:
         """
-        url = 'http://bizcommon.alicdn.com/l2nDqpMmn6DGHnWzZQA/Cg9qI5imMInpPvK5Mnm%40%40hd.m3u8'
+        # url = 'http://bizcommon.alicdn.com/l2nDqpMmn6DGHnWzZQA/Cg9qI5imMInpPvK5Mnm%40%40hd.m3u8'
+        url = 'https://s1.bfzycdn.com/video/renmindemingyi/%E7%AC%AC07%E9%9B%86/index.m3u8'
         parse = 0
         headers = {
             'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
@@ -306,6 +307,10 @@ class Spider(BaseSpider):  # 元类 默认的元类 type
             'header': headers,  # 播放UA
         }
         return result
+
+    @staticmethod
+    def adRemove():
+        return 'reg:/video/adjump.*?ts'
 
     config = {
         "player": {},
@@ -411,3 +416,10 @@ if __name__ == '__main__':
         a = spider.superStr2dict(code)
         print(type(a), a)
     # spider.searchContent('斗罗大陆')
+    print(spider.playerContent(None, 1, None))
+    with open('ad.m3u8', encoding='utf-8') as f:
+        adt = f.read()
+    url = adt.split('\n')[0]
+    adt = '\n'.join(adt.split('\n')[1:])
+    ad_remove = 'reg:/video/adjump(.*?)ts'
+    print(spider.fixAdM3u8(adt, url, ad_remove))
