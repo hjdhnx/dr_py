@@ -1,14 +1,6 @@
 // print(env);
-// vipUrl = 'https://www.bilibili.com/bangumi/play/ep704873';
-fetch_params.headers = {
-        'User-Agent':PC_UA,
-        "Referer": "https://www.bilibili.com",
-        "Cookie":env.bili_cookie||''
-};
-let appkey = env.appkey||'';
-let access_key = env.access_key||'';
-// print(fetch_params);
-
+// input = 'https://www.bilibili.com/bangumi/play/ep704873';
+var flag = ['bilibili'];
 function getEpUrl(ssUrl){
 let html = request(ssUrl);
 let short_link = html.match(/short_link(.*?),/)[1];
@@ -17,15 +9,15 @@ let epUrl = unescape(short_link);
 return epUrl
 }
 
-function getCidEid(vipUrl){
-// print(vipUrl);
-let url = vipUrl.split('?')[0];
+function getCidEid(input){
+// print(input);
+let url = input.split('?')[0];
 // print(url);
 if(url.endsWith('/')){
 url = url.slice(0,-1);
 }
 if(url.includes('bilibili.com/video/')){
-let r = request(vipUrl);
+let r = request(input);
 try{
 let mtext = r.match(/window\.__INITIAL_STATE__=(.*?);\(function/)[1];
 mtext = JSON.parse(mtext);
@@ -54,18 +46,27 @@ return [cid,avid,null];
 return null
 }
 }else if(url.includes('/ss')){
-let epUrl = getEpUrl(vipUrl);
+let epUrl = getEpUrl(input);
 return getCid(epUrl)
 }else{
 return null
 }
 }
-if(!/bilibili/.test(vipUrl)){
-   realUrl = vipUrl;
+function lazy(){
+fetch_params.headers = {
+        'User-Agent':PC_UA,
+        "Referer": "https://www.bilibili.com",
+        "Cookie":env.bili_cookie||''
+};
+let appkey = env.appkey||'';
+let access_key = env.access_key||'';
+
+if(!/bilibili/.test(input)){
+   realUrl = input;
 }else {
         try {
-// print(vipUrl);
-                let ids = getCidEid(vipUrl);
+// print(input);
+                let ids = getCidEid(input);
                 if (Array.isArray(ids)) {
                         print(ids);
                         let cid = ids[0];
@@ -83,12 +84,15 @@ if(!/bilibili/.test(vipUrl)){
 
                         } catch (e) {
                                 print(e.message);
-                                realUrl = vipUrl;
+                                realUrl = input;
                         }
                 } else {
-                        realUrl = vipUrl;
+                        realUrl = input;
                 }
         } catch (e) {
                 print(e.message);
         }
+}
+
+return realUrl
 }

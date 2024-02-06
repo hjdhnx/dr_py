@@ -49,7 +49,10 @@
             <a href="/rules/clear">缓存文件列表-清除</a>
         </div>
         <div class="btn">
-            <a href="{{ getHost(0) }}/config/0?ver=0">本地配置地址</a>
+            <a href="{{ getHost(0) }}/config/0?ver=2&mode=1">本地配置地址JS1</a>
+        </div>
+        <div class="btn">
+            <a href="{{ getHost(0) }}/config/0?ver=0&mode=0">本地配置地址JS0</a>
         </div>
         {% if is_linux %}
         <div class="btn">
@@ -61,7 +64,10 @@
         </div>
         {% if '192.168' in getHost(1) %}
         <div class="btn">
-            <a href="{{ getHost(1) }}/config/1?ver=0">局域网配置地址</a>
+            <a href="{{ getHost(1) }}/config/1?ver=2&mode=1">局域网配置地址JS1</a>
+        </div>
+        <div class="btn">
+            <a href="{{ getHost(1) }}/config/1?ver=0&mode=0">局域网配置地址JS0</a>
         </div>
         {% if is_linux %}
         <div class="btn">
@@ -73,7 +79,10 @@
         </div>
         {% endif %}
         <div class="btn">
-            <a href="{{ getHost(2) }}/config/2?ver=0">远程配置地址</a>
+            <a href="{{ getHost(2) }}/config/2?ver=2&mode=1">远程配置地址JS1</a>
+        </div>
+        <div class="btn">
+            <a href="{{ getHost(2) }}/config/2?ver=0&mode=0">远程配置地址JS0</a>
         </div>
         {% if is_linux %}
         <div class="btn">

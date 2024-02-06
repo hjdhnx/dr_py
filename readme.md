@@ -50,6 +50,7 @@
 [我的豆瓣](./static/img/豆瓣.png)  
 [爱看不看](https://jason-ray.notion.site/jason-ray/Pluto-TVB-706da08332804a19ab012b4f8385df64)|[goorm](./doc/道长乱说.md)|[大佬地盘](./doc/大佬友链.md)   
 [其他语言实现drpy-cms接口](./doc/接口文档.md)  
+[快速搭建海阔视界道长仓库](./doc/海阔视界道长仓库搭建说明.md)  
 [dr项目QQ官群](https://qm.qq.com/cgi-bin/qm/qr?k=H2KwcXrMdiR5M2blHR5gjZzPfN_S3N_C&jump_from=webapi)  
 
 

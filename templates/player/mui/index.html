@@ -1,7 +1,7 @@
  <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
   <head>
-    <title>一款优秀的 HTML5 视频播放器</title>
+    <title>drpy专用H5播放器-mui</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="renderer" content="webkit">
@@ -74,8 +74,9 @@
     </style>
 <div id="loading"  align="center"></div>
 <script type="text/javascript">
+    let url = document.location.href.split("url=")[1];
     var config = {
-        "url":"{{ctx.url}}",
+        "url":url||"{{ctx.url}}",
         "key":"",
         "vkey":"",
         "time":"",

@@ -86,6 +86,8 @@ def parse_home(filename):
     env = get_env()
     py_ctx.update({
         'vipUrl': url,
+        'realUrl': '',
+        'input': url,
         'fetch_params': {'headers': {'Referer':url}, 'timeout': 10, 'encoding': 'utf-8'},
         'jsp':jsp,
         '重定向':重定向,
@@ -105,7 +107,9 @@ def parse_home(filename):
     t1 = time()
     try:
         loader, _ = runJScode(jscode, ctx=ctx)
-        realUrl = loader.eval('realUrl')
+        # realUrl = loader.eval('realUrl')
+        # realUrl = loader.eval(f'lazy("{url}")')
+        realUrl = loader.eval('lazy()')
         if not realUrl:
             return R.failed(f'解析失败:{realUrl}')
         if isinstance(realUrl, PyJsString):

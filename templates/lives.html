@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>电视直播页面-{{ver}}</title>
+    <meta charset="UTF-8"> <!-- 设置字符编码为UTF-8 -->
+    <meta name="description" content="drpy在线电视直播by道长">
+    <meta name="author" content="道长" />
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">-->
+    <link rel="stylesheet" media="screen" href="/static/css/admin.css">
+    <link rel="icon" href="/static/img/logo.png" type="image/x-icon">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/grey.js"></script>
+    <style>
+        .container {
+            text-align: center; /* 设置文本居中对齐，将块水平居中 */
+        }
+
+        .block {
+            display: inline-block; /* 将块设置为行内块元素，每行显示两个 */
+            width: 300px; /* 每个块的宽度，可以根据需要自定义 */
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #d5d1d1;
+            border-radius: 10px; /* 设置圆角半径为10px */
+            text-align: center; /* 使块内文本左对齐 */
+            background: rgb(71, 143, 250,0.8); /* 背景颜色 */
+            opacity: 0.8; /* 透明度 */
+        }
+
+        .block h2 {
+            color: rgb(254, 254, 254); /* 设置文字颜色为红色 */
+        }
+
+        .block img {
+            max-width: 100%;
+            height: auto; /* 保持图片宽高比例 */
+        }
+        body {
+            background-image: url("/pics?id=zb"); /* 设置背景图像的URL */
+            background-size: cover; /* 使图像覆盖整个页面，不变形 */
+            background-repeat: no-repeat; /* 防止图像重复平铺 */
+            background-attachment: fixed; /* 固定背景图像，使其在滚动时保持固定 */
+            background-position: center center; /* 居中显示背景图像 */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% for live in lives %}
+        <div class="block">
+            <a href="/web/player{{zb_player}}?url={{ live.url }}" target="_blank">
+                <h2>{{ live.title }}</h2>
+            </a>
+        </div>
+
+        {% endfor %}
+        <!-- 可以根据需要添加更多块 -->
+    </div>
+</body>
+</html>

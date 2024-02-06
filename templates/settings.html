@@ -140,9 +140,9 @@
   <span class="label{{conf.name|length}}">
     {{ conf.name }}:
   </span>
-    {% if conf.key!="SPIDER_JAR" %}
+    {% if conf.key not in ["SPIDER_JAR","ZB_PLAYER"] %}
   <input class="conf" type="text" name="{{ conf.key }}"  placeholder="请输入{{ conf.key }}..." value="{{ conf.value }}"/>
-    {% else %}
+    {% elif conf.key=="SPIDER_JAR" %}
     <select class="conf" name="{{ conf.key }}">
 <!--    <option>-请选择-</option>-->
     {% for jar in jar_lists %}
@@ -153,6 +153,18 @@
         {% endif %}
     {% endfor %}
     </select>
+    {% elif conf.key=="ZB_PLAYER" %}
+    <select class="conf" name="{{ conf.key }}">
+<!--    <option>-请选择-</option>-->
+    {% for player in ["1","2","3","4"] %}
+        {% if player==player_now %}
+        <option selected>{{player}}</option>
+        {% else %}
+        <option>{{player}}</option>
+        {% endif %}
+    {% endfor %}
+    </select>
+
     {% endif %}
   <a class="edit_conf btn_option" href="javascript:void(0);" value="{{ conf.key }}">编辑</a>
   <a class="save_conf btn_option" href="javascript:void(0);" value="{{ conf.key }}">保存</a>

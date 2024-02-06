@@ -2,6 +2,7 @@ import cheerio from 'assets://js/lib/cheerio.min.js';
 import 'assets://js/lib/crypto-js.js';
 import 模板 from"../js/模板.js"
 import {gbkTool} from './gbk.js'
+// import './rsa.js'
 
 // import cheerio from "https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/libs/cheerio.min.js";
 // import "https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/libs/crypto-js.js";
@@ -17,6 +18,31 @@ function init_test(){
     console.log(RKEY);
     console.log(JSON.stringify(rule));
     console.log("init_test_end");
+
+    // console.log(typeof (CryptoJS));
+    // console.log(typeof (JSEncrypt));
+    // var publicKey = "-----BEGIN PUBLIC KEY-----\n" +
+    //     "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDTTt5d1LYtIxiW9ekKFBVonFOT\n" +
+    //     "XJHv4PY4xCDLPYbHWRKa/mRO7J11OJX+cR7bqzNq6uxH1W339wV\n" +
+    //     "lLP/x3Rl1RBh4prj0eYOEIsDVTvLTJONKazRtQrZ7yzSZ69o/3CQv\n" +
+    //     "ex6kb4js+9zho4U9fwIDAQAB\n" +
+    //     "-----END PUBLIC KEY-----";
+    // var text = '你好';
+    // const encryptor = new JSEncrypt();
+    // console.log(typeof (encryptor.setPublicKey));
+    // console.log(typeof (encryptor.encrypt));
+    // encryptor.setPublicKey(publicKey) // 设置公钥
+    // var str = encryptor.encrypt(text) // 对数据进行加密
+    // console.log("加密数据：" + str);
+    // log('rsax:'+typeof(rsax));
+    // log('rsaX:'+typeof(rsaX));
+    // let data = base64Encode('你好');
+    // let publicKey = 'dzyyds';
+    // console.log(typeof (RSA.encode));
+    // let encryptBase64Data = RSA.encode(data,publicKey);
+    // log('encryptBase64Data:'+encryptBase64Data);
+    // let str = RSA.decode(data,publicKey);
+    // log('str:'+str);
 }
 
 /**
@@ -41,14 +67,14 @@ function pre(){
 
 let rule = {};
 let vercode = typeof(pdfl) ==='function'?'drpy2.1':'drpy2';
-const VERSION = vercode+' 3.9.47beta32 20230911';
+const VERSION = vercode+' 3.9.49beta2 20231122';
 /** 已知问题记录
  * 1.影魔的jinjia2引擎不支持 {{fl}}对象直接渲染 (有能力解决的话尽量解决下，支持对象直接渲染字符串转义,如果加了|safe就不转义)[影魔牛逼，最新的文件发现这问题已经解决了]
  * Array.prototype.append = Array.prototype.push; 这种js执行后有毛病,for in 循环列表会把属性给打印出来 (这个大毛病需要重点排除一下)
  * 2.import es6py.js但是里面的函数没有被装载进来.比如drpy规则报错setResult2 is undefiend(合并文件了可以不管了)
  * 3.无法重复导入cheerio(怎么解决drpy和parseTag里都需要导入cheerio的问题) 无法在副文件导入cheerio (现在是全部放在drpy一个文件里了,凑合解决?)
  * 4.有个错误不知道哪儿来的 executeScript: com.quickjs.JSObject$Undefined cannot be cast to java.lang.String 在 点击选集播放打印init_test_end后面打印(貌似不影响使用)
- * 5.需要实现 stringify 函数,比起JSON.stringify函数,它会原封不动保留中文不会编码unicode
+ * 5.需要实现 stringify 函数,比起JSON.strifngify函数,它会原封不动保留中文不会编码unicode
  * 6.base64Encode,base64Decode,md5函数还没有实现 (抄影魔代码实现了)
  * 7.eval(getCryptoJS());还没有实现 (可以空实现了,以后遇到能忽略)
  * done:  jsp:{pdfa,pdfh,pd},json:{pdfa,pdfh,pd},jq:{pdfa,pdfh,pd}
@@ -422,6 +448,34 @@ function getCryptoJS(){
     // return request('https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/libs/crypto-hiker.js');
     return 'console.log("CryptoJS已装载");'
 }
+
+// 封装的RSA加解密类
+const RSA = {
+    encode:function (data,key,option){
+        // log('encode');
+        if(typeof(rsaEncrypt)==='function'){
+            if(!option||typeof(option)!=='object'){
+                return rsaEncrypt(data,key);
+            }else{
+                return rsaEncrypt(data,key,option);
+            }
+        }else{
+            return false
+        }
+    },
+    decode:function (data,key,option){
+        // log('decode');
+        if(typeof(rsaDecrypt)==='function'){
+            if(!option||typeof(option)!=='object'){
+                return rsaDecrypt(data,key);
+            }else{
+                return rsaDecrypt(data,key,option);
+            }
+        }else{
+            return false
+        }
+    }
+};
 
 /**
  * 获取壳子返回的代理地址
@@ -1504,7 +1558,27 @@ function searchParse(searchObj) {
     }
     p = p.trim();
     let pp = rule.一级.split(';');
-    let url = searchObj.searchUrl.replaceAll('**', searchObj.wd).replaceAll('fypage', searchObj.pg);
+    let url = searchObj.searchUrl.replaceAll('**', searchObj.wd);
+    if(searchObj.pg === 1 && url.includes('[')&&url.includes(']')&&!url.includes('#')){
+        url = url.split('[')[1].split(']')[0];
+    }else if(searchObj.pg > 1 && url.includes('[')&&url.includes(']')&&!url.includes('#')){
+        url = url.split('[')[0];
+    }
+
+    if(/fypage/.test(url)){
+        if(url.includes('(')&&url.includes(')')){
+            let url_rep = url.match(/.*?\((.*)\)/)[1];
+            // console.log(url_rep);
+            let cnt_page = url_rep.replaceAll('fypage', searchObj.pg);
+            // console.log(cnt_page);
+            let cnt_pg = eval(cnt_page);
+            // console.log(cnt_pg);
+            url = url.replaceAll(url_rep,cnt_pg).replaceAll('(','').replaceAll(')','');
+        }else{
+            url = url.replaceAll('fypage',searchObj.pg);
+        }
+    }
+
     MY_URL = url;
     console.log(MY_URL);
     // log(searchObj.搜索);
@@ -1894,9 +1968,73 @@ function detailParse(detailObj){
     let t2 = (new Date()).getTime();
     console.log(`加载二级界面${MY_URL}耗时:${t2-t1}毫秒`);
     // print(vod);
+    vod = vodDeal(vod);
+    // print(vod);
     return JSON.stringify({
         list: [vod]
     })
+}
+
+/**
+ * 获取二级待返回的播放线路没处理时的索引关系
+ * @param vod
+ * @returns {{}}
+ */
+function get_tab_index(vod){
+    let obj = {};
+    vod.vod_play_from.split('$$$').forEach((it,index)=>{
+        obj[it] = index;
+    });
+    return obj
+}
+
+/**
+ * 处理待返回的vod数据|线路去除,排序,重命名
+ * @param vod
+ * @returns {*}
+ */
+function vodDeal(vod){
+    let vod_play_from = vod.vod_play_from.split('$$$');
+    let vod_play_url = vod.vod_play_url.split('$$$');
+
+    // 移除指定线路后的列表
+    let tab_removed_list = vod_play_from;
+    // 排序后的线路列表
+    let tab_ordered_list = vod_play_from;
+    // 线路重命名后的列表
+    let tab_renamed_list = vod_play_from;
+    // 定义实际要返回线路
+    let tab_list = vod_play_from;
+    // 选集列表根据线路排序
+    let play_ordered_list = vod_play_url;
+
+    // 判断有移除线路或者线路排序
+    if((rule.tab_remove&&rule.tab_remove.length>0)||(rule.tab_order&&rule.tab_order.length>0)){
+        // 获取原来线路的索引下标
+        let tab_index_dict = get_tab_index(vod);
+
+        if(rule.tab_remove&&rule.tab_remove.length>0){
+            tab_removed_list = vod_play_from.filter(it=>!rule.tab_remove.includes(it));
+            tab_list = tab_removed_list;
+        }
+
+        if(rule.tab_order&&rule.tab_order.length>0){
+            let tab_order = rule.tab_order;
+            tab_ordered_list = tab_removed_list.sort((a, b) => {
+            return (tab_order.indexOf(a)===-1?9999:tab_order.indexOf(a)) - (tab_order.indexOf(b)===-1?9999:tab_order.indexOf(b))
+            });
+            tab_list = tab_ordered_list;
+        }
+        play_ordered_list = tab_list.map(it=>vod_play_url[tab_index_dict[it]]);
+    }
+
+    if(rule.tab_rename&&typeof(rule.tab_rename)==='object'&Object.keys(rule.tab_rename).length>0){
+        tab_renamed_list = tab_list.map(it=>rule.tab_rename[it]||it);
+        tab_list = tab_renamed_list;
+    }
+    vod.vod_play_from = tab_list.join('$$$');
+    vod.vod_play_url = play_ordered_list.join('$$$');
+    return vod
 }
 
 /**
@@ -2104,7 +2242,13 @@ function init(ext) {
         }else{
             rule.url = rule.host && rule.url ? urljoin(rule.host,rule.url) : rule.url;
         }
-        rule.searchUrl = rule.host && rule.searchUrl ? urljoin(rule.host,rule.searchUrl) : rule.searchUrl;
+        if(rule.searchUrl.includes('[')&&rule.searchUrl.includes(']')&&!rule.searchUrl.includes('#')){
+            let u1 = rule.searchUrl.split('[')[0]
+            let u2 = rule.searchUrl.split('[')[1].split(']')[0]
+            rule.searchUrl = rule.host && rule.searchUrl?urljoin(rule.host,u1)+'['+urljoin(rule.host,u2)+']':rule.searchUrl;
+        }else{
+            rule.searchUrl = rule.host && rule.searchUrl ? urljoin(rule.host,rule.searchUrl) : rule.searchUrl;
+        }
 
         rule.timeout = rule.timeout||5000;
         rule.encoding = rule.编码||rule.encoding||'utf-8';
@@ -2117,6 +2261,11 @@ function init(ext) {
         rule.sniffer = !!(rule.sniffer && rule.sniffer!=='0' && rule.sniffer!=='false');
 
         rule.isVideo = rule.hasOwnProperty('isVideo')?rule.isVideo:'';
+
+        rule.tab_remove = rule.hasOwnProperty('tab_remove')?rule.tab_remove:[];
+        rule.tab_order = rule.hasOwnProperty('tab_order')?rule.tab_order:[];
+        rule.tab_rename = rule.hasOwnProperty('tab_rename')?rule.tab_rename:{};
+
         if(rule.headers && typeof(rule.headers) === 'object'){
             try {
                 let header_keys = Object.keys(rule.headers);
@@ -2320,7 +2469,8 @@ function proxy(params){
 function sniffer(){
     let enable_sniffer =  rule.sniffer || false;
     if(enable_sniffer){
-        log('准备执行辅助嗅探代理规则:\n'+rule.isVideo);
+        // log('准备执行辅助嗅探代理规则:\n'+rule.isVideo);
+        log('开始执行辅助嗅探代理规则...');
     }
     return enable_sniffer
 }
@@ -2344,7 +2494,11 @@ function isVideo(url){
         isVideo:is_video,
         t:t,
     };
-    return isVideoParse(isVideoObj)
+    let result = isVideoParse(isVideoObj);
+    if(result){
+        log('成功执行辅助嗅探规则并检测到视频地址:\n'+rule.isVideo);
+    }
+    return result
 }
 
 function DRPY(){//导出函数
