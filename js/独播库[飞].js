@@ -8,6 +8,7 @@
 	title:'独播库[飞]',
 	// host:'https://www.duboku.tv',
 	host:'https://u.duboku.io',
+	// host:'https://w.duboku.io',
 	url: '/vodshow/fyfilter.html',
 	filterable:1,//是否启用分类筛选,
 	filter_url:'{{fl.cateId}}-{{fl.area}}-{{fl.by}}-{{fl.class}}-{{fl.lang}}-{{fl.letter}}---fypage---{{fl.year}}',
@@ -38,20 +39,28 @@
 	class_parse:'.nav-list li;a&&Text;a&&href;.*/(.*?).html',
 	play_parse: true,
 	lazy:`js:
-		let html = JSON.parse(request(input).match(/r player_.*?=(.*?)</)[1]);
-		let url = html.url;
+		var html = JSON.parse(request(input).match(/r player_.*?=(.*?)</)[1]);
+		var url = html.url;
+		var from = html.from;
+		var next = html.link_next;
 		if (html.encrypt == '1') {
 			url = unescape(url)
 		} else if (html.encrypt == '2') {
 			url = unescape(base64Decode(url))
+		} else if (html.encrypt == '3') {
+			url = url.substring(8, url.length);
+			url = base64Decode(url);
+			url = url.substring(8, (url.length) - 8)
 		}
-		if (/m3u8|mp4/.test(url)) {
+		if (/\\.m3u8|\\.mp4/.test(url)) {
+			var sign = request(HOST + '/static/player/' + from + '.php').match(/PlayUrl\\+'(.*?)'/)[1];
 			input = {
 				jx: 0,
-				url: url,
+				url: url+sign,
 				parse: 0,
 				header: JSON.stringify({
-					'referer': HOST + "/static/player/vidjs.html",
+					"referer": HOST,
+					// 'referer': HOST + "/static/player/vidjs.html",
 				}),
 			}
 		} else {
