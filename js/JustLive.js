@@ -71,7 +71,7 @@ var rule = {
         html.forEach(it => {
             d.push({
                 title: it.roomName,
-                desc: it.ownerName,
+                desc: '👁' + it.online + '  🆙' + it.ownerName,
                 pic_url: it.roomPic,
                 url: it.platForm + '|' + it.roomId
             });
@@ -90,7 +90,7 @@ var rule = {
         html.forEach(it => {
             d.push({
                 title: it.roomName,
-                desc: it.ownerName,
+                desc: '👁' + it.online + '  🆙' + it.ownerName,
                 pic_url: it.roomPic,
                 url: it.platForm + '|' + it.roomId
             });
@@ -98,49 +98,43 @@ var rule = {
         setResult(d);
     `,
     二级: `js:
-        var d = [];
-        if (typeof play_url === "undefined") {
-            var play_url = ""
-        }
-        let platform = input.split("|")[0].replace(HOST+'/','');
-        let roomId = input.split("|")[1];
-        let link = HOST + '/api/live/getRoomInfo?uid=&platform=' + platform + '&roomId=' + roomId;
-        var jo = JSON.parse(request(link)).data;
-        VOD = {
-            vod_id: jo.roomId,
-            vod_name: jo.roomName,
-            vod_pic: jo.roomPic,
-            type_name: jo.platForm.replace("huya", "虎牙").replace("douyu", "斗鱼").replace("cc", "网易CC").replace("bilibili", "哔哩哔哩").replace("douyin", "抖音") + "." + jo.categoryName,
-            vod_content: "🏷分区：" + jo.platForm.replace("huya", "虎牙").replace("douyu", "斗鱼").replace("cc", "网易CC").replace("bilibili", "哔哩哔哩").replace("douyin", "抖音") + "·" + jo.categoryName + " 🏷UP主：" + jo.ownerName + " 🏷人气：" + jo.online + (jo.isLive === 1 ? " 🏷状态：正在直播" : "状态：未开播")
-        };
-        var playurl = JSON.parse(request("http://live.yj1211.work/api/live/getRealUrl?platform=" + jo.platForm + "&roomId=" + jo.roomId)).data;
-        var name = {
-            "OD": "原画",
-            "FD": "流畅",
-            "LD": "标清",
-            "SD": "高清",
-            "HD": "超清",
-            "2K": "2K",
-            "4K": "4K",
-            "FHD": "全高清",
-            "XLD": "极速",
-            "SQ": "普通音质",
-            "HQ": "高音质"
-        };
-        Object.keys(playurl).forEach(function(key) {
-            if (!/ayyuid|to/.test(key)) {
-                d.push({
-                    title: name[key],
-                    url: playurl[key]
-                })
+        try {
+            var d = [];
+            if (typeof play_url === "undefined") {
+                var play_url = ""
             }
-        });
-        VOD.vod_play_from = "选择画质";
-        VOD.vod_play_url = d.map(function(it) {
-            // return it.title + "$" + it.url
-            return it.title + "$" + play_url + urlencode(it.url + "|" + jo.platForm + "|" + jo.roomId)
-        }).join("#");
-        setResult(d)
+            let platform = input.split("|")[0].replace(HOST+'/','');
+            let roomId = input.split("|")[1];
+            let link = HOST + '/api/live/getRoomInfo?uid=&platform=' + platform + '&roomId=' + roomId;
+            var jo = JSON.parse(request(link)).data;
+            VOD = {
+                vod_id: jo.roomId,
+                vod_name: jo.roomName,
+                vod_pic: jo.roomPic,
+                type_name: jo.platForm.replace("huya", "虎牙").replace("douyu", "斗鱼").replace("cc", "网易CC").replace("bilibili", "哔哩哔哩").replace("douyin", "抖音") + "." + jo.categoryName,
+                vod_content: "🏷分区：" + jo.platForm.replace("huya", "虎牙").replace("douyu", "斗鱼").replace("cc", "网易CC").replace("bilibili", "哔哩哔哩").replace("douyin", "抖音") + "·" + jo.categoryName + " 🏷UP主：" + jo.ownerName + " 🏷人气：" + jo.online + (jo.isLive === 1 ? " 🏷状态：正在直播" : "状态：未开播")
+            };
+            // var playurl = JSON.parse(request("http://live.yj1211.work/api/live/getRealUrl?platform=" + jo.platForm + "&roomId=" + jo.roomId)).data; //单线路
+            let episodes = JSON.parse(request("http://live.yj1211.work/api/live/getRealUrlMultiSource?platform=" + jo.platForm + "&roomId=" + jo.roomId)).data; //多线路
+            let playFrom = [];
+            let playList = [];
+            let kplayList = [];
+            Object.keys(episodes).forEach(function(key) {
+                playFrom.append(key);
+                kplayList = episodes[key].map(function(it) {
+                    let title = it.qualityName;
+                    let playUrl = it.playUrl
+                    return title + "$" + play_url + urlencode(playUrl)
+                }).join("#")
+                playList.append(kplayList);
+            });
+            let vod_play_from = playFrom.join("$$$");
+            let vod_play_url = playList.join("$$$");
+            VOD["vod_play_from"] = vod_play_from;
+            VOD["vod_play_url"] = vod_play_url;
+        } catch (e) {
+            log("获取二级详情页发生错误:" + e.message);
+        }
     `,
     搜索: `js:
         var d = [];
@@ -148,7 +142,7 @@ var rule = {
         html.forEach(it => {
             d.push({
                 title: it.roomName,
-                desc: it.ownerName,
+                 desc: '👁' + it.online + '  🆙' + it.ownerName,
                 pic_url: it.roomPic,
                 url: it.platForm + '|' + it.roomId
             });
