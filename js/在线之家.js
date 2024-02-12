@@ -4,7 +4,6 @@ var rule = {
 	模板: '首图2',
 	// host:'https://www.zxzj.site',
 	host: 'https://www.zxzja.com',
-	// hostJs:'print(HOST);let html=request(HOST,{headers:{"User-Agent":PC_UA}});let src=jsp.pdfh(html,"li:eq(0)&&a:eq(2)&&href");print(src);HOST=src',
 	url: '/vodshow/fyclassfyfilter.html',
 	filterable: 1,//是否启用分类筛选,
 	filter_url: '-{{fl.area}}-{{fl.by}}-{{fl.class}}-----fypage---{{fl.year}}',
@@ -20,10 +19,9 @@ var rule = {
 	tab_remove:['夸克网盘','迅雷云盘','百度网盘'],
 	// 搜索:muban.首图2.搜索1,
 	搜索: 'ul.stui-vodlist&&li;a&&title;.lazyload&&data-original;.pic-text&&Text;a&&href',
-	图片来源: '@Referer=https://api.douban.com/@User-Agent=Mozilla/5.0%20(Windows%20NT%2010.0;%20Win64;%20x64)%20AppleWebKit/537.36%20(KHTML,%20like%20Gecko)%20Chrome/113.0.0.0%20Safari/537.36',
-	headers: {
-		'User-Agent': 'MOBILE_UA',
-        'Referer': HOST,
+	headers:{
+		'User-Agent':'MOBILE_UA',
+		// 'Referer': HOST,
 	},
 	lazy: `js:
 		var html = JSON.parse(request(input).match(/r player_.*?=(.*?)</)[1]);
