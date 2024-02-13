@@ -99,7 +99,6 @@ var rule = {
     `,
     二级: `js:
         try {
-            var d = [];
             if (typeof play_url === "undefined") {
                 var play_url = ""
             }
@@ -112,8 +111,7 @@ var rule = {
                 vod_name: jo.roomName,
                 vod_pic: jo.roomPic,
                 type_name: jo.platForm.replace("huya", "虎牙").replace("douyu", "斗鱼").replace("cc", "网易CC").replace("bilibili", "哔哩哔哩").replace("douyin", "抖音") + "." + jo.categoryName,
-                vod_director: '👥人气 ' + jo.online,
-                vod_actor: '🆙 ' + jo.ownerName,
+                vod_director: '🆙 ' + jo.ownerName,
                 vod_content: "🏷分区：" + jo.platForm.replace("huya", "虎牙").replace("douyu", "斗鱼").replace("cc", "网易CC").replace("bilibili", "哔哩哔哩").replace("douyin", "抖音") + "·" + jo.categoryName + " 🏷UP主：" + jo.ownerName + " 🏷人气：" + jo.online + (jo.isLive === 1 ? " 🏷状态：正在直播" : "状态：未开播")
             };
             let episodes = JSON.parse(request("http://live.yj1211.work/api/live/getRealUrlMultiSource?platform=" + jo.platForm + "&roomId=" + jo.roomId)).data; //多线路
@@ -161,28 +159,32 @@ var rule = {
                 });
                 d.push(
                     {
-                        title: "虎牙解析1",
+                        title: "解析1",
                         url: "http://epg.112114.xyz/huya/" + jo.roomId
                     },
                     {
-                        title: "虎牙解析2",
+                        title: "解析2",
                         url: "https://www.aois.eu.org/live/huya/" + jo.roomId
                     },
                     {
-                        title: "虎牙解析3",
+                        title: "解析3",
                         url: "https://www.goodiptv.club/huya/" + jo.roomId
                     },
                     {
-                        title: "虎牙解析4",
+                        title: "解析4",
                         url: "http://maomao.kandiantv.cn/huya1.php?id=" + jo.roomId
                     },
                     {
-                        title: "虎牙解析5",
+                        title: "解析5",
                         url: "http://43.138.170.29:35455/huya/" + jo.roomId
                     },
                     {
-                        title: "虎牙解析6",
+                        title: "解析6",
                         url: "http://8.210.232.168/php/huya.php?id=" + jo.roomId
+                    },
+                    {
+                        title: "虎牙解析",
+                        url: "http://cfss.cc/cdn/hy/" + jo.roomId + ".flv"
                     },
                 );
                 VOD["vod_play_from"] = "选择画质";
@@ -207,5 +209,19 @@ var rule = {
             });
         })
         setResult(d);
+    `,
+
+    //是否启用辅助嗅探: 1,0
+    sniffer:1,
+    // 辅助嗅探规则js写法
+    isVideo: `js:
+        log(input);
+        if(/\\/huya/.test(input)) {
+            input = true
+        } else if(/\\.flv?|\\.m3u8?|\\.mp4?/.test(input)){
+            input = true
+        }else{
+            input = false
+        }
     `,
 }

@@ -50,7 +50,7 @@ var rule = {
                     url: it.rid,
                     title: it.roomName,
                     img: it.roomSrc,
-                    desc: '👁' + it.hn + '　' + '🆙' + it.nickname,
+                    desc: '👁' + it.hn + '  🆙' + it.nickname,
                 })
             });
         });
@@ -64,67 +64,135 @@ var rule = {
                 url: it.rid,
                 title: it.roomName,
                 img: it.roomSrc,
-                desc: '👁' + it.hn + '　' + '🆙' + it.nickname,
+                desc: '👁' + it.hn + '  🆙' + it.nickname,
             })
         });
         setResult(d);
     `,
     二级:`js:
-        var d = [];
+    try {
+        if (typeof play_url === "undefined") {
+            var play_url = ""
+        }
         var jo = JSON.parse(request(input)).data;
         VOD = {
             vod_id: jo.roomId,
             vod_name: jo.roomName,
             vod_pic: jo.roomPic,
-            type_name: jo.platForm.replace("douyu", "斗鱼") + "." + jo.categoryName,
-            vod_remarks: '🏷roomId ' + jo.roomId,
-            vod_director: '👥在线人数 ' + jo.online,
-            vod_actor: '🆙 ' + jo.ownerName,
-            vod_content: '🏷roomId：' + jo.roomId + "｜" +  ' 🏷状态：' + (jo.isLive == 1 ? '正在直播' : '未开播'),
-            // vod_content: "🏷分区：" + jo.platForm.replace("douyu", "斗鱼") + "·" + jo.categoryName + " 🏷UP主：" + jo.ownerName + " 🏷人气：" + jo.online + (jo.isLive === 1 ? " 🏷状态：正在直播" : "状态：未开播"),
+            type_name: "斗鱼." + jo.categoryName,
+            vod_director: '🆙 ' + jo.ownerName,
+            vod_content: "🏷分区：斗鱼" + "·" + jo.categoryName + " 🏷UP主：" + jo.ownerName + " 🏷人气：" + jo.online + (jo.isLive === 1 ? " 🏷状态：正在直播" : "状态：未开播")
         };
-        var playurl = JSON.parse(request("http://live.yj1211.work/api/live/getRealUrl?platform=" + jo.platForm + "&roomId=" + jo.roomId)).data;
-        // var name = {
-        //     OD: "JustLive",
-        //     FD: "流畅",
-        //     LD: "标清",
-        //     SD: "高清",
-        //     HD: "JustLive(预览)",
-        //     "2K": "2K",
-        //     "4K": "4K",
-        //     FHD: "全高清",
-        //     XLD: "极速",
-        //     SQ: "普通音质",
-        //     HQ: "高音质",
-        // };
-        Object.keys(playurl).forEach(function(key) {
-            // if (!/ayyuid|to/.test(key)) {
-            if (/OD/.test(key)) {
-                d.push({
-                    // title: name[key],
-                    title: 'JustLive',
-                    url: playurl[key]
-                })
-            }
+        let episodes = JSON.parse(request("http://live.yj1211.work/api/live/getRealUrlMultiSource?platform=" + jo.platForm + "&roomId=" + jo.roomId)).data; //多线路
+        if (Object.keys(episodes).length !== 0) {
+            let playFrom = [];
+            let playList = [];
+            let kplayList = [];
+            Object.keys(episodes).forEach(function(key) {
+                playFrom.append(key);
+                kplayList = episodes[key].map(function(it) {
+                    let title = it.qualityName;
+                    let playUrl = it.playUrl
+                    return title + "$" + play_url + urlencode(playUrl)
+                }).join("#")
+                playList.append(kplayList);
+            });
+            let vod_play_from = playFrom.join("$$$");
+            let vod_play_url = playList.join("$$$");
+            VOD["vod_play_from"] = vod_play_from;
+            VOD["vod_play_url"] = vod_play_url;
+        } else {
+            var d = [];
+            episodes = JSON.parse(request("http://live.yj1211.work/api/live/getRealUrl?platform=" + jo.platForm + "&roomId=" + jo.roomId)).data; //单线路
+            var name = {
+                "OD": "原画",
+                "FD": "流畅",
+                "LD": "标清",
+                "SD": "高清",
+                "HD": "超清",
+                "2K": "2K",
+                "4K": "4K",
+                "FHD": "全高清",
+                "XLD": "极速",
+                "SQ": "普通音质",
+                "HQ": "高音质"
+            };
+            Object.keys(episodes).forEach(function(key) {
+                if (!/ayyuid|to/.test(key)) {
+                    d.push({
+                        title: name[key],
+                        url: episodes[key]
+                    })
+                }
+            });
+            d.push(
+                {
+                    title: "解析1",
+                    url: "http://epg.112114.xyz/huya/" + jo.roomId
+                },
+                {
+                    title: "解析2",
+                    url: "https://www.aois.eu.org/live/huya/" + jo.roomId
+                },
+                {
+                    title: "解析3",
+                    url: "https://www.goodiptv.club/huya/" + jo.roomId
+                },
+                {
+                    title: "解析4",
+                    url: "http://maomao.kandiantv.cn/huya1.php?id=" + jo.roomId
+                },
+                {
+                    title: "解析5",
+                    url: "http://43.138.170.29:35455/huya/" + jo.roomId
+                },
+                {
+                    title: "解析6",
+                    url: "http://8.210.232.168/php/huya.php?id=" + jo.roomId
+                },
+            );
+            VOD["vod_play_from"] = "播放源";
+            VOD["vod_play_url"] = d.map(function(it) {
+                return it.title + "$" + it.url
+            }).join("#");
+            setResult(d);
+        }
+    } catch (e) {
+        log("获取二级详情页发生错误:" + e.message);
+    }
+    `,
+    // 搜索:'json:data.list;roomName;roomSrc;nickname;roomId',
+    搜索: `js:
+        var d = [];
+        let rurls = input.split(';')[0].split('#');
+        let rurl = rurls[0];
+        let params = rurls.length > 1 ?rurls[1]:'';
+        let _fetch_params = JSON.parse(JSON.stringify(rule_fetch_params));
+        let postData = {body:params};
+        Object.assign(_fetch_params,postData);
+        let jo = JSON.parse(post(rurl,_fetch_params)).data.list;
+        jo.forEach(it => {
+            d.push({
+                url: it.roomId,
+                title: it.roomName,
+                img: it.roomSrc,
+                desc: '👁' + it.hn + '  🆙' + it.nickname,
+            })
         });
-        d.push({
-            title: "斗鱼解析1",
-            url: "http://epg.112114.xyz/douyu/" + jo.roomId
-        }, {
-            title: "斗鱼解析2",
-            url: "https://www.aois.eu.org/live/douyu/" + jo.roomId
-        }, {
-            title: "斗鱼解析3",
-            url: "https://www.goodiptv.club/douyu/" + jo.roomId
-        }, {
-            title: "斗鱼解析4",
-            url: "http://maomao.kandiantv.cn/douyu1.php?id=" + jo.roomId
-        });
-        VOD.vod_play_from = "播放源";
-        VOD.vod_play_url = d.map(function(it) {
-            return it.title + "$" + it.url
-        }).join("#");
         setResult(d);
     `,
-    搜索:'json:data.list;roomName;roomSrc;nickname;roomId',
+
+    //是否启用辅助嗅探: 1,0
+    sniffer:1,
+    // 辅助嗅探规则js写法
+    isVideo: `js:
+        log(input);
+        if(/\\/huya/.test(input)) {
+            input = true
+        } else if(/\\.flv?|\\.m3u8?|\\.mp4?/.test(input)){
+            input = true
+        }else{
+            input = false
+        }
+    `,
 }
