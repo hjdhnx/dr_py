@@ -12,7 +12,26 @@ var rule = {
     },
     timeout: 5000,
     play_parse: true,
-    lazy: "",
+    pagecount:{"1":1,"2":1,"4":1,"22":1,"8":1,"9":1,"10":1,"14":1,"15":1,"12":1,"13":1,"16":1,"28":1,"7":1,"11":1,"33":1,"27":1,"23":1,"26":1,"3":1,"21":1,"18":1},
+    lazy: `js:
+        if(/embed=/.test(input)) {
+            let url = input.match(/embed=(.*?)&/)[1];
+            url = base64Decode(url);
+            input = {
+                jx:0,
+                url: url.split('#')[0],
+                parse: 0
+            }
+        } else if (/\\?url=/.test(input)){
+            input = {
+                jx:0,
+                url: input.split('?url=')[1].split('#')[0],
+                parse: 0
+            }
+        } else {
+            input
+        }
+    `,
     limit: 6,
     double: false,
     推荐: "*",
