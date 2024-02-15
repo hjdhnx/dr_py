@@ -53,14 +53,15 @@
 			url = url.substring(8, (url.length) - 8)
 		}
 		if (/\\.m3u8|\\.mp4/.test(url)) {
-			var sign = request(HOST + '/static/player/' + from + '.php').match(/PlayUrl\\+'(.*?)'/)[1];
+			// var sign = request(HOST + '/static/player/' + from + '.php').match(/PlayUrl\\+'(.*?)'/)[1];
 			input = {
 				jx: 0,
-				url: url+sign,
+				// url: url+sign,
+				url: url,
 				parse: 0,
 				header: JSON.stringify({
-					"referer": HOST,
-					// 'referer': HOST + "/static/player/vidjs.html",
+					// "referer": HOST,
+					'referer': HOST + "/static/player/vidjs.html",
 				}),
 			}
 		} else {
