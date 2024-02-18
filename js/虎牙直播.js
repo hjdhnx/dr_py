@@ -136,10 +136,10 @@ var rule = {
                         title: "解析3",
                         url: "https://www.goodiptv.club/huya/" + jo.roomId
                     },
-                    {
-                        title: "解析4",
-                        url: "http://maomao.kandiantv.cn/huya1.php?id=" + jo.roomId
-                    },
+                    // {
+                    //     title: "解析4",
+                    //     url: "http://maomao.kandiantv.cn/huya1.php?id=" + jo.roomId
+                    // },
                     {
                         title: "解析5",
                         url: "http://43.138.170.29:35455/huya/" + jo.roomId
