@@ -39,7 +39,7 @@
 <a href="./doc/安卓本地搭建说明.md" alt="install">
 <img src="https://img.shields.io/badge/install support-termux|windows|ubuntu|python3.6~python3.8-yellowgreen" />
 </a>
-
+[新项目-hipy](https://github.com/hjdhnx/hipy-server)  
 [更新日志](./doc/更新日志.md) | [C#版drpy](https://github.com/flash168/Peach) | [推荐PC端使用zyplayer新版](https://github.com/Hiram-Wong/ZyPlayer/releases)  
 [android&linux&macos搭建教程](./doc/安卓本地搭建说明.md) | [windows搭建教程](./doc/windows搭建说明.md)  
 [写源教程](./doc/写源教程.md)  | [js压缩.min.js](./doc/js压缩.md)  
