@@ -1,6 +1,6 @@
 import cheerio from 'assets://js/lib/cheerio.min.js';
 import 'assets://js/lib/crypto-js.js';
-import 模板 from"../js/模板.js"
+import 模板 from"./模板.js"
 import {gbkTool} from './gbk.js'
 // import './rsa.js'
 
@@ -67,7 +67,7 @@ function pre(){
 
 let rule = {};
 let vercode = typeof(pdfl) ==='function'?'drpy2.1':'drpy2';
-const VERSION = vercode+' 3.9.49beta36 202400410';
+const VERSION = vercode+' 3.9.49beta38 202400413';
 /** 已知问题记录
  * 1.影魔的jinjia2引擎不支持 {{fl}}对象直接渲染 (有能力解决的话尽量解决下，支持对象直接渲染字符串转义,如果加了|safe就不转义)[影魔牛逼，最新的文件发现这问题已经解决了]
  * Array.prototype.append = Array.prototype.push; 这种js执行后有毛病,for in 循环列表会把属性给打印出来 (这个大毛病需要重点排除一下)
@@ -1378,6 +1378,15 @@ function homeVodParse(homeVodObj){
     let t2 = (new Date()).getTime();
     console.log('加载首页推荐耗时:'+(t2-t1)+'毫秒');
     // console.log(JSON.stringify(d));
+    if(rule.图片替换 && rule.图片替换.includes('=>')){
+        let replace_from = rule.图片替换.split('=>')[0];
+        let replace_to = rule.图片替换.split('=>')[1];
+        d.forEach(it=>{
+            if(it.vod_pic&&it.vod_pic.startsWith('http')){
+                it.vod_pic = it.vod_pic.replace(replace_from,replace_to);
+            }
+        });
+    }
     if(rule.图片来源){
         d.forEach(it=>{
             if(it.vod_pic&&it.vod_pic.startsWith('http')){
@@ -1512,6 +1521,15 @@ function categoryParse(cateObj) {
         } catch (e) {
             console.log(e.message);
         }
+    }
+    if(rule.图片替换 && rule.图片替换.includes('=>')){
+        let replace_from = rule.图片替换.split('=>')[0];
+        let replace_to = rule.图片替换.split('=>')[1];
+        d.forEach(it=>{
+            if(it.vod_pic&&it.vod_pic.startsWith('http')){
+                it.vod_pic = it.vod_pic.replace(replace_from,replace_to);
+            }
+        });
     }
     if(rule.图片来源){
         d.forEach(it=>{
@@ -1704,6 +1722,15 @@ function searchParse(searchObj) {
             print('搜索发生错误:'+e.message);
             return '{}'
         }
+    }
+    if(rule.图片替换 && rule.图片替换.includes('=>')){
+        let replace_from = rule.图片替换.split('=>')[0];
+        let replace_to = rule.图片替换.split('=>')[1];
+        d.forEach(it=>{
+            if(it.vod_pic&&it.vod_pic.startsWith('http')){
+                it.vod_pic = it.vod_pic.replace(replace_from,replace_to);
+            }
+        });
     }
     if(rule.图片来源){
         d.forEach(it=>{
@@ -1961,6 +1988,11 @@ function detailParse(detailObj){
             }
         }
         vod.vod_play_url = vod_play_url;
+    }
+    if(rule.图片替换 && rule.图片替换.includes('=>')){
+        let replace_from = rule.图片替换.split('=>')[0];
+        let replace_to = rule.图片替换.split('=>')[1];
+        vod.vod_pic = vod.vod_pic.replace(replace_from,replace_to);
     }
     if(rule.图片来源 && vod.vod_pic && vod.vod_pic.startsWith('http')){
         vod.vod_pic = vod.vod_pic + rule.图片来源;
@@ -2257,6 +2289,7 @@ function init(ext) {
         rule.encoding = rule.编码||rule.encoding||'utf-8';
         rule.search_encoding = rule.搜索编码||rule.search_encoding||'';
         rule.图片来源 = rule.图片来源||'';
+        rule.图片替换 = rule.图片替换||'';
         rule.play_json = rule.hasOwnProperty('play_json')?rule.play_json:[];
         rule.pagecount = rule.hasOwnProperty('pagecount')?rule.pagecount:{};
         rule.proxy_rule = rule.hasOwnProperty('proxy_rule')?rule.proxy_rule:'';
