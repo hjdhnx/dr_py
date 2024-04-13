@@ -1,6 +1,6 @@
 import cheerio from 'assets://js/lib/cheerio.min.js';
 import 'assets://js/lib/crypto-js.js';
-import 模板 from"./模板.js"
+import 模板 from "../js/模板.js"
 import {gbkTool} from './gbk.js'
 // import './rsa.js'
 
