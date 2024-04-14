@@ -67,7 +67,7 @@ function pre(){
 
 let rule = {};
 let vercode = typeof(pdfl) ==='function'?'drpy2.1':'drpy2';
-const VERSION = vercode+' 3.9.49beta38 202400413';
+const VERSION = vercode+' 3.9.49beta38 202400414';
 /** 已知问题记录
  * 1.影魔的jinjia2引擎不支持 {{fl}}对象直接渲染 (有能力解决的话尽量解决下，支持对象直接渲染字符串转义,如果加了|safe就不转义)[影魔牛逼，最新的文件发现这问题已经解决了]
  * Array.prototype.append = Array.prototype.push; 这种js执行后有毛病,for in 循环列表会把属性给打印出来 (这个大毛病需要重点排除一下)
@@ -2093,6 +2093,7 @@ function tellIsJx(url){
 function playParse(playObj){
     fetch_params = JSON.parse(JSON.stringify(rule_fetch_params));
     MY_URL = playObj.url;
+    var MY_FLAG = playObj.flag;
     if(!/http/.test(MY_URL)){
         try {
             MY_URL = base64Decode(MY_URL);
@@ -2100,9 +2101,11 @@ function playParse(playObj){
     }
     MY_URL = decodeURIComponent(MY_URL);
     var input = MY_URL;//注入给免嗅js
+    var flag = MY_FLAG;//注入播放线路名称给免嗅js
     let common_play = {
         parse:1,
         url:input,
+        flag:flag,
         // url:urlencode(input),
         jx:tellIsJx(input)
     };
