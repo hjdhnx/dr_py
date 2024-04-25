@@ -483,7 +483,7 @@ const RSA = {
             // let offset = 0; // 分段偏移量
             // // 分段加密
             // while (offset < textLen) {
-            //     let chunk = data.substr(offset, chunkSize); // 提取分段数据
+            //     let chunk = data.slice(offset, chunkSize); // 提取分段数据
             //     let enc = encryptor.encrypt(chunk); // 加密分段数据
             //     encrypted += enc; // 连接加密结果
             //     offset += chunkSize; // 更新偏移量
@@ -547,13 +547,13 @@ function fixAdM3u8(m3u8_text, m3u8_url, ad_remove) {
         return m3u8_text
     }
     if (ad_remove.startsWith('reg:')) {
-        ad_remove = ad_remove.substr(4)
+        ad_remove = ad_remove.slice(4)
     } else if (ad_remove.startsWith('js:')) {
-        ad_remove = ad_remove.substr(3)
+        ad_remove = ad_remove.slice(3)
     }
-    let m3u8_start = m3u8_text.substr(0, m3u8_text.indexOf('#EXTINF')).trim();
-    let m3u8_body = m3u8_text.substr(m3u8_text.indexOf('#EXTINF'), m3u8_text.indexOf('#EXT-X-ENDLIST')).trim();
-    let m3u8_end = m3u8_text.substr(m3u8_text.indexOf('#EXT-X-ENDLIST')).trim();
+    let m3u8_start = m3u8_text.slice(0, m3u8_text.indexOf('#EXTINF')).trim();
+    let m3u8_body = m3u8_text.slice(m3u8_text.indexOf('#EXTINF'), m3u8_text.indexOf('#EXT-X-ENDLIST')).trim();
+    let m3u8_end = m3u8_text.slice(m3u8_text.indexOf('#EXT-X-ENDLIST')).trim();
     let murls = [];
     let m3_body_list = m3u8_body.split('\n');
     let m3_len = m3_body_list.length;
@@ -824,7 +824,7 @@ function pd2(html,parse,uri){
     }
     if(DOM_CHECK_ATTR.test(parse) && !SPECIAL_URL.test(ret)){
         if(/http/.test(ret)){
-            ret = ret.substr(ret.indexOf('http'));
+            ret = ret.slice(ret.indexOf('http'));
         }else{
             ret = urljoin(MY_URL,ret)
         }
