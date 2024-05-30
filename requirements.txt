@@ -4,7 +4,7 @@ flask==2.0.3;python_version < '3.7'
 flask==2.2.2;python_version >= '3.7'
 flask_migrate
 flask-sqlalchemy==2.5.1
-SQLAlchemy==1.4.41
+SQLAlchemy==1.4.40
 requests
 psutil
 # netifaces
@@ -19,3 +19,4 @@ easydict
 jsonpath
 quickjs
 ujson
+Werkzeug==2.2.2
